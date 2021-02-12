@@ -1,0 +1,5 @@
+{:linters {:unresolved-symbol {:exclude [(day8.re-frame.tracing/fn-traced)]}
+           :unused-binding {:level :warning
+                            :exclude-destructured-keys-in-fn-args true}
+           :unused-var :off
+           :deprecated-var :off}}
