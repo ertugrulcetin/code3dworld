@@ -1,7 +1,9 @@
 (ns code3dworld.main.core
   (:require ["electron" :refer [app BrowserWindow crashReporter]]))
 
+
 (def main-window (atom nil))
+
 
 (defn init-browser []
   (reset! main-window (BrowserWindow.
@@ -11,6 +13,7 @@
       ; Path is relative to the compiled js file (main.js in our case)
   (.loadURL ^js/electron.BrowserWindow @main-window (str "file://" js/__dirname "/public/index.html"))
   (.on ^js/electron.BrowserWindow @main-window "closed" #(reset! main-window nil)))
+
 
 (defn main []
       ; CrashReporter can just be omitted

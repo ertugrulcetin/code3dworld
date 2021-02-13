@@ -21,6 +21,7 @@
 
   :clean-targets ^{:protect false} ["resources/public/js" "target"]
 
+  :cljfmt {:remove-consecutive-blank-lines? false}
 
   :shadow-cljs {:nrepl {:port 8777}
 
