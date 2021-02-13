@@ -1,5 +1,6 @@
 /out/
 /resources/public/js/
+/resources/public/css/
 /resources/main.js
 /target/
 /*-init.clj
