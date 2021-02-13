@@ -13,7 +13,11 @@
             [lein-shell "0.5.0"]
             [lein-ancient "0.6.15"]
             [lein-cljfmt "0.7.0"]
-            [lein-nsort "0.1.14"]]
+            [lein-nsort "0.1.14"]
+            [lein-less "1.7.5"]]
+
+  :less {:source-paths ["less"]
+         :target-path  "resources/public/css"}
 
   :min-lein-version "2.9.0"
 
@@ -43,8 +47,8 @@
                                                {day8.re-frame.tracing day8.re-frame.tracing-stubs}}}
 
                                     :devtools {:http-root "resources/public"
-                                               :http-port 8280
-                                               }}}}
+                                               :http-port 8280}}}}
+
 
   :shell {:commands {"karma" {:windows ["cmd" "/c" "karma"]
                               :default-command "karma"}
@@ -96,8 +100,8 @@
                    [clj-kondo "2021.01.20"]]
     :source-paths ["dev"]}
 
-   :prod {}
+   :prod {}}
 
-   }
+
 
   :prep-tasks [])
