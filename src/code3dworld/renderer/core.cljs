@@ -23,3 +23,9 @@
   (re-frame/dispatch-sync [::events/initialize-db])
   (dev-setup)
   (mount-root))
+
+
+(comment
+ (shadow/watch :renderer)
+ (shadow/repl :renderer)
+ )
