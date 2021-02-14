@@ -1,8 +1,9 @@
 (ns code3dworld.renderer.util)
 
 
-(defn current-settings []
+(defn current-settings
   "This function gets current settings from local storage"
+  []
   (try
     (into (sorted-map)
           (as-> (.getItem js/localStorage "current_settings") data

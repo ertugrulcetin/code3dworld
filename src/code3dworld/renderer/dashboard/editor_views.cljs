@@ -14,8 +14,7 @@
                            :theme       "monokai"})))
 
 
-(defn- editor-views []
+(defn editor-views []
   (r/create-class
    {:component-did-mount boot-code-editor
     :reagent-render      (fn [] [body-view])}))
-

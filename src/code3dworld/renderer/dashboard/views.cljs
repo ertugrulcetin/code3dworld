@@ -1,8 +1,6 @@
 (ns code3dworld.renderer.dashboard.views
   (:require
    [code3dworld.renderer.dashboard.editor-views :refer [editor-views]]
-   [code3dworld.renderer.dashboard.subs :as subs]
-   [re-frame.core :refer [dispatch subscribe]]
    [reagent.core :as r]))
 
 
