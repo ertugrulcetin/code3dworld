@@ -2,9 +2,10 @@
   (:require [code3dworld.renderer.util :as util]
             [re-frame.core :refer [reg-cofx]]))
 
+
 (def default-db
-  {:name         "code3dworld"
-   :active-panel :dashboard})
+  {:name "code3dworld"})
+
 
 (reg-cofx
  :current-settings

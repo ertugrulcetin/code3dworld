@@ -1,8 +1,10 @@
 (ns code3dworld.renderer.dashboard.editor-views
   (:require [reagent.core :as r]))
 
+
 (defn- body-view []
   [:textarea#c3-code-editor])
+
 
 (defn- boot-code-editor []
   (.fromTextArea js/CodeMirror
@@ -10,6 +12,7 @@
                  (clj->js {:lineNumbers true
                            :mode        "clojure"
                            :theme       "monokai"})))
+
 
 (defn- editor-views []
   (r/create-class
