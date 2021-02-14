@@ -26,6 +26,5 @@
 
 
 (comment
- (shadow/watch :renderer)
- (shadow/repl :renderer)
- )
+  (shadow/watch :renderer)
+  (shadow/repl :renderer))
