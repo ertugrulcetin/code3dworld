@@ -1,4 +1,4 @@
-(ns code3dworld.renderer.dashboard.subs
+(ns code3dworld.renderer.subs
   (:require
    [re-frame.core :refer [reg-sub]]))
 

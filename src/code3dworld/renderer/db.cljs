@@ -1,7 +1,7 @@
 (ns code3dworld.renderer.db
   (:require
-   [re-frame.core :refer [reg-cofx]]
-   [code3dworld.renderer.util :as util]))
+   [code3dworld.renderer.util :as util]
+   [re-frame.core :refer [reg-cofx]]))
 
 
 (def default-db

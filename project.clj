@@ -23,8 +23,10 @@
 
   :source-paths ["src"]
 
+  ;; TODO fix here
   :nsort {:require {:sort-fn (comp (juxt #(.indexOf % :as) first)
-                               #(mapv (fn [v] (if (string? v) (symbol v) v)) %))}
+                               #(mapv (fn [v] (if (string? v) (symbol v) v)) %))
+                    :comp #(compare %2 %1)}
           :source-paths ["src"]}
 
   :clean-targets ^{:protect false} ["resources/public/js" "target"]

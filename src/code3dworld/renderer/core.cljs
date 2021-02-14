@@ -1,10 +1,10 @@
 (ns code3dworld.renderer.core
   (:require
-   [code3dworld.renderer.config :as config]
-   [code3dworld.renderer.events :as events]
-   [code3dworld.renderer.views :as views]
+   [reagent.dom :as rdom]
    [re-frame.core :as re-frame]
-   [reagent.dom :as rdom]))
+   [code3dworld.renderer.views :as views]
+   [code3dworld.renderer.events :as events]
+   [code3dworld.renderer.config :as config]))
 
 
 (defn dev-setup []

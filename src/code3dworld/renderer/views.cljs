@@ -1,12 +1,12 @@
 (ns code3dworld.renderer.views
   (:require
-   ["codemirror/addon/edit/closebrackets"]
-   ["codemirror/addon/edit/matchbrackets"]
-   ["codemirror/mode/clojure/clojure"]
-   ["codemirror" :as cm]
-   [goog.dom :as dom]
+   [reagent.core :as r]
    [goog.object :as ob]
-   [reagent.core :as r]))
+   [goog.dom :as dom]
+   ["codemirror" :as cm]
+   ["codemirror/mode/clojure/clojure"]
+   ["codemirror/addon/edit/matchbrackets"]
+   ["codemirror/addon/edit/closebrackets"]))
 
 
 (def from-textarea (ob/get cm "fromTextArea"))
