@@ -1,7 +1,8 @@
 (ns code3dworld.renderer.common.events
-  (:require [re-frame.core :refer [reg-event-db reg-event-fx inject-cofx]]
-            [code3dworld.renderer.db :as db]
-            [code3dworld.renderer.util :as util]))
+  (:require
+   [code3dworld.renderer.db :as db]
+   [code3dworld.renderer.util :as util]
+   [re-frame.core :refer [reg-event-db reg-event-fx inject-cofx]]))
 
 
 (reg-event-fx

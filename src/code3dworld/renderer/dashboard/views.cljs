@@ -1,8 +1,9 @@
 (ns code3dworld.renderer.dashboard.views
-  (:require [reagent.core :as r]
-            [re-frame.core :refer [dispatch subscribe]]
-            [code3dworld.renderer.dashboard.subs :as subs]
-            [code3dworld.renderer.dashboard.editor-views :refer [editor-views]]))
+  (:require
+   [code3dworld.renderer.dashboard.editor-views :refer [editor-views]]
+   [code3dworld.renderer.dashboard.subs :as subs]
+   [re-frame.core :refer [dispatch subscribe]]
+   [reagent.core :as r]))
 
 
 (defn- instruction-title [title]
