@@ -1,11 +1,11 @@
 (ns code3dworld.renderer.views
   (:require
-   ["codemirror" :as cm]
-   ["codemirror/addon/edit/matchbrackets"]
    ["codemirror/addon/edit/closebrackets"]
+   ["codemirror/addon/edit/matchbrackets"]
    ["codemirror/mode/clojure/clojure"]
-   [goog.object :as ob]
+   ["codemirror" :as cm]
    [goog.dom :as dom]
+   [goog.object :as ob]
    [reagent.core :as r]))
 
 

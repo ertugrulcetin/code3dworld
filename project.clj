@@ -17,11 +17,15 @@
             [lein-less "1.7.5"]]
 
   :less {:source-paths ["less"]
-         :target-path  "resources/public/css"}
+         :target-path "resources/public/css"}
 
   :min-lein-version "2.9.0"
 
   :source-paths ["src"]
+
+  :nsort {:require {:sort-fn (comp (juxt #(.indexOf % :as) first)
+                               #(mapv (fn [v] (if (string? v) (symbol v) v)) %))}
+          :source-paths ["src"]}
 
   :clean-targets ^{:protect false} ["resources/public/js" "target"]
 
