@@ -1,4 +1,4 @@
-(ns code3dworld.renderer.common.events
+(ns code3dworld.renderer.events
   (:require
    [code3dworld.renderer.db :as db]
    [code3dworld.renderer.util :as util]
