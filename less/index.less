@@ -1,4 +1,70 @@
-@import "./dashboard.less";
 @import "./normalize.less";
 @import "./variables.less";
-@import "./navbar.less";
+
+.icon-2x {
+  display: inline;
+  width: 15px;
+}
+
+.mr-5 {
+  margin-right: 5px !important;
+}
+
+.p-5 {
+  padding: 5px !important;
+}
+
+.p-10 {
+  padding: 10px !important;
+}
+
+.c3-dashboard-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  .c3-dashboard-main {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .c3-dashboard-instructions {
+      width: 600px;
+      resize: vertical;
+      .c3-dashboard-instruction-title {
+        color: @c3-black-002;
+        background-color: @c3-gray-001;
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .c3-dashboard-code {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .c3-dashboard-editor {
+        height: 100%;
+        .CodeMirror {
+          height: 100%;
+          font-size: @editor-font-size;
+        }
+      }
+
+      .c3-dashboard-console {
+        height: 100%;
+        background-color: @c3-black-001;
+        color: @c3-gray-002;
+      }
+    }
+  }
+
+  .c3-dashboard-bottom {
+    height: 70px;
+    background-color: @c3-black-002;
+    color: @c3-white-001;
+  }
+}

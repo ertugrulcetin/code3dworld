@@ -1,8 +1,8 @@
 (ns code3dworld.renderer.core
   (:require
-   [code3dworld.renderer.common.events :as events]
    [code3dworld.renderer.config :as config]
-   [code3dworld.renderer.navigation.views :as views]
+   [code3dworld.renderer.events :as events]
+   [code3dworld.renderer.views :as views]
    [re-frame.core :as re-frame]
    [reagent.dom :as rdom]))
 
