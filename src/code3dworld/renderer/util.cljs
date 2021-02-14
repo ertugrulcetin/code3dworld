@@ -1,5 +1,6 @@
 (ns code3dworld.renderer.util)
 
+
 (defn current-settings []
   "This function gets current settings from local storage"
   (try
@@ -9,6 +10,7 @@
             (js->clj data :keywordize-keys true)))
     (catch js/Error _
       {})))
+
 
 (defn dissoc-in
   ([m ks]

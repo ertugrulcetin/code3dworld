@@ -4,39 +4,48 @@
             [code3dworld.renderer.dashboard.subs :as subs]
             [code3dworld.renderer.dashboard.editor-views :refer [editor-views]]))
 
-(defn- instruction-title-view [title]
+
+(defn- instruction-title [title]
   [:p.c3-dashboard-instruction-title.bg-gray-100.text-gray-900.p-5
    [:span.fa.fa-book.mr-3]
    [:span title]])
 
-(defn- instructions-view []
-  [:div.c3-dashboard-instructions
-   [instruction-title-view "Learn"]])
 
-(defn- editor-view []
+(defn- instructions []
+  [:div.c3-dashboard-instructions
+   [instruction-title "Learn"]])
+
+
+(defn- editor []
   [:div.c3-dashboard-editor
    [editor-views]])
 
-(defn- console-view []
+
+(defn- console []
   [:div.c3-dashboard-console.bg-gray-700.text-gray-300.p-5])
 
-(defn- code-view []
-  [:div.c3-dashboard-code
-   [editor-view]
-   [console-view]])
 
-(defn- bottom-view []
+(defn- code []
+  [:div.c3-dashboard-code
+   [editor]
+   [console]])
+
+
+(defn- bottom []
   [:div.c3-dashboard-bottom.bg-gray-900.text-gray-50])
 
-(defn- main-view []
+
+(defn- main []
   [:div.c3-dashboard-main
-   [instructions-view]
-   [code-view]])
+   [instructions]
+   [code]])
+
 
 (defn- body-view []
   [:div.c3-dashboard-container
-   [main-view]
-   [bottom-view]])
+   [main]
+   [bottom]])
+
 
 (defn dashboard-views []
   (r/create-class
