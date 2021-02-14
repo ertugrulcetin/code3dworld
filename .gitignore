@@ -22,3 +22,5 @@
 
 .clj-kondo/.cache
 .lein-repl-history
+pom.xml
+package-lock.json
