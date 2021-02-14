@@ -1,6 +1,15 @@
 (ns code3dworld.renderer.views
   (:require
+   ["codemirror" :as cm]
+   ["codemirror/addon/edit/matchbrackets"]
+   ["codemirror/addon/edit/closebrackets"]
+   ["codemirror/mode/clojure/clojure"]
+   [goog.object :as ob]
+   [goog.dom :as dom]
    [reagent.core :as r]))
+
+
+(def from-textarea (ob/get cm "fromTextArea"))
 
 
 (defn- editor-body-view []
@@ -8,18 +17,21 @@
    [:textarea#c3-code-editor]])
 
 
+
 (defn- boot-code-editor []
-  (.fromTextArea js/CodeMirror
-                 (.getElementById js/document "c3-code-editor")
-                 (clj->js {:lineNumbers true
-                           :mode        "clojure"
-                           :theme       "monokai"})))
+  (from-textarea
+   (dom/getElement "c3-code-editor")
+   (clj->js {:lineNumbers true
+             :matchBrackets true
+             :autoCloseBrackets true
+             :mode "clojure"
+             :theme "monokai"})))
 
 
 (defn- editor []
   (r/create-class
    {:component-did-mount boot-code-editor
-    :reagent-render      (fn [] [editor-body-view])}))
+    :reagent-render (fn [] [editor-body-view])}))
 
 
 (defn- instruction-title []
