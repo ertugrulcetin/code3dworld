@@ -18,6 +18,25 @@
   padding: 10px !important;
 }
 
+.c3-button {
+  background: transparent;
+  border-radius: @button-radius;
+  border: 1px solid @c3-white;
+  color: @c3-white;
+  padding: 10px 25px 10px 25px;
+  outline: none;
+  &:hover {
+    background-color: @c3-white;
+    color: @c3-black;
+  }
+}
+
+.c3-button.c3-next-button {
+  background-color: @c3-yellow-001;
+  border-color: @c3-yellow-001;
+  color: @c3-black;
+}
+
 .c3-dashboard-container {
   display: flex;
   flex-direction: column;
@@ -47,15 +66,29 @@
       justify-content: space-between;
 
       .c3-dashboard-editor {
-        height: 100%;
+        height: 60%;
         .CodeMirror {
           height: 100%;
           font-size: @editor-font-size;
         }
       }
 
+      .c3-dashboard-editor-action {
+        background-color: @c3-gray-003;
+        display: flex;
+        .c3-dahboard-run-button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: @c3-blue-001;
+          color: @c3-white;
+          padding: 15px 25px 15px 25px;
+          cursor: pointer;
+        }
+      }
+
       .c3-dashboard-console {
-        height: 100%;
+        height: 40%;
         background-color: @c3-black-001;
         color: @c3-gray-002;
       }
@@ -66,5 +99,41 @@
     height: 70px;
     background-color: @c3-black-002;
     color: @c3-white-001;
+    display: flex;
+    justify-content: space-between;
+
+    .c3-dashboard-bottom-left {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      span {
+        margin-left: 40px;
+      }
+    }
+
+    .c3-dashboard-bottom-action {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .c3-back-button {
+        margin-left: 10px;
+      }
+
+      .c3-next-button {
+        margin-right: 10px;
+      }
+    }
+
+    .c3-dashboard-bottom-right {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      span {
+        margin-right: 40px;
+      }
+    }
   }
 }

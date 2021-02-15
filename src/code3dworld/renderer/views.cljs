@@ -46,6 +46,11 @@
    [instruction-title]])
 
 
+(defn- editor-action-box []
+  [:div.c3-dashboard-editor-action
+   [:div.c3-dahboard-run-button "Run"]])
+
+
 (defn- console []
   [:div.c3-dashboard-console.p-5])
 
@@ -53,11 +58,29 @@
 (defn- code []
   [:div.c3-dashboard-code
    [editor]
+   [editor-action-box]
    [console]])
 
 
+(defn- bottom-action-box []
+  [:<>
+   [:div.c3-back-button
+    [:button.c3-button
+     "Back"]]
+   [:div "2/7"]
+   [:div.c3-next-button
+    [:button.c3-button.c3-next-button
+     "Next"]]])
+
+
 (defn- bottom []
-  [:div.c3-dashboard-bottom])
+  [:div.c3-dashboard-bottom
+   [:div.c3-dashboard-bottom-left
+    [:span "Lesson name!"]]
+   [:div.c3-dashboard-bottom-action
+    [bottom-action-box]]
+   [:div.c3-dashboard-bottom-right
+    [:span "Feedback"]]])
 
 
 (defn- main []
