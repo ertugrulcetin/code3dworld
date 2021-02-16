@@ -14,7 +14,7 @@
 
 
 (defn- editor-body-view []
-  [:div.c3-editor
+  [:div#editor.c3-editor
    [:textarea#c3-code-editor]])
 
 
@@ -52,15 +52,15 @@
 
 
 (defn- console []
-  [:div#console.c3-console.p-5])
+  [:div.c3-console.p-5])
 
 
 (defn- code []
   [:div#code.c3-code
-   [:div#editor.c3-editor-box
-    [editor]
-    [editor-action-box]]
-   [console]])
+   [editor]
+   [:div#console.c3-action-container
+    [editor-action-box]
+    [console]]])
 
 
 (defn- bottom-action-box []
