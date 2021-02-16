@@ -9,8 +9,11 @@
    ["codemirror/addon/edit/matchbrackets"]
    ["codemirror/addon/edit/closebrackets"]))
 
+(enable-console-print!)
+
 
 (def from-textarea (ob/get cm "fromTextArea"))
+(def ipc-renderer (.-ipcRenderer (js/require "electron")))
 
 
 (defn- editor-body-view []
@@ -97,6 +100,10 @@
 
 
 (defn- boot-main-panel []
+  (.on ipc-renderer "asynchronous-reply" (fn [event arg]
+                                           (println event)
+                                           (println "Main message:" arg)))
+  (.send ipc-renderer "asynchronous-message" "ping")
   (split #js ["#instructions" "#code"]
          (clj->js {:sizes [150 300]
                    :gutterSize 20
