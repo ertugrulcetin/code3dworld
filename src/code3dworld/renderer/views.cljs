@@ -1,5 +1,6 @@
 (ns code3dworld.renderer.views
   (:require
+   ["/vendor/split" :as split]
    [reagent.core :as r]
    [goog.object :as ob]
    [goog.dom :as dom]
@@ -15,7 +16,6 @@
 (defn- editor-body-view []
   [:div.c3-editor
    [:textarea#c3-code-editor]])
-
 
 
 (defn- boot-code-editor []
@@ -97,13 +97,15 @@
 
 
 (defn- boot-main-panel []
-  (js/Split #js ["#instructions" "#code"] (clj->js {:sizes [150,300]
-                                                    :gutterSize 20
-                                                    :dragInterval 0.5}))
-  (js/Split #js ["#editor" "#console"] (clj->js {:sizes [300,100]
-                                                 :direction "vertical"
-                                                 :gutterSize 20
-                                                 :dragInterval 0.5})))
+  (split #js ["#instructions" "#code"]
+         (clj->js {:sizes [150 300]
+                   :gutterSize 20
+                   :dragInterval 0.5}))
+  (split #js ["#editor" "#console"]
+         (clj->js {:sizes [300 100]
+                   :direction "vertical"
+                   :gutterSize 20
+                   :dragInterval 0.5})))
 
 
 (defn main-panel []
