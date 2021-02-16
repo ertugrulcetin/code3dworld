@@ -13,7 +13,7 @@
 
 
 (defn- editor-body-view []
-  [:div.c3-dashboard-editor
+  [:div.c3-editor
    [:textarea#c3-code-editor]])
 
 
@@ -35,30 +35,31 @@
 
 
 (defn- instruction-title []
-  [:p.c3-dashboard-instruction-title.p-10
+  [:p.c3-instruction-title.p-10
    [:img.icon-2x.mr-5
     {:src "/img/book.svg"}]
    [:span "Learn"]])
 
 
 (defn- instructions []
-  [:div.c3-dashboard-instructions
+  [:div#instructions.c3-instructions
    [instruction-title]])
 
 
 (defn- editor-action-box []
-  [:div.c3-dashboard-editor-action
-   [:div.c3-dahboard-run-button "Run"]])
+  [:div.c3-editor-action
+   [:div.c3-run-button "Run"]])
 
 
 (defn- console []
-  [:div.c3-dashboard-console.p-5])
+  [:div#console.c3-console.p-5])
 
 
 (defn- code []
-  [:div.c3-dashboard-code
-   [editor]
-   [editor-action-box]
+  [:div#code.c3-code
+   [:div#editor.c3-editor-box
+    [editor]
+    [editor-action-box]]
    [console]])
 
 
@@ -74,17 +75,17 @@
 
 
 (defn- bottom []
-  [:div.c3-dashboard-bottom
-   [:div.c3-dashboard-bottom-left
+  [:div.c3-bottom
+   [:div.c3-bottom-left
     [:span "Lesson name!"]]
-   [:div.c3-dashboard-bottom-action
+   [:div.c3-bottom-action
     [bottom-action-box]]
-   [:div.c3-dashboard-bottom-right
+   [:div.c3-bottom-right
     [:span "Feedback"]]])
 
 
 (defn- main []
-  [:div.c3-dashboard-main
+  [:div.c3-main
    [instructions]
    [code]])
 
@@ -95,6 +96,17 @@
    [bottom]])
 
 
+(defn- boot-main-panel []
+  (js/Split #js ["#instructions" "#code"] (clj->js {:sizes [150,300]
+                                                    :gutterSize 20
+                                                    :dragInterval 0.5}))
+  (js/Split #js ["#editor" "#console"] (clj->js {:sizes [300,100]
+                                                 :direction "vertical"
+                                                 :gutterSize 20
+                                                 :dragInterval 0.5})))
+
+
 (defn main-panel []
   (r/create-class
-   {:reagent-render (fn [] [body-view])}))
+   {:component-did-mount boot-main-panel
+    :reagent-render (fn [] [body-view])}))

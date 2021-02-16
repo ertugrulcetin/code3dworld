@@ -43,15 +43,21 @@
   justify-content: space-between;
   height: 100%;
 
-  .c3-dashboard-main {
+  .c3-main {
     height: 100%;
     display: flex;
     justify-content: space-between;
 
-    .c3-dashboard-instructions {
+    .gutter {
+      &:hover {
+        cursor: ew-resize;
+      }
+    }
+
+    .c3-instructions {
       width: 600px;
       resize: vertical;
-      .c3-dashboard-instruction-title {
+      .c3-instruction-title {
         color: @c3-black-002;
         background-color: @c3-gray-001;
         display: flex;
@@ -59,35 +65,47 @@
       }
     }
 
-    .c3-dashboard-code {
+    .c3-code {
       width: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
 
-      .c3-dashboard-editor {
-        height: 60%;
-        .CodeMirror {
-          height: 100%;
-          font-size: @editor-font-size;
+      .gutter {
+        background-color: @c3-black-001;
+        &:hover {
+          cursor: ns-resize;
         }
       }
 
-      .c3-dashboard-editor-action {
-        background-color: @c3-gray-003;
+      .c3-editor-box {
         display: flex;
-        .c3-dahboard-run-button {
+        flex-direction: column;
+        height: 60%;
+        .c3-editor {
+          height: 100%;
+          .CodeMirror {
+            height: 100%;
+            font-size: @editor-font-size;
+          }
+        }
+
+        .c3-editor-action {
+          background-color: @c3-gray-003;
           display: flex;
-          justify-content: center;
-          align-items: center;
-          background-color: @c3-blue-001;
-          color: @c3-white;
-          padding: 15px 25px 15px 25px;
-          cursor: pointer;
+          .c3-run-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: @c3-blue-001;
+            color: @c3-white;
+            padding: 15px 25px 15px 25px;
+            cursor: pointer;
+          }
         }
       }
 
-      .c3-dashboard-console {
+      .c3-console {
         height: 40%;
         background-color: @c3-black-001;
         color: @c3-gray-002;
@@ -95,14 +113,14 @@
     }
   }
 
-  .c3-dashboard-bottom {
+  .c3-bottom {
     height: 70px;
     background-color: @c3-black-002;
     color: @c3-white-001;
     display: flex;
     justify-content: space-between;
 
-    .c3-dashboard-bottom-left {
+    .c3-bottom-left {
       width: 100%;
       display: flex;
       align-items: center;
@@ -111,7 +129,7 @@
       }
     }
 
-    .c3-dashboard-bottom-action {
+    .c3-bottom-action {
       width: 100%;
       display: flex;
       justify-content: space-between;
@@ -126,7 +144,7 @@
       }
     }
 
-    .c3-dashboard-bottom-right {
+    .c3-bottom-right {
       width: 100%;
       display: flex;
       align-items: center;
