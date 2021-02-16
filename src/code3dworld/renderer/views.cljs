@@ -37,7 +37,7 @@
 (defn- instruction-title []
   [:p.c3-instruction-title.p-10
    [:img.icon-2x.mr-5
-    {:src "/img/book.svg"}]
+    {:src "img/book.svg"}]
    [:span "Learn"]])
 
 
