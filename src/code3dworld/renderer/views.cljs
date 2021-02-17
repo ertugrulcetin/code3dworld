@@ -5,9 +5,11 @@
    [goog.object :as ob]
    [goog.dom :as dom]
    ["codemirror" :as cm]
+   [code3dworld.renderer.events :as events]
    ["codemirror/mode/clojure/clojure"]
    ["codemirror/addon/edit/matchbrackets"]
-   ["codemirror/addon/edit/closebrackets"]))
+   ["codemirror/addon/edit/closebrackets"]
+   [re-frame.core :refer [dispatch]]))
 
 
 (def from-textarea (ob/get cm "fromTextArea"))
@@ -48,7 +50,22 @@
 
 (defn- editor-action-box []
   [:div.c3-editor-action
-   [:div.c3-run-button "Run"]])
+   [:div.c3-run-button
+    "Run"]
+   [:div.c3-full-screen
+    [:img
+     {:src "/img/full-screen.svg"}]]
+   [:div.c3-command-window
+    [:img
+     {:src "/img/command-window.svg"}]]
+   [:div.c3-decrease-font
+    {:on-click #(dispatch [::events/set-editor-font-size (comp -)])}
+    [:img
+     {:src "/img/decrease-font-size.svg"}]]
+   [:div.c3-increase-font
+    {:on-click #(dispatch [::events/set-editor-font-size (comp +)])}
+    [:img
+     {:src "/img/increase-font-size.svg"}]]])
 
 
 (defn- console []

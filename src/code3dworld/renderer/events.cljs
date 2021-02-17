@@ -2,7 +2,8 @@
   (:require
    [code3dworld.renderer.util :as util]
    [code3dworld.renderer.db :as db]
-   [re-frame.core :refer [reg-event-db reg-event-fx inject-cofx]]))
+   [re-frame.core :refer [reg-event-db reg-event-fx inject-cofx]]
+   [code3dworld.renderer.effects]))
 
 
 (reg-event-fx
@@ -35,3 +36,14 @@
  (fn [db [_ key-seq f & args]]
    (let [key-seq (if (vector? key-seq) key-seq [key-seq])]
      (apply update-in (concat [db key-seq f] args)))))
+
+
+(reg-event-fx
+ ::set-editor-font-size
+ (fn [{:keys [db]} [_ sym]]
+   (let [font-size (or (-> db :editor :settings :font-size) 18)
+         font-size (sym font-size 2)]
+     (when (and (>= font-size 14) (<= font-size 36))
+       {:db (assoc-in db [:editor :settings :font-size] font-size)
+        :set-editor-font-size! {:class-name "CodeMirror"
+                                :value (str font-size "px")}}))))
