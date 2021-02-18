@@ -13,7 +13,7 @@
 
 
 (def from-textarea (ob/get cm "fromTextArea"))
-(def ipc-renderer (.-ipcRenderer (js/require "electron")))
+#_(def ipc-renderer (.-ipcRenderer (js/require "electron")))
 
 
 (defn- editor-body-view []
@@ -99,11 +99,15 @@
    [bottom]])
 
 
+(defn- init-ipc []
+  #_(.on ipc-renderer "asynchronous-reply" (fn [event arg]
+                                             (println event)
+                                             (println "Main message:" arg)))
+  #_(.send ipc-renderer "asynchronous-message" "ping"))
+
+
 (defn- boot-main-panel []
-  (.on ipc-renderer "asynchronous-reply" (fn [event arg]
-                                           (println event)
-                                           (println "Main message:" arg)))
-  (.send ipc-renderer "asynchronous-message" "ping")
+  (init-ipc)
   (split #js ["#instructions" "#code"]
          (clj->js {:sizes [150 300]
                    :gutterSize 20
