@@ -21,3 +21,9 @@
  :<- [::visibility]
  (fn [visibility _]
    (:instruction? visibility)))
+
+
+(reg-sub
+ ::instruction
+ (fn [db _]
+   (:instruction db)))

@@ -3,6 +3,7 @@
    [reagent.core :as r]
    [goog.object :as ob]
    [goog.dom :as dom]
+   [code3dworld.renderer.util :as util]
    [code3dworld.renderer.subs :as subs]
    [code3dworld.renderer.events :as events]
    [re-frame.core :refer [dispatch subscribe]]
@@ -52,19 +53,30 @@
     {:src "img/book.svg"}]
    [:span "Learn"]])
 
+(defn- boot-instructions [chapter]
+  (reset!
+   horizontal-split
+   (split #js ["#instructions" "#code"]
+          (clj->js {:sizes [150 300]
+                    :gutterSize 20
+                    :dragInterval 0.5})))
+  (util/read-edn
+   (str "resources/courses/" chapter ".edn")
+   #(dispatch [::events/set-data [:instruction] %])))
 
-(defn- instructions []
+
+(defn- instruction-body []
+  @(subscribe [::subs/instruction]))
+
+
+(defn- instructions [chapter]
   (r/create-class
-   {:component-did-mount #(reset!
-                           horizontal-split
-                           (split #js ["#instructions" "#code"]
-                                  (clj->js {:sizes [150 300]
-                                            :gutterSize 20
-                                            :dragInterval 0.5})))
+   {:component-did-mount #(boot-instructions chapter)
     :component-will-unmount #(.destroy @horizontal-split)
     :reagent-render (fn []
                       [:div#instructions.c3-instructions
-                       [instruction-title]])}))
+                       [instruction-title]
+                       [instruction-body]])}))
 
 
 (defn- editor-action-box []
@@ -137,7 +149,7 @@
 (defn- main []
   [:div.c3-main
    (when @(subscribe [::subs/instruction-visible?])
-     [instructions])
+     [instructions "chapter_1"])
    [code]])
 
 
