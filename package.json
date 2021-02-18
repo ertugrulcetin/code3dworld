@@ -5,6 +5,7 @@
     "codemirror": "^5.59.2",
     "electron": "^11.2.3",
     "highlight.js": "9.18.1",
+    "nrepl-client": "^0.3.0",
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "react-highlight.js": "1.0.7"

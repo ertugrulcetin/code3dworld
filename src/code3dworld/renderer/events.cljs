@@ -47,3 +47,10 @@
        {:db (assoc-in db [:editor :settings :font-size] font-size)
         :set-editor-font-size! {:class-name "CodeMirror"
                                 :value (str font-size "px")}}))))
+
+
+(reg-event-db
+ ::set-element-visible
+ (fn [db [_ element-key]]
+   (let [element (-> db :visibility element-key)]
+     (assoc-in db [:visibility element-key] (not element)))))

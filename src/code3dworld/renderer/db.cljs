@@ -5,7 +5,9 @@
 
 
 (def default-db
-  {:name "code3dworld"})
+  {:name "code3dworld"
+   :visibility {:console? true
+                :instruction? true}})
 
 
 (reg-cofx
