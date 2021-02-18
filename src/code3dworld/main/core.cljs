@@ -1,7 +1,7 @@
 (ns code3dworld.main.core
   (:require
-   ["nrepl-client" :as nrepl]
    [goog.object :as ob]
+   ["nrepl-client" :as nrepl]
    ["electron" :refer [app BrowserWindow crashReporter ipcMain]]))
 
 

@@ -1,10 +1,10 @@
 (ns code3dworld.renderer.views
   (:require
-   ["/vendor/split" :as split]
    [reagent.core :as r]
    [goog.object :as ob]
    [goog.dom :as dom]
    ["codemirror" :as cm]
+   ["/vendor/split" :as split]
    ["codemirror/mode/clojure/clojure"]
    ["codemirror/addon/edit/matchbrackets"]
    ["codemirror/addon/edit/closebrackets"]))

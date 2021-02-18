@@ -23,9 +23,7 @@
 
   :source-paths ["src"]
 
-  ;; TODO fix here
-  :nsort {:require {:sort-fn (comp (juxt #(.indexOf % :as) first)
-                               #(mapv (fn [v] (if (string? v) (symbol v) v)) %))
+  :nsort {:require {:sort-fn (juxt (comp (complement string?) first) #(.indexOf % :as) first)
                     :comp #(compare %2 %1)}
           :source-paths ["src"]}
 
