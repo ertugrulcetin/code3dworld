@@ -29,8 +29,8 @@
   (.on ipcMain "asynchronous-message" (fn [event arg]
                                         (println "Renderer message:" arg)
                                         (.send (.-sender event) "asynchronous-reply" "pong")))
-  (.on js/process "uncaughtException" (fn [error]
-                                        (println "Here is the ERROR:" error))))
+  #_(.on js/process "uncaughtException" (fn [error]
+                                          (println "Here is the ERROR:" error))))
 
 
 (defn main []
