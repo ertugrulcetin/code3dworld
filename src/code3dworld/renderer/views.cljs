@@ -21,8 +21,6 @@
 
 
 (defonce vertical-split (r/atom nil))
-
-
 (defonce horizontal-split (r/atom nil))
 
 
@@ -84,20 +82,20 @@
    [:div.c3-run-button
     "Run"]
    [:div.c3-full-screen
-    {:on-click #(do (dispatch [::events/set-element-visible :instruction?])
-                    (dispatch [::events/set-element-visible :console?]))}
+    {:on-click #(do (dispatch [::events/update-element-visibility :instruction?])
+                    (dispatch [::events/update-element-visibility :console?]))}
     [:img
      {:src "/img/full-screen.svg"}]]
    [:div.c3-command-window
-    {:on-click #(dispatch [::events/set-element-visible :console?])}
+    {:on-click #(dispatch [::events/update-element-visibility :console?])}
     [:img
      {:src "/img/command-window.svg"}]]
    [:div.c3-decrease-font
-    {:on-click #(dispatch [::events/set-editor-font-size (comp -)])}
+    {:on-click #(dispatch [::events/set-editor-font-size -])}
     [:img
      {:src "/img/decrease-font-size.svg"}]]
    [:div.c3-increase-font
-    {:on-click #(dispatch [::events/set-editor-font-size (comp +)])}
+    {:on-click #(dispatch [::events/set-editor-font-size +])}
     [:img
      {:src "/img/increase-font-size.svg"}]]])
 

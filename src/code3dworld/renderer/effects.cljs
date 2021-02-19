@@ -3,7 +3,7 @@
 
 
 (reg-fx
- :set-editor-font-size!
+ ::set-editor-font-size!
  (fn [{:keys [class-name value]}]
    (set!
     (.. (dom/getElementByClass class-name) -style -fontSize)

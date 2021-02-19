@@ -1,9 +1,9 @@
 (ns code3dworld.renderer.events
   (:require
    [code3dworld.renderer.util :as util]
+   [code3dworld.renderer.effects :as effects]
    [code3dworld.renderer.db :as db]
-   [re-frame.core :refer [reg-event-db reg-event-fx inject-cofx]]
-   [code3dworld.renderer.effects]))
+   [re-frame.core :refer [reg-event-db reg-event-fx inject-cofx]]))
 
 
 (reg-event-fx
@@ -45,12 +45,12 @@
          font-size (sym font-size 2)]
      (when (and (>= font-size 14) (<= font-size 36))
        {:db (assoc-in db [:editor :settings :font-size] font-size)
-        :set-editor-font-size! {:class-name "CodeMirror"
-                                :value (str font-size "px")}}))))
+        ::effects/set-editor-font-size! {:class-name "CodeMirror"
+                                         :value (str font-size "px")}}))))
 
 
 (reg-event-db
- ::set-element-visible
+ ::update-element-visibility
  (fn [db [_ element-key]]
    (let [element (-> db :visibility element-key)]
      (assoc-in db [:visibility element-key] (not element)))))
