@@ -61,6 +61,36 @@
         display: flex;
         align-items: center;
       }
+      .c3-instruction-body {
+        padding: 20px;
+        height: 100%;
+        overflow: auto;
+
+        .c3-body {
+          margin: 20px 0 20px 0;
+          color: @c3-black-001;
+          font-size: @editor-font-size;
+          line-height: 1.4;
+          font-weight: 500;
+        }
+
+        .c3-code-container {
+          background-color: @c3-black-001;
+          padding: 10px;
+          word-break: break-all;
+          span.text {
+            color: @c3-yellow-001;
+          }
+          span.key {
+            color: @c3-white;
+            margin-right: 5px;
+          }
+          code.row {
+            display: block;
+            padding: 2px 0 2px 0;
+          }
+        }
+      }
     }
 
     .c3-code {
