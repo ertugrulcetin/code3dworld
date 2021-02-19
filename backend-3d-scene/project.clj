@@ -8,7 +8,9 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
 
   :dependencies [[org.clojure/clojure "1.10.1"]
+                 [org.clojure/tools.logging "1.1.0"]
                  [jme-clj "0.1.13"]
+                 [mount "0.1.16"]
                  [nrepl "0.8.3"]]
 
   :plugins [[ertu/lein-bikeshed "0.1.13"]
@@ -63,8 +65,7 @@
                     ["eastwood"]]
             "clj-kondo" ["with-profile" "+dev" "run" "-m" "clj-kondo.main"]}
 
-  :jvm-opts ^:replace ["-XX:+UseZGC"
-                       "-XX:-OmitStackTraceInFastThrow"
+  :jvm-opts ^:replace ["-XX:-OmitStackTraceInFastThrow"
                        "-XX:+ScavengeBeforeFullGC"
                        "-XX:+IgnoreUnrecognizedVMOptions"
                        "-Djava.net.preferIPv4Stack=true"
