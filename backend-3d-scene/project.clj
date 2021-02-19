@@ -33,6 +33,12 @@
 
   :uberjar-name "backend-3d-scene.jar"
 
+  :clj-kondo/config '{:linters {:unused-binding {:level :warning
+                                                 :exclude-destructured-keys-in-fn-args true}
+                                :unused-var :off
+                                :deprecated-var :off}
+                      :skip-comments true}
+
   :cljfmt {:remove-consecutive-blank-lines? false}
 
   :eastwood {:source-paths ["src"]
