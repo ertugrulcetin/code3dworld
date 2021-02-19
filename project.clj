@@ -101,7 +101,7 @@
   {:dev
    {:dependencies [[binaryage/devtools "1.0.2"]
                    [day8.re-frame/re-frame-10x "0.7.0"]
-                   [clj-kondo "2021.01.20"]]
+                   [clj-kondo "2021.02.13"]]
     :source-paths ["dev"]}
 
    :prod {}}
