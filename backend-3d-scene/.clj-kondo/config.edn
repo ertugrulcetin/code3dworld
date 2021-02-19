@@ -1,5 +1,0 @@
-{:linters {:unused-binding {:level :warning
-                            :exclude-destructured-keys-in-fn-args true}
-           :unused-var :off
-           :deprecated-var :off}
- :skip-comments true}
