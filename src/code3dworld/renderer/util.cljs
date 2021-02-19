@@ -1,4 +1,8 @@
-(ns code3dworld.renderer.util)
+(ns code3dworld.renderer.util
+  (:require
+   [cljs.reader :as reader]))
+
+(def fs "Provides access to Node/Electron [fs library](https://nodejs.org/api/fs.html)." (js/require "fs"))
 
 
 (defn current-settings
@@ -27,3 +31,9 @@
    (if-let [[ks' & kss] (seq kss)]
      (recur (dissoc-in m ks) ks' kss)
      (dissoc-in m ks))))
+
+
+(defn read-edn [path f]
+  (.readFile fs path "utf8"
+             (fn [_ data]
+               (f (reader/read-string data)))))

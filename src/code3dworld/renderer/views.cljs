@@ -3,6 +3,10 @@
    [reagent.core :as r]
    [goog.object :as ob]
    [goog.dom :as dom]
+   [code3dworld.renderer.util :as util]
+   [code3dworld.renderer.subs :as subs]
+   [code3dworld.renderer.events :as events]
+   [re-frame.core :refer [dispatch subscribe]]
    ["codemirror" :as cm]
    ["/vendor/split" :as split]
    ["codemirror/mode/clojure/clojure"]
@@ -14,6 +18,10 @@
 
 (def from-textarea (ob/get cm "fromTextArea"))
 #_(def ipc-renderer (.-ipcRenderer (js/require "electron")))
+
+
+(defonce vertical-split (r/atom nil))
+(defonce horizontal-split (r/atom nil))
 
 
 (defn- editor-body-view []
@@ -43,19 +51,67 @@
     {:src "img/book.svg"}]
    [:span "Learn"]])
 
+(defn- boot-instructions [chapter]
+  (reset!
+   horizontal-split
+   (split #js ["#instructions" "#code"]
+          (clj->js {:sizes [150 300]
+                    :gutterSize 20
+                    :dragInterval 0.5})))
+  (util/read-edn
+   (str "resources/courses/" chapter ".edn")
+   #(dispatch [::events/set-data [:instruction] %])))
 
-(defn- instructions []
-  [:div#instructions.c3-instructions
-   [instruction-title]])
+
+(defn- instruction-body []
+  @(subscribe [::subs/instruction]))
+
+
+(defn- instructions [chapter]
+  (r/create-class
+   {:component-did-mount #(boot-instructions chapter)
+    :component-will-unmount #(.destroy @horizontal-split)
+    :reagent-render (fn []
+                      [:div#instructions.c3-instructions
+                       [instruction-title]
+                       [instruction-body]])}))
 
 
 (defn- editor-action-box []
   [:div.c3-editor-action
-   [:div.c3-run-button "Run"]])
+   [:div.c3-run-button
+    "Run"]
+   [:div.c3-full-screen
+    {:on-click #(do (dispatch [::events/update-element-visibility :instruction?])
+                    (dispatch [::events/update-element-visibility :console?]))}
+    [:img
+     {:src "/img/full-screen.svg"}]]
+   [:div.c3-command-window
+    {:on-click #(dispatch [::events/update-element-visibility :console?])}
+    [:img
+     {:src "/img/command-window.svg"}]]
+   [:div.c3-decrease-font
+    {:on-click #(dispatch [::events/set-editor-font-size -])}
+    [:img
+     {:src "/img/decrease-font-size.svg"}]]
+   [:div.c3-increase-font
+    {:on-click #(dispatch [::events/set-editor-font-size +])}
+    [:img
+     {:src "/img/increase-font-size.svg"}]]])
 
 
 (defn- console []
-  [:div.c3-console.p-5])
+  (r/create-class
+   {:component-did-mount #(reset!
+                           vertical-split
+                           (split #js ["#editor" "#console"]
+                                  (clj->js {:sizes [300 100]
+                                            :direction "vertical"
+                                            :gutterSize 20
+                                            :dragInterval 0.5})))
+    :component-will-unmount #(.destroy @vertical-split)
+    :reagent-render (fn []
+                      [:div.c3-console.p-5])}))
 
 
 (defn- code []
@@ -63,7 +119,8 @@
    [editor]
    [:div#console.c3-action-container
     [editor-action-box]
-    [console]]])
+    (when @(subscribe [::subs/console-visible?])
+      [console])]])
 
 
 (defn- bottom-action-box []
@@ -89,7 +146,8 @@
 
 (defn- main []
   [:div.c3-main
-   [instructions]
+   (when @(subscribe [::subs/instruction-visible?])
+     [instructions "chapter_1"])
    [code]])
 
 
@@ -106,20 +164,7 @@
   #_(.send ipc-renderer "asynchronous-message" "ping"))
 
 
-(defn- boot-main-panel []
-  (init-ipc)
-  (split #js ["#instructions" "#code"]
-         (clj->js {:sizes [150 300]
-                   :gutterSize 20
-                   :dragInterval 0.5}))
-  (split #js ["#editor" "#console"]
-         (clj->js {:sizes [300 100]
-                   :direction "vertical"
-                   :gutterSize 20
-                   :dragInterval 0.5})))
-
-
 (defn main-panel []
   (r/create-class
-   {:component-did-mount boot-main-panel
+   {:component-did-mount #(init-ipc)
     :reagent-render (fn [] [body-view])}))

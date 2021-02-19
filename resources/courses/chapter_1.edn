@@ -1,0 +1,15 @@
+[:div.c3-instruction-body
+ [:h3 "Hello World!"]
+ [:p.c3-body
+  "If programming is the act of teaching a computer
+   to have a conversation with a user, it would be most
+   useful to first teach the computer how to speak.
+   In Python, this is accomplished with the"
+  [:span.c3-inline-code "print"] "statement."]
+ [:div.c3-code-container
+  [:code.row
+   [:span.key "print"] [:span.text "\"Hello, world!\""]]
+  [:code.row
+   [:span.key "print"] [:span.text "\"Water—there is not a drop of water there! Were Niagara but a cataract of sand, would you travel your thousand miles to see it?\""]]]
+ [:p.c3-body
+  "A" [:span.c3-inline-code "print"] "statement is the easiest way to get your Python program to communicate with you. Being able to command this communication will be one of the most valuable tools in your programming toolbox."]]

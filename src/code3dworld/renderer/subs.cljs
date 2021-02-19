@@ -4,12 +4,26 @@
 
 
 (reg-sub
- ::dashboard
+ ::visibility
  (fn [db _]
-   (:dashboard db)))
+   (:visibility db)))
 
 
 (reg-sub
- ::visibility
- :<- [::dashboard]
- :visibility)
+ ::console-visible?
+ :<- [::visibility]
+ (fn [visibility _]
+   (:console? visibility)))
+
+
+(reg-sub
+ ::instruction-visible?
+ :<- [::visibility]
+ (fn [visibility _]
+   (:instruction? visibility)))
+
+
+(reg-sub
+ ::instruction
+ (fn [db _]
+   (:instruction db)))
