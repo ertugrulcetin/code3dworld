@@ -18,6 +18,7 @@
 
 (defn parse-error-msg [msg]
   (condp #(str/includes? %2 %1) msg
+
     "EOF while reading"
     (str "Looks like you did not close your parenthesis.\n"
          "Make sure that every opened form or function should be closed (my-function).\n"
