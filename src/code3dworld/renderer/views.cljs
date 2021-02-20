@@ -11,7 +11,8 @@
    ["/vendor/split" :as split]
    ["codemirror/mode/clojure/clojure"]
    ["codemirror/addon/edit/matchbrackets"]
-   ["codemirror/addon/edit/closebrackets"]))
+   ["codemirror/addon/edit/closebrackets"]
+   ))
 
 (enable-console-print!)
 
@@ -36,7 +37,7 @@
              :matchBrackets true
              :autoCloseBrackets true
              :mode "clojure"
-             :theme "monokai"})))
+             :theme "darcula"})))
 
 
 (defn- editor []
@@ -71,7 +72,7 @@
      (clj->js {:lineNumbers true
                :readOnly true
                :mode "clojure"
-               :theme "monokai"}))))
+               :theme "darcula"}))))
 
 
 (defn- instruction-body [body]
