@@ -11,8 +11,7 @@
    ["/vendor/split" :as split]
    ["codemirror/mode/clojure/clojure"]
    ["codemirror/addon/edit/matchbrackets"]
-   ["codemirror/addon/edit/closebrackets"]
-   ))
+   ["codemirror/addon/edit/closebrackets"]))
 
 (enable-console-print!)
 
