@@ -63,7 +63,7 @@
                     :gutterSize 20
                     :dragInterval 0.5})))
   (util/read-edn
-   (str "resources/courses/" chapter ".edn")
+   (str "resources/chapters/" chapter ".edn")
    #(dispatch [::events/set-data [:instruction] %])))
 
 
@@ -167,7 +167,7 @@
 (defn- main []
   [:div.c3-main
    (when @(subscribe [::subs/instruction-visible?])
-     [instructions "chapter_1"])
+     [instructions "intro"])
    [code]])
 
 
