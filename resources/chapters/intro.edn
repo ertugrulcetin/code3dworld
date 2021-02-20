@@ -9,4 +9,6 @@
 
  [:h3 "About Clojure"]
  [:p.c3-body
-  "In this course, we're going to use " [:b "Clojure"] " programming language. Clojure is very powerful and easy to learn for beginners. It has few rules to remember compared to other languages out there. After learning Clojure, you will be able to create any application you want. It's so much fun, and you'll love it. 😊"]]
+  "In this course, we're going to use " [:b "Clojure"] " programming language. Clojure is very powerful and easy to learn for beginners. It has few rules to remember compared to other languages out there."]
+ [:p.c3-body
+  "After learning Clojure, you will be able to create any application you want. It's so much fun, and you'll love it. \uD83D\uDE0A"]]
