@@ -85,19 +85,19 @@
     {:on-click #(do (dispatch [::events/update-element-visibility :instruction?])
                     (dispatch [::events/update-element-visibility :console?]))}
     [:img
-     {:src "/img/full-screen.svg"}]]
+     {:src "img/full-screen.svg"}]]
    [:div.c3-command-window
     {:on-click #(dispatch [::events/update-element-visibility :console?])}
     [:img
-     {:src "/img/command-window.svg"}]]
+     {:src "img/command-window.svg"}]]
    [:div.c3-decrease-font
     {:on-click #(dispatch [::events/set-editor-font-size -])}
     [:img
-     {:src "/img/decrease-font-size.svg"}]]
+     {:src "img/decrease-font-size.svg"}]]
    [:div.c3-increase-font
     {:on-click #(dispatch [::events/set-editor-font-size +])}
     [:img
-     {:src "/img/increase-font-size.svg"}]]])
+     {:src "img/increase-font-size.svg"}]]])
 
 
 (defn- console []
