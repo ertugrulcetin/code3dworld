@@ -65,12 +65,13 @@
 
 
 (defn- boot-instruction-body []
-  (from-textarea
-   (dom/getElement "c3-code-preview")
-   (clj->js {:lineNumbers true
-             :readOnly true
-             :mode "clojure"
-             :theme "monokai"})))
+  (doseq [element (array-seq (dom/getElementsByClass "c3-code-preview"))]
+    (from-textarea
+     element
+     (clj->js {:lineNumbers true
+               :readOnly true
+               :mode "clojure"
+               :theme "monokai"}))))
 
 
 (defn- instruction-body [body]
