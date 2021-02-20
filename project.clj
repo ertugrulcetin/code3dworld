@@ -16,7 +16,7 @@
             [lein-nsort "0.1.14"]
             [lein-less "1.7.5"]]
 
-  :less {:source-paths ["less"]
+  :less {:source-paths ["resources/public/less"]
          :target-path "resources/public/css"}
 
   :min-lein-version "2.9.0"

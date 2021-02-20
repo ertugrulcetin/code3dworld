@@ -55,6 +55,8 @@
     }
 
     .c3-instructions {
+      height: ~"calc(100% - 80px)";
+
       .c3-instruction-title {
         color: @c3-black-002;
         background-color: @c3-gray-001;
@@ -75,9 +77,12 @@
         }
 
         .c3-code-container {
-          background-color: @c3-black-001;
-          padding: 10px;
           word-break: break-all;
+          .CodeMirror {
+            font-size: 18px;
+            height: auto;
+            border-radius: 5px;
+          }
           span.text {
             color: @c3-yellow-001;
           }
@@ -95,6 +100,7 @@
 
     .c3-code {
       width: 100%;
+      overflow-x: auto;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -174,6 +180,9 @@
           height: ~"calc(100% - 50px)";
           background-color: @c3-black-001;
           color: @c3-gray-002;
+          padding: 20px;
+          font-size: @editor-font-size;
+          overflow: auto;
         }
       }
     }
