@@ -10,6 +10,7 @@
    ["codemirror" :as cm]
    ["/vendor/split" :as split]
    ["codemirror/mode/clojure/clojure"]
+   ["codemirror/addon/selection/active-line"]
    ["codemirror/addon/edit/matchbrackets"]
    ["codemirror/addon/edit/closebrackets"]))
 
@@ -35,6 +36,8 @@
    (clj->js {:lineNumbers true
              :matchBrackets true
              :autoCloseBrackets true
+             :styleActiveLine true
+             :styleActiveSelected true
              :mode "clojure"
              :theme "darcula"})))
 
