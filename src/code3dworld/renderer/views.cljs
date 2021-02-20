@@ -51,6 +51,7 @@
     {:src "img/book.svg"}]
    [:span "Learn"]])
 
+
 (defn- boot-instructions [chapter]
   (reset!
    horizontal-split
@@ -63,8 +64,19 @@
    #(dispatch [::events/set-data [:instruction] %])))
 
 
-(defn- instruction-body []
-  @(subscribe [::subs/instruction]))
+(defn- boot-instruction-body []
+  (from-textarea
+   (dom/getElement "c3-code-preview")
+   (clj->js {:lineNumbers true
+             :readOnly true
+             :mode "clojure"
+             :theme "monokai"})))
+
+
+(defn- instruction-body [body]
+  (r/create-class
+   {:component-did-mount boot-instruction-body
+    :reagent-render (fn [] body)}))
 
 
 (defn- instructions [chapter]
@@ -74,7 +86,8 @@
     :reagent-render (fn []
                       [:div#instructions.c3-instructions
                        [instruction-title]
-                       [instruction-body]])}))
+                       (when-let [body @(subscribe [::subs/instruction])]
+                         [instruction-body body])])}))
 
 
 (defn- editor-action-box []
@@ -111,7 +124,10 @@
                                             :dragInterval 0.5})))
     :component-will-unmount #(.destroy @vertical-split)
     :reagent-render (fn []
-                      [:div.c3-console.p-5])}))
+                      [:div.c3-console
+                       [:p "~ cd Projects/electron/code3dworld/"]
+                       [:p "~ lein watch"]
+                       [:p "~ electron ."]])}))
 
 
 (defn- code []
