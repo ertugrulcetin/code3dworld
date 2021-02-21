@@ -45,7 +45,7 @@
 
 (comment
   (try
-   (eval '(selam 1))
+   ;(eval '(selam 1))
    ;(read-string "(")
    ;(/ 2 0)
     ;(eval (read-string "(12 12)"))
