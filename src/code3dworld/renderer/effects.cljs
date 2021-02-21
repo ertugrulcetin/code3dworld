@@ -8,3 +8,12 @@
    (set!
     (.. (dom/getElementByClass class-name) -style -fontSize)
     value)))
+
+
+(reg-fx
+ ::set-item-to-local!
+ (fn [{:keys [key val]}]
+   (try
+     (.setItem (.-localStorage js/window) key (.stringify js/JSON (clj->js val)))
+     (catch js/Error e
+       (println e)))))

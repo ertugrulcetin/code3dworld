@@ -41,16 +41,32 @@
 (reg-event-fx
  ::set-editor-font-size
  (fn [{:keys [db]} [_ sym]]
-   (let [font-size (or (-> db :editor :settings :font-size) 18)
-         font-size (sym font-size 2)]
+   (let [font-size (or (-> db :editor :font-size) 18)
+         font-size (sym font-size 1)]
      (when (and (>= font-size 14) (<= font-size 36))
-       {:db (assoc-in db [:editor :settings :font-size] font-size)
-        ::effects/set-editor-font-size! {:class-name "CodeMirror"
-                                         :value (str font-size "px")}}))))
+       {:db (assoc-in db [:editor :font-size] font-size)
+        :dispatch-n [[::update-editor-font-size]
+                     [::save-settings-to-local]]}))))
 
 
-(reg-event-db
+(reg-event-fx
+ ::update-editor-font-size
+ (fn [{:keys [db]} _]
+   (when-let [size (-> db :editor :font-size)]
+     {::effects/set-editor-font-size! {:class-name "cm-s-c3-code-editor"
+                                       :value (str size "px")}})))
+
+
+(reg-event-fx
  ::update-element-visibility
- (fn [db [_ element-key]]
+ (fn [{:keys [db]} [_ element-key]]
    (let [element (-> db :visibility element-key)]
-     (assoc-in db [:visibility element-key] (not element)))))
+     {:db (assoc-in db [:visibility element-key] (not element))
+      :dispatch [::save-settings-to-local]})))
+
+
+(reg-event-fx
+ ::save-settings-to-local
+ (fn [{:keys [db]} _]
+   {::effects/set-item-to-local! {:key "settings"
+                                  :val (select-keys db [:visibility :editor])}}))
