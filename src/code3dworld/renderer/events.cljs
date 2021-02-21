@@ -8,9 +8,10 @@
 
 (reg-event-fx
  ::initialize-db
- [(inject-cofx :current-settings)]
- (fn [{:keys [_ current-settings]}]
-   {:db (assoc db/default-db :current-settings (util/current-settings))}))
+ [(inject-cofx :settings)]
+ (fn [{:keys [_ settings]}]
+   {:db (merge db/default-db (util/settings))
+    :dispatch [::update-editor-font-size]}))
 
 
 (reg-event-db

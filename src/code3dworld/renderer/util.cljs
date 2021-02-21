@@ -5,12 +5,12 @@
 (def fs "Provides access to Node/Electron [fs library](https://nodejs.org/api/fs.html)." (js/require "fs"))
 
 
-(defn current-settings
+(defn settings
   "This function gets current settings from local storage"
   []
   (try
     (into (sorted-map)
-          (as-> (.getItem js/localStorage "current_settings") data
+          (as-> (.getItem js/localStorage "settings") data
             (.parse js/JSON data)
             (js->clj data :keywordize-keys true)))
     (catch js/Error _

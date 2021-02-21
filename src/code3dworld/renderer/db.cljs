@@ -11,6 +11,6 @@
 
 
 (reg-cofx
- :current-settings
+ :settings
  (fn [cofx _]
-   (assoc cofx :current-settings (util/current-settings))))
+   (assoc cofx :settings (util/settings))))
