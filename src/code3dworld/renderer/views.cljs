@@ -39,7 +39,7 @@
              :styleActiveLine true
              :styleActiveSelected true
              :mode "clojure"
-             :theme "darcula"})))
+             :theme "darcula c3-code-editor"})))
 
 
 (defn- editor []
