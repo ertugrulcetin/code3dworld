@@ -1,16 +1,11 @@
 (ns backend-3d-scene.api
-  (:refer-clojure :exclude [print println])
   (:require
-   [clojure.core.async :as a]
    [clojure.string :as str]
    [clojure.walk :as walk]
    [jme-clj.core :as jme]
    [kezban.core :as k]
    [mount.core :as mount :refer [defstate]])
-  (:import (com.jme3.math ColorRGBA)
-           (java.io StringWriter)))
-
-(defonce out-ch (a/chan))
+  (:import (com.jme3.math ColorRGBA)))
 
 
 (defn- get-wrong-arity-fn-name [msg]
@@ -52,7 +47,7 @@
 
 (defn- get-used-fns [code]
   (let [s (atom [])
-        code (k/try-> code (#(str "(" % ")")) (read-string))]
+        code (k/try-> code (#(str "(" % ")")) read-string)]
     (walk/prewalk (fn [form]
                     (when (list? form)
                       (swap! s conj form))
@@ -93,34 +88,25 @@
   :stop (jme/unbind-app #'app*))
 
 
-(defn print [& more]
-  (let [s (StringWriter.)]
-    (binding [*print-readably* nil
-              *out* s]
-      (apply pr more)
-      (a/put! out-ch (str s))
-      nil)))
-
-
-(defn println [& more]
-  (let [s (StringWriter.)]
-    (binding [*print-readably* nil
-              *out* s]
-      (apply prn more)
-      (a/put! out-ch (str s))
-      nil)))
-
-
+;;TODO add timeout
 (defn run [code]
   (try
-    (let [forms (read-string (str "(" code ")"))]
+    (let [forms (read-string (str "(" code ")"))
+          result (atom {})
+          p (promise)]
       (binding [jme/*app* app]
         (jme/enqueue (fn []
-                       (try
-                         (eval (cons 'do forms))
-                         (catch Throwable t
-                           (->> t Throwable->map :cause parse-error-msg (hash-map :error) (a/put! out-ch)))))))
-      {:used-fns (get-used-fns code)})
+                       (let [r (with-out-str
+                                 (try
+                                   (eval (cons 'do forms))
+                                   (catch Throwable t
+                                     (swap! result assoc
+                                            :error? true
+                                            :error-msg (->> t Throwable->map :cause parse-error-msg)))))]
+                         (swap! result assoc :out r)
+                         (deliver p true)))))
+      (deref p)
+      (merge @result {:used-fns (get-used-fns code)}))
     (catch Throwable t
       {:error? true
        :error-msg (-> t Throwable->map :cause parse-error-msg)})))
@@ -128,12 +114,9 @@
 
 (comment
   (println "hey")
-  (a/go-loop []
-    (let [x (a/<! out-ch)]
-      (clojure.core/println x))
-    (recur))
   (macroexpand-1 '(run "(print 'selam 2"))
   (run "(println \"Ertu\") (/ 2 0)")
+  (run "(println \"Ertu\")")
   (do
     (mount/stop #'app)
     (mount/start #'app)))

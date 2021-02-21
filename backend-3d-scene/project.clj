@@ -8,7 +8,6 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
 
   :dependencies [[org.clojure/clojure "1.10.1"]
-                 [org.clojure/core.async "1.3.610"]
                  [org.clojure/tools.logging "1.1.0"]
                  [jme-clj "0.1.13"]
                  [mount "0.1.16"]
@@ -64,7 +63,10 @@
                     ["clj-kondo" "--lint" "src"]
                     ["kibit"]
                     ["eastwood"]]
-            "clj-kondo" ["with-profile" "+dev" "run" "-m" "clj-kondo.main"]}
+            "clj-kondo" ["with-profile" "+dev" "run" "-m" "clj-kondo.main"]
+            "fix" ["do"
+                   ["nsort" "-r"]
+                   ["cljfmt" "fix"]]}
 
   :jvm-opts ^:replace ["-XX:-OmitStackTraceInFastThrow"
                        "-XX:+ScavengeBeforeFullGC"
