@@ -7,12 +7,12 @@
 
 
 (defn- get-wrong-arity-fn-name [msg]
-  (let [[_ v] (str/split msg (re-pattern "passed to: "))]
+  (let [[_ v] (str/split msg #"passed to: ")]
     (name (symbol v))))
 
 
 (defn- get-unresolved-var-name [msg]
-  (let [[_ v] (str/split msg (re-pattern "Unable to resolve symbol: | in this context"))]
+  (let [[_ v] (str/split msg #"Unable to resolve symbol: | in this context")]
     v))
 
 
@@ -45,10 +45,10 @@
 
 (comment
   (try
-   ;(eval '(selam 1))
+   (eval '(selam 1))
    ;(read-string "(")
    ;(/ 2 0)
-    (eval (read-string "(12 12)"))
+    ;(eval (read-string "(12 12)"))
     (catch Exception e
       (parse-error-msg (:cause (Throwable->map e)))
      ;(:cause (Throwable->map e))
