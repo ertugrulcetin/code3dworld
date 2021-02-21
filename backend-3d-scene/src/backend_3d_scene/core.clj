@@ -39,7 +39,7 @@
          "(\"Some string\") -> first parameter is a string\n"
          "(true) -> first parameter is a boolean")
 
-    "Divide by zero" (str "Diving a number with zero is not acceptable in math :).")
+    "Divide by zero" (str "Numbers can't be divided by zero. It is not acceptable in math :).")
     msg))
 
 
