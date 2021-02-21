@@ -1,6 +1,7 @@
 {:lint-as {mount.core/defstate clojure.core/def}
  :linters {:unused-binding {:level :warning
                             :exclude-destructured-keys-in-fn-args true}
+           :unresolved-symbol :off
            :unused-var :off
            :deprecated-var :off}
  :skip-comments true}
