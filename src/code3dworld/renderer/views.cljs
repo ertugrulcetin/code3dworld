@@ -187,4 +187,5 @@
 (defn main-panel []
   (r/create-class
    {:component-did-mount #(init-ipc)
+    :component-will-unmount #(dispatch [::events/save-settings-to-local])
     :reagent-render (fn [] [body-view])}))
