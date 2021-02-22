@@ -2,11 +2,12 @@
   (:require
    [reagent.core :as r]
    [goog.object :as ob]
+   [goog.functions :as gf]
    [goog.dom :as dom]
    [code3dworld.renderer.util :as util]
    [code3dworld.renderer.subs :as subs]
    [code3dworld.renderer.events :as events]
-   [re-frame.core :refer [dispatch subscribe]]
+   [re-frame.core :refer [dispatch dispatch-sync subscribe]]
    ["codemirror" :as cm]
    ["/vendor/split" :as split]
    ["codemirror/mode/clojure/clojure"]
@@ -19,10 +20,12 @@
 
 (def from-textarea (ob/get cm "fromTextArea"))
 #_(def ipc-renderer (.-ipcRenderer (js/require "electron")))
+(def on-change-editor (gf/debounce (fn [dispatch-key e] (dispatch-sync [dispatch-key e])) 500))
 
 
 (defonce vertical-split (r/atom nil))
 (defonce horizontal-split (r/atom nil))
+(defonce c3-editor (r/atom nil))
 
 
 (defn- editor-body-view []
@@ -31,15 +34,19 @@
 
 
 (defn- boot-code-editor []
-  (from-textarea
-   (dom/getElement "c3-code-editor")
-   (clj->js {:lineNumbers true
-             :matchBrackets true
-             :autoCloseBrackets true
-             :styleActiveLine true
-             :styleActiveSelected true
-             :mode "clojure"
-             :theme "darcula c3-code-editor"})))
+  (reset!
+   c3-editor
+   (from-textarea
+    (dom/getElement "c3-code-editor")
+    (clj->js {:lineNumbers true
+              :matchBrackets true
+              :autoCloseBrackets true
+              :styleActiveLine true
+              :styleActiveSelected true
+              :mode "clojure"
+              :theme "darcula c3-code-editor"})))
+  (.on @c3-editor "change" #(on-change-editor ::events/save-editor-content
+                                              (.getValue @c3-editor))))
 
 
 (defn- editor []

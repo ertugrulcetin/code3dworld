@@ -59,6 +59,13 @@
 
 
 (reg-event-fx
+ ::save-editor-content
+ (fn [{:keys [db]} [_ code]]
+   {:db (assoc-in db [:editor :code] code)
+    :dispatch [::save-settings-to-local]}))
+
+
+(reg-event-fx
  ::update-element-visibility
  (fn [{:keys [db]} [_ element-key]]
    (let [element (-> db :visibility element-key)]
