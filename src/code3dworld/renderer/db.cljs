@@ -7,7 +7,12 @@
 (def default-db
   {:name "code3dworld"
    :visibility {:console? true
-                :instruction? true}})
+                :instruction? true}
+   :chapters {:intro {:title "Intro"
+                      :order 1}
+              :chapter_1 {:title "Reducers"
+                          :order 2}}
+   :active-chapter :intro})
 
 
 (reg-cofx
