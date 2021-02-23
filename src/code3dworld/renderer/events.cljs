@@ -61,7 +61,7 @@
 (reg-event-fx
  ::save-editor-content
  (fn [{:keys [db]} [_ code]]
-   {:db (assoc-in db [:editor :code] code)
+   {:db (assoc-in db [:chapters (:active-chapter db) :code] code)
     :dispatch [::save-settings-to-local]}))
 
 
@@ -74,7 +74,21 @@
 
 
 (reg-event-fx
+ ::change-chapter
+ (fn [{:keys [db]} [_ operation]]
+   (let [active-ch-key (:active-chapter db)
+         active-ch-order (-> db :chapters active-ch-key :order)
+         new-ch-order (if (= operation :next) (inc active-ch-order) (dec active-ch-order))
+         new-ch-order (if (or (< new-ch-order 1) (> new-ch-order (-> db :chapters count)))
+                        active-ch-order
+                        new-ch-order)
+         new-ch-key (some #(when (= new-ch-order (-> % val :order)) (key %)) (:chapters db))]
+     {:db (assoc db :active-chapter new-ch-key)
+      :dispatch [::save-settings-to-local]})))
+
+
+(reg-event-fx
  ::save-settings-to-local
  (fn [{:keys [db]} _]
    {::effects/set-item-to-local! {:key "settings"
-                                  :val (select-keys db [:visibility :editor])}}))
+                                  :val (select-keys db [:visibility :editor :chapters :active-chapter])}}))

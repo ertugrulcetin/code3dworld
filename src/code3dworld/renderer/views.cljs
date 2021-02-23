@@ -20,7 +20,7 @@
 
 (def from-textarea (ob/get cm "fromTextArea"))
 #_(def ipc-renderer (.-ipcRenderer (js/require "electron")))
-(def on-change-editor (gf/debounce (fn [dispatch-key e] (dispatch-sync [dispatch-key e])) 500))
+(def on-change-editor (gf/debounce (fn [key e] (dispatch-sync [key e])) 500))
 
 
 (defonce vertical-split (r/atom nil))
@@ -45,6 +45,9 @@
               :styleActiveSelected true
               :mode "clojure"
               :theme "darcula c3-code-editor"})))
+  (when-let [code (:code @(subscribe [::subs/chapter]))]
+    (.setValue @c3-editor code))
+  (dispatch [::events/update-editor-font-size])
   (.on @c3-editor "change" #(on-change-editor ::events/save-editor-content
                                               (.getValue @c3-editor))))
 
@@ -69,9 +72,10 @@
           (clj->js {:sizes [150 300]
                     :gutterSize 20
                     :dragInterval 0.5})))
-  (util/read-edn
-   (str "resources/chapters/" chapter ".edn")
-   #(dispatch [::events/set-data [:instruction] %])))
+  (when chapter
+    (util/read-edn
+     (str "resources/chapters/" (name chapter) ".edn")
+     #(dispatch [::events/set-data [:instruction] %]))))
 
 
 (defn- boot-instruction-body []
@@ -95,10 +99,12 @@
    {:component-did-mount #(boot-instructions chapter)
     :component-will-unmount #(.destroy @horizontal-split)
     :reagent-render (fn []
-                      [:div#instructions.c3-instructions
-                       [instruction-title]
-                       (when-let [body @(subscribe [::subs/instruction])]
-                         [instruction-body body])])}))
+                      (let [body @(subscribe [::subs/instruction])]
+                        [:div#instructions.c3-instructions
+                         {:key body}
+                         [instruction-title]
+                         (when body
+                           [instruction-body body])]))}))
 
 
 (defn- editor-action-box []
@@ -151,31 +157,38 @@
 
 
 (defn- bottom-action-box []
-  [:<>
-   [:div.c3-back-button
-    [:button.c3-button
-     "Back"]]
-   [:div "2/7"]
-   [:div.c3-next-button
-    [:button.c3-button.c3-next-button
-     "Next"]]])
+  (let [chapter-order-info @(subscribe [::subs/chapter-order-info])]
+    [:<>
+     [:div.c3-back-button
+      [:button.c3-button
+       {:on-click #(dispatch [::events/change-chapter :back])}
+       "Back"]]
+     [:div chapter-order-info]
+     [:div.c3-next-button
+      [:button.c3-button.c3-next-button
+       {:on-click #(dispatch [::events/change-chapter :next])}
+       "Next"]]]))
 
 
 (defn- bottom []
-  [:div.c3-bottom
-   [:div.c3-bottom-left
-    [:span "Lesson name!"]]
-   [:div.c3-bottom-action
-    [bottom-action-box]]
-   [:div.c3-bottom-right
-    [:span "Feedback"]]])
+  (let [chapter @(subscribe [::subs/chapter])]
+    [:div.c3-bottom
+     [:div.c3-bottom-left
+      [:span (:title chapter)]]
+     [:div.c3-bottom-action
+      [bottom-action-box]]
+     [:div.c3-bottom-right
+      [:span "Feedback"]]]))
 
 
 (defn- main []
-  [:div.c3-main
-   (when @(subscribe [::subs/instruction-visible?])
-     [instructions "intro"])
-   [code]])
+  (let [chapter @(subscribe [::subs/active-chapter])
+        instruction? @(subscribe [::subs/instruction-visible?])]
+    [:div.c3-main
+     {:key chapter}
+     (when (and instruction? chapter)
+       [instructions chapter])
+     [code]]))
 
 
 (defn- body-view []
@@ -194,5 +207,4 @@
 (defn main-panel []
   (r/create-class
    {:component-did-mount #(init-ipc)
-    :component-will-unmount #(dispatch [::events/save-settings-to-local])
     :reagent-render (fn [] [body-view])}))
