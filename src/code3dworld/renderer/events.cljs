@@ -10,7 +10,7 @@
  ::initialize-db
  [(inject-cofx :settings)]
  (fn [{:keys [_ settings]}]
-   {:db (merge db/default-db (util/settings))
+   {:db (merge db/default-db (update settings :active-chapter #(keyword %)))
     :dispatch [::update-editor-font-size]}))
 
 
