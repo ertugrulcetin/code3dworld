@@ -8,11 +8,10 @@
   {:name "code3dworld"
    :visibility {:console? true
                 :instruction? true}
-   :chapters {:intro {:title "Intro"
-                      :order 1}
-              :chapter_1 {:title "Reducers"
-                          :order 2}}
-   :active-chapter :intro})
+   :chapters {:intro {:title "Intro"}
+              :chapter_1 {:title "Reducers"}}
+   :active-chapter :intro
+   :chapters-list [:intro :chapter_1]})
 
 
 (reg-cofx
