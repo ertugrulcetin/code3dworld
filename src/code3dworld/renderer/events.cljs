@@ -10,8 +10,10 @@
  ::initialize-db
  [(inject-cofx :settings)]
  (fn [{:keys [_ settings]}]
-   {:db (merge db/default-db (update settings :active-chapter #(keyword %)))
-    :dispatch [::update-editor-font-size]}))
+   (let [settings (when-not (empty? settings)
+                    (update settings :active-chapter #(keyword %)))]
+     {:db (merge db/default-db settings)
+      :dispatch [::update-editor-font-size]})))
 
 
 (reg-event-db
@@ -68,22 +70,17 @@
 (reg-event-fx
  ::update-element-visibility
  (fn [{:keys [db]} [_ element-key]]
-   (let [element (-> db :visibility element-key)]
-     {:db (assoc-in db [:visibility element-key] (not element))
-      :dispatch [::save-settings-to-local]})))
+   {:db (update-in db [:visibility element-key] not)
+    :dispatch [::save-settings-to-local]}))
 
 
 (reg-event-fx
  ::change-chapter
  (fn [{:keys [db]} [_ operation]]
-   (let [active-ch-key (:active-chapter db)
-         active-ch-order (-> db :chapters active-ch-key :order)
-         new-ch-order (if (= operation :next) (inc active-ch-order) (dec active-ch-order))
-         new-ch-order (if (or (< new-ch-order 1) (> new-ch-order (-> db :chapters count)))
-                        active-ch-order
-                        new-ch-order)
-         new-ch-key (some #(when (= new-ch-order (-> % val :order)) (key %)) (:chapters db))]
-     {:db (assoc db :active-chapter new-ch-key)
+   (let [current-chapter (:active-chapter db)
+         [prev [_ next-chapter]] (split-with #(not= % current-chapter) (:chapters-list db))
+         new-chapter (if (= operation :next) next-chapter (last prev))]
+     {:db (assoc db :active-chapter (or new-chapter current-chapter))
       :dispatch [::save-settings-to-local]})))
 
 

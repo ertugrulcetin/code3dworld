@@ -36,16 +36,30 @@
 
 
 (reg-sub
- ::chapter
+ ::chapters
  (fn [db _]
-   (let [active (:active-chapter db)]
-     (-> db :chapters active))))
+   (:chapters db)))
+
+
+(reg-sub
+ ::chapters-list
+ (fn [db _]
+   (:chapters-list db)))
+
+
+(reg-sub
+ ::chapter
+ :<- [::chapters]
+ :<- [::active-chapter]
+ (fn [[chapters active-chapter] _]
+   (active-chapter chapters)))
 
 
 (reg-sub
  ::chapter-order-info
- (fn [db _]
-   (let [active (:active-chapter db)]
-     (str (-> db :chapters active :order)
-          "/"
-          (-> db :chapters count)))))
+ :<- [::chapters-list]
+ :<- [::active-chapter]
+ (fn [[chapters-list active-chapter] _]
+   (str (->> active-chapter (.indexOf chapters-list) inc)
+        "/"
+        (count chapters-list))))
