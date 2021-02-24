@@ -101,9 +101,9 @@
     :reagent-render (fn []
                       (let [body @(subscribe [::subs/instruction])]
                         [:div#instructions.c3-instructions
-                         {:key body}
                          [instruction-title]
                          (when body
+                           ^{:key body}
                            [instruction-body body])]))}))
 
 
