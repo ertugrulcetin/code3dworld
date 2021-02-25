@@ -113,6 +113,29 @@
 
 
 (comment
+  (defn thunk-timeout
+    [thunk ms]
+    (let [task (FutureTask. thunk)
+          thr (Thread. task)]
+      (try
+        (.start thr)
+        (.get task ms TimeUnit/MILLISECONDS)
+        (catch TimeoutException e
+          (.cancel task true)
+          (.stop thr)
+          (throw (TimeoutException. "Execution timed out.")))
+        (catch Exception e
+          (.cancel task true)
+          (.stop thr)
+          (throw e)))))
+
+  (thunk-timeout (fn []
+                   (do (println "here we go")
+                       (doall (filter (fn [x]
+                                        (println "hey")
+                                        (odd? x)) (range)))
+                       (println "geldi")))
+                 10)
   (println "hey")
   (macroexpand-1 '(run "(print 'selam 2"))
   (run "(println \"Ertu\") (/ 2 0)")
