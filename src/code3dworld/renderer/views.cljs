@@ -28,6 +28,13 @@
 (defonce c3-editor (r/atom nil))
 
 
+(defn tooltip [opt element]
+  [:div.c3-tooltip-wrapper
+   {:class (:class opt)}
+   element
+   [:div.tooltip (:text opt)]])
+
+
 (defn- editor-body-view []
   [:div#editor.c3-editor
    [:textarea#c3-code-editor]])
@@ -111,23 +118,41 @@
   [:div.c3-editor-action
    [:div.c3-run-button
     "Run"]
-   [:div.c3-full-screen
-    {:on-click #(do (dispatch [::events/update-element-visibility :instruction?])
-                    (dispatch [::events/update-element-visibility :console?]))}
-    [:img
-     {:src "img/full-screen.svg"}]]
-   [:div.c3-command-window
-    {:on-click #(dispatch [::events/update-element-visibility :console?])}
-    [:img
-     {:src "img/command-window.svg"}]]
-   [:div.c3-decrease-font
-    {:on-click #(dispatch [::events/set-editor-font-size -])}
-    [:img
-     {:src "img/decrease-font-size.svg"}]]
-   [:div.c3-increase-font
-    {:on-click #(dispatch [::events/set-editor-font-size +])}
-    [:img
-     {:src "img/increase-font-size.svg"}]]])
+   [tooltip
+    {:text "Full Screen"
+     :class "c3-full-screen"}
+    [:div
+     {:on-click #(do (dispatch [::events/update-element-visibility :instruction?])
+                     (dispatch [::events/update-element-visibility :console?]))}
+     [:img
+      {:src "img/full-screen.svg"}]]]
+   [tooltip
+    {:text "Command Line"
+     :class "c3-command-window"}
+    [:div
+     {:on-click #(dispatch [::events/update-element-visibility :console?])}
+     [:img
+      {:src "img/command-window.svg"}]]]
+   [tooltip
+    {:text "Font Decrease"
+     :class "c3-decrease-font"}
+    [:div
+     {:on-click #(dispatch [::events/set-editor-font-size -])}
+     [:img
+      {:src "img/decrease-font-size.svg"}]]]
+   [tooltip
+    {:text "Font Increase"
+     :class "c3-increase-font"}
+    [:div
+     {:on-click #(dispatch [::events/set-editor-font-size +])}
+     [:img
+      {:src "img/increase-font-size.svg"}]]]
+   [tooltip
+    {:text "Run Game"
+     :class "c3-play-button"}
+    [:div
+     [:img
+      {:src "img/play.svg"}]]]])
 
 
 (defn- console []
