@@ -42,9 +42,9 @@
 
 
 (reg-sub
- ::chapters-list
+ ::chapters-order
  (fn [db _]
-   (:chapters-list db)))
+   (:chapters-order db)))
 
 
 (reg-sub
@@ -57,9 +57,9 @@
 
 (reg-sub
  ::chapter-order-info
- :<- [::chapters-list]
+ :<- [::chapters-order]
  :<- [::active-chapter]
- (fn [[chapters-list active-chapter] _]
-   (str (->> active-chapter (.indexOf chapters-list) inc)
+ (fn [[chapters-order active-chapter] _]
+   (str (->> active-chapter (.indexOf chapters-order) inc)
         "/"
-        (count chapters-list))))
+        (count chapters-order))))

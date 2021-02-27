@@ -11,7 +11,7 @@
    :chapters {:intro {:title "Intro"}
               :chapter_1 {:title "Reducers"}}
    :active-chapter :intro
-   :chapters-list [:intro :chapter_1]})
+   :chapters-order [:intro :chapter_1]})
 
 
 (reg-cofx

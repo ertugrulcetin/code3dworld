@@ -78,7 +78,7 @@
  ::change-chapter
  (fn [{:keys [db]} [_ operation]]
    (let [current-chapter (:active-chapter db)
-         [prev [_ next-chapter]] (split-with #(not= % current-chapter) (:chapters-list db))
+         [prev [_ next-chapter]] (split-with #(not= % current-chapter) (:chapters-order db))
          new-chapter (if (= operation :next) next-chapter (last prev))]
      {:db (assoc db :active-chapter (or new-chapter current-chapter))
       :dispatch [::save-settings-to-local]})))
