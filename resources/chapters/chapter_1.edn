@@ -1,16 +1,17 @@
 [:div.c3-instruction-body
- [:h3 "Hello World!"]
+ [:h2 "Printing some results"]
  [:p.c3-body
-  "If programming is the act of teaching a computer
-   to have a conversation with a user, it would be most
-   useful to first teach the computer how to speak.
-   In Python, this is accomplished with the"
-  [:span.c3-inline-code "print"] "statement."]
- [:div.c3-code-container
-  [:textarea.c3-code-preview
-   {:defaultValue "(map inc [1 2 3 4])\n\n(into [1 2 3] [4 5 6])"}]]
- [:div.c3-code-container
-  [:textarea.c3-code-preview
-   {:defaultValue "(map inc [1 2 3 4])\n\n(into [1 2 3] [4 5 6])"}]]
+  "As you can see, there is "
+  [:code "(println \"Hello, world!\")"]
+  "Clojure code in the editor. Let's hit the blue " [:b "Run"] " button then you'll see "
+  [:b "\"Hello, world\""]
+  " in the console."]
+ [:p.c3-body "The console is under the editor."]
+
+ [:h3 "Let's do some math!"]
  [:p.c3-body
-  "A" [:span.c3-inline-code "print"] "statement is the easiest way to get your Python program to communicate with you. Being able to command this communication will be one of the most valuable tools in your programming toolbox."]]
+  "In Clojure, parens around everything. The command (function name) is always the first thing (first argument) and then everything else (rest of the arguments). For example, to add two numbers, you would type: "]
+ [:div.c3-code-container
+  [:textarea#c3-code-preview
+   {:defaultValue "(+ 2 3) ;;=> 5"}]]
+ ]
