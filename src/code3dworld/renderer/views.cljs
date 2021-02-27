@@ -66,10 +66,17 @@
 
 
 (defn- instruction-title []
-  [:p.c3-instruction-title.p-10
-   [:img.icon-2x.mr-5
-    {:src "img/book.svg"}]
-   [:span "Learn"]])
+  (let [chapter @(subscribe [::subs/chapter])]
+    [:div.c3-instruction-title.p-10
+     [:img.icon-2x.mr-5
+      {:src "img/book.svg"}]
+     [:span "Learn"]
+     [:div.c3-chapter-status
+      [:img.icon-2x
+       {:src (util/format "img/%s.svg"
+                          (if (:done? chapter)
+                            "done"
+                            "check"))}]]]))
 
 
 (defn- boot-instructions [chapter]
