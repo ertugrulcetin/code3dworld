@@ -80,6 +80,13 @@
           font-size: @editor-font-size;
           line-height: 1.4;
           font-weight: 500;
+
+          code {
+            background-color: @c3-gray-001;
+            border: 1px solid @c3-gray-002;
+            border-radius: 5px;
+            padding: 2px;
+          }
         }
 
         .c3-code-container {
@@ -89,17 +96,6 @@
             font-size: 18px;
             height: auto;
             border-radius: 5px;
-          }
-          span.text {
-            color: @c3-yellow-001;
-          }
-          span.key {
-            color: @c3-white;
-            margin-right: 5px;
-          }
-          code.row {
-            display: block;
-            padding: 2px 0 2px 0;
           }
         }
       }
@@ -151,7 +147,7 @@
             margin-left: 20px;
             cursor: pointer;
             img {
-              width: 25px;
+              width: 20px;
             }
           }
           .c3-command-window {
@@ -160,7 +156,7 @@
             margin-left: 20px;
             cursor: pointer;
             img {
-              width: 25px;
+              width: 24px;
             }
           }
           .c3-decrease-font {
@@ -169,7 +165,7 @@
             margin-left: 20px;
             cursor: pointer;
             img {
-              width: 20px;
+              width: 24px;
             }
           }
           .c3-increase-font {
@@ -178,7 +174,17 @@
             margin-left: 20px;
             cursor: pointer;
             img {
-              width: 20px;
+              width: 24px;
+            }
+          }
+          .c3-play-button {
+            display: flex;
+            align-items: center;
+            padding-right: 20px;
+            margin-left: auto;
+            cursor: pointer;
+            img {
+              width: 24px;
             }
           }
         }
@@ -223,6 +229,9 @@
 
       .c3-next-button {
         margin-right: 10px;
+        &:hover {
+          opacity: 0.7;
+        }
       }
     }
 
@@ -239,55 +248,55 @@
 }
 
 .c3-tooltip-wrapper {
-	-webkit-transform: translateZ(0);
-	-webkit-font-smoothing: antialiased;
+  -webkit-transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
   line-height: 0;
-	.tooltip {
+  .tooltip {
     line-height: 1.2;
-		background: @c3-black-001;
-		bottom: 100%;
-		color: @c3-white;
-		display: block;
-		left: -20px;
-		margin-bottom: 15px;
-		opacity: 0;
-		padding: 10px;
-		pointer-events: none;
-		position: absolute;
-		-webkit-transform: translateY(10px);
-		transform: translateY(10px);
-		-webkit-transition: all .25s ease-out;
-		transition: all .25s ease-out;
-		-webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-		box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-		&:before {
-			bottom: -20px;
-			content: " ";
-			display: block;
-			height: 20px;
-			left: 0;
-			position: absolute;
-			width: 100%;
-		}
-		&:after {
-			border-left: solid transparent 10px;
-			border-right: solid transparent 10px;
-			border-top: solid @c3-black-001 10px;
-			bottom: -10px;
-			content: " ";
-			height: 0;
-			left: 50%;
-			margin-left: -13px;
-			position: absolute;
-			width: 0;
-		}
-	}
-	&:hover {
-		.tooltip {
-			opacity: 1;
-			pointer-events: auto;
-			-webkit-transform: translateY(0px);
-			transform: translateY(0px);
-		}
-	}
+    background: @c3-black-001;
+    bottom: 100%;
+    color: @c3-white;
+    display: block;
+    left: -20px;
+    margin-bottom: 15px;
+    opacity: 0;
+    padding: 10px;
+    pointer-events: none;
+    position: absolute;
+    -webkit-transform: translateY(10px);
+    transform: translateY(10px);
+    -webkit-transition: all .25s ease-out;
+    transition: all .25s ease-out;
+    -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+    &:before {
+      bottom: -20px;
+      content: " ";
+      display: block;
+      height: 20px;
+      left: 0;
+      position: absolute;
+      width: 100%;
+    }
+    &:after {
+      border-left: solid transparent 10px;
+      border-right: solid transparent 10px;
+      border-top: solid @c3-black-001 10px;
+      bottom: -10px;
+      content: " ";
+      height: 0;
+      left: 50%;
+      margin-left: -13px;
+      position: absolute;
+      width: 0;
+    }
+  }
+  &:hover {
+    .tooltip {
+      opacity: 1;
+      pointer-events: auto;
+      -webkit-transform: translateY(0px);
+      transform: translateY(0px);
+    }
+  }
 }
