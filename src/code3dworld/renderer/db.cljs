@@ -10,7 +10,7 @@
                 :instruction? true}
    :chapters {:intro {:title "Intro"}
               :chapter_1 {:title "Hello, World!"}
-              :chapter_2 {:title "Some Math"}
+              :chapter_2 {:title "Math Time"}
               :chapter_3 {:title "3D Scene"}}
    :active-chapter :intro
    :chapters-order [:intro :chapter_1 :chapter_2 :chapter_3]})
