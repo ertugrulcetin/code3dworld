@@ -6,14 +6,25 @@
    [re-frame.core :refer [reg-event-db reg-event-fx inject-cofx]]))
 
 
+(defn- check-initialize-db [db]
+  (and
+   (:active-chapter db)
+   (:chapters-list db)
+   (some #{(:active-chapter db)} (:chapters-list db))))
+
+
 (reg-event-fx
  ::initialize-db
  [(inject-cofx :settings)]
  (fn [{:keys [_ settings]}]
-   (let [settings (when-not (empty? settings)
-                    (update settings :active-chapter #(keyword %)))]
-     {:db (merge db/default-db settings)
-      :dispatch [::update-editor-font-size]})))
+   (let [settings (when-not (-> settings :active-chapter empty?)
+                    (update settings :active-chapter #(keyword %)))
+         db       (merge db/default-db settings)]
+     (if (or (nil? settings) (check-initialize-db db))
+       {:db db
+        :dispatch [::update-editor-font-size]}
+       {:db db/default-db
+        ::effects/remove-item-to-local! "settings"}))))
 
 
 (reg-event-db

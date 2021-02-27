@@ -17,3 +17,11 @@
      (.setItem (.-localStorage js/window) key (.stringify js/JSON (clj->js val)))
      (catch js/Error e
        (println e)))))
+
+(reg-fx
+ ::remove-item-to-local!
+ (fn [key]
+   (try
+     (.removeItem (.-localStorage js/window) key)
+     (catch js/Error e
+       (println e)))))

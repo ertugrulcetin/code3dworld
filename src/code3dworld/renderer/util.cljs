@@ -1,6 +1,5 @@
 (ns code3dworld.renderer.util
-  (:require
-   [cljs.reader :as reader]))
+  (:require [goog.string :as gstring] [cljs.reader :as reader]))
 
 (def fs "Provides access to Node/Electron [fs library](https://nodejs.org/api/fs.html)." (js/require "fs"))
 
@@ -37,3 +36,8 @@
   (.readFile fs path "utf8"
              (fn [_ data]
                (f (reader/read-string data)))))
+
+
+(defn format
+  [& args]
+  (apply gstring/format args))
