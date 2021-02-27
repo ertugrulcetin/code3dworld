@@ -69,7 +69,7 @@
   (reset!
    horizontal-split
    (split #js ["#instructions" "#code"]
-          (clj->js {:sizes [150 300]
+          (clj->js {:sizes [200 300]
                     :gutterSize 20
                     :dragInterval 0.5})))
   (when chapter
@@ -82,8 +82,8 @@
   (doseq [element (array-seq (dom/getElementsByClass "c3-code-preview"))]
     (from-textarea
      element
-     (clj->js {:lineNumbers true
-               :readOnly true
+     (clj->js {:readOnly true
+               :cursorBlinkRate -1
                :mode "clojure"
                :theme "darcula"}))))
 
