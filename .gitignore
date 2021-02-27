@@ -22,5 +22,6 @@
 
 .clj-kondo/.cache
 .lein-repl-history
+.cljs_node_repl/
 pom.xml
 package-lock.json
