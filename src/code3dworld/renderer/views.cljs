@@ -122,44 +122,53 @@
 
 
 (defn- editor-action-box []
-  [:div.c3-editor-action
-   [:div.c3-run-button
-    "Run"]
-   [tooltip
-    {:text "Full Screen"
-     :class "c3-full-screen"}
-    [:div
-     {:on-click #(do (dispatch [::events/update-element-visibility :instruction?])
-                     (dispatch [::events/update-element-visibility :console?]))}
-     [:img
-      {:src "img/full-screen.svg"}]]]
-   [tooltip
-    {:text "Command Line"
-     :class "c3-command-window"}
-    [:div
-     {:on-click #(dispatch [::events/update-element-visibility :console?])}
-     [:img
-      {:src "img/command-window.svg"}]]]
-   [tooltip
-    {:text "Font Decrease"
-     :class "c3-decrease-font"}
-    [:div
-     {:on-click #(dispatch [::events/set-editor-font-size -])}
-     [:img
-      {:src "img/decrease-font-size.svg"}]]]
-   [tooltip
-    {:text "Font Increase"
-     :class "c3-increase-font"}
-    [:div
-     {:on-click #(dispatch [::events/set-editor-font-size +])}
-     [:img
-      {:src "img/increase-font-size.svg"}]]]
-   [tooltip
-    {:text "Run Game"
-     :class "c3-play-button"}
-    [:div
-     [:img
-      {:src "img/play.svg"}]]]])
+  (let [visibility @(subscribe [::subs/visibility])
+        console? (:console? visibility)
+        instruction? (:instruction? visibility)]
+    [:div.c3-editor-action
+     [:div.c3-run-button
+      "Run"]
+     [tooltip
+      {:text (if (and console? instruction?)
+               "Enter Full Screen"
+               "Exit Full Screen")
+       :class "c3-full-screen"}
+      [:div
+       {:on-click #(do (dispatch [::events/update-element-visibility :instruction?])
+                       (dispatch [::events/update-element-visibility :console?]))}
+       [:img
+        {:src (if (and console? instruction?)
+                "img/full-screen.svg"
+                "img/exit-full-screen.svg")}]]]
+     [tooltip
+      {:text (if console?
+               "Hide Console"
+               "Show Console")
+       :class "c3-command-window"}
+      [:div
+       {:on-click #(dispatch [::events/update-element-visibility :console?])}
+       [:img
+        {:src "img/command-window.svg"}]]]
+     [tooltip
+      {:text "Decrease Font"
+       :class "c3-decrease-font"}
+      [:div
+       {:on-click #(dispatch [::events/update-editor-font-size -])}
+       [:img
+        {:src "img/decrease-font-size.svg"}]]]
+     [tooltip
+      {:text "Increase Font"
+       :class "c3-increase-font"}
+      [:div
+       {:on-click #(dispatch [::events/update-editor-font-size +])}
+       [:img
+        {:src "img/increase-font-size.svg"}]]]
+     [tooltip
+      {:text "Run 3D Scene"
+       :class "c3-play-button"}
+      [:div
+       [:img
+        {:src "img/play.svg"}]]]]))
 
 
 (defn- console []

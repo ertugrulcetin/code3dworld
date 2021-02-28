@@ -9,8 +9,8 @@
 (defn- check-initialize-db [db]
   (and
    (:active-chapter db)
-   (:chapters-list db)
-   (some #{(:active-chapter db)} (:chapters-list db))))
+   (:chapters-order db)
+   (some #{(:active-chapter db)} (:chapters-order db))))
 
 
 (reg-event-fx
@@ -18,13 +18,13 @@
  [(inject-cofx :settings)]
  (fn [{:keys [_ settings]}]
    (let [settings (when-not (-> settings :active-chapter empty?)
-                    (update settings :active-chapter #(keyword %)))
+                    (update settings :active-chapter keyword))
          db       (merge db/default-db settings)]
      (if (or (nil? settings) (check-initialize-db db))
        {:db db
-        :dispatch [::update-editor-font-size]}
+        :dispatch [::update-editor-font-size-in-local]}
        {:db db/default-db
-        ::effects/remove-item-to-local! "settings"}))))
+        ::effects/remove-item-from-local! "settings"}))))
 
 
 (reg-event-db
@@ -53,22 +53,22 @@
 
 
 (reg-event-fx
- ::set-editor-font-size
+ ::update-editor-font-size
  (fn [{:keys [db]} [_ sym]]
    (let [font-size (or (-> db :editor :font-size) 18)
          font-size (sym font-size 1)]
      (when (and (>= font-size 14) (<= font-size 36))
        {:db (assoc-in db [:editor :font-size] font-size)
-        :dispatch-n [[::update-editor-font-size]
+        :dispatch-n [[::update-editor-font-size-in-local]
                      [::save-settings-to-local]]}))))
 
 
 (reg-event-fx
- ::update-editor-font-size
+ ::update-editor-font-size-in-local
  (fn [{:keys [db]} _]
    (when-let [size (-> db :editor :font-size)]
-     {::effects/set-editor-font-size! {:class-name "cm-s-c3-code-editor"
-                                       :value (str size "px")}})))
+     {::effects/update-editor-font-size! {:class-name "cm-s-c3-code-editor"
+                                          :value (str size "px")}})))
 
 
 (reg-event-fx
