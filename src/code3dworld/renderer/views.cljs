@@ -55,8 +55,7 @@
   (when-let [code (:code @(subscribe [::subs/chapter]))]
     (.setValue @c3-editor code))
   (dispatch [::events/update-editor-font-size])
-  (.on @c3-editor "change" #(on-change-editor ::events/save-editor-content
-                                              (.getValue @c3-editor))))
+  (.on @c3-editor "change" #(on-change-editor ::events/save-editor-content (.getValue @c3-editor))))
 
 
 (defn- editor []
@@ -73,10 +72,7 @@
      [:span "Learn"]
      [:div.c3-chapter-status
       [:img.icon-2x
-       {:src (util/format "img/%s.svg"
-                          (if (:done? chapter)
-                            "done"
-                            "check"))}]]]))
+       {:src (util/format "img/%s.svg" (if (:done? chapter) "done" "check"))}]]]))
 
 
 (defn- boot-instructions [chapter]
