@@ -1,11 +1,11 @@
 (ns backend-3d-scene.api
   (:require
+   [backend-3d-scene.scene :as scene]
    [clojure.string :as str]
    [clojure.walk :as walk]
    [jme-clj.core :as jme]
    [kezban.core :as k]
-   [mount.core :as mount :refer [defstate]])
-  (:import (com.jme3.math ColorRGBA)))
+   [mount.core :as mount :refer [defstate]]))
 
 
 (defn- get-wrong-arity-fn-name [msg]
@@ -58,43 +58,13 @@
          (map first))))
 
 
-(defn- init []
-  (let [box (jme/box 1 1 1)
-        geom (jme/geo "Box" box)
-        mat (jme/material "Common/MatDefs/Misc/Unshaded.j3md")]
-    ;(jme/set* (jme/input-manager) :cursor-visible true)
-    ;(jme/set* (jme/fly-cam) :enabled false)
-    (jme/set* mat :color "Color" ColorRGBA/Blue)
-    (jme/set* geom :material mat)
-    (jme/add-to-root geom)))
-
-
-(defstate ^{:on-reload :noop}
-  app
-  :start (do
-           (jme/defsimpleapp app*
-             :opts {:show-settings? false
-                    :pause-on-lost-focus? false
-                    :display-stat-view? false
-                    :display-fps? false
-                    :settings {:title "3D Scene"
-                               :load-defaults? true
-                               :frame-rate 60
-                               :width 800
-                               :height 600
-                               :resizable? false}}
-             :init init)
-           (jme/start app*))
-  :stop (jme/unbind-app #'app*))
-
-
 ;;TODO add timeout
 (defn run [code]
   (try
     (let [forms (read-string (str "(" code ")"))
           result (atom {})
           p (promise)]
-      (binding [jme/*app* app]
+      (binding [jme/*app* scene/app]
         (jme/enqueue (fn []
                        (let [out (with-out-str
                                    (try
@@ -117,6 +87,19 @@
   (macroexpand-1 '(run "(print 'selam 2"))
   (run "(println \"Ertu\") (/ 2 0)")
   (run "(println \"Ertu\")")
+  (jme/run scene/app
+           (scene/create-box 0)
+           #_(dotimes [i 5]
+               (create-box i))
+           #_(doseq [box (map :box (filter (comp odd? :index) (get-all-boxes)))]
+               (scale box 1.5))
+
+           #_(doseq [box (map :box (filter (comp even? :index) (get-all-boxes)))]
+               (rotate box 0 45 0))
+           #_(set* (fly-cam) :move-speed 10)
+           #_(let [{:keys [player]} (get-state)]
+               (setc player
+                     :physics-location (vec3 100 -50 0))))
   (do
-    (mount/stop #'app)
-    (mount/start #'app)))
+    (mount/stop #'scene/app)
+    (mount/start #'scene/app)))
