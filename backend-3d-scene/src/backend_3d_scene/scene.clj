@@ -92,20 +92,22 @@
      :terrain terrain}))
 
 
-(defn create-box [i]
+(defn get-all-boxes []
+  (get-state :app :boxes))
+
+
+(defn create-box [{:keys [name size] :or {size 5} :as opts}]
   (let [texture (load-texture "Textures/2D/box.jpg")
         mat (set* (unshaded-mat) :texture "ColorMap" texture)
         r (ray (.getLocation (cam)) (.getDirection (cam)))
         dir (.getDirection r)
         origin (.getOrigin r)
-        box* (setc (geo "box-1" (box 5 5 5))
+        box* (setc (geo name (box size size size))
                    :local-translation (add origin (mult dir 100))
                    :material mat)]
-    (update-state :app :boxes (fnil conj []) {:index i :box (add-to-root box*)})))
-
-
-(defn get-all-boxes []
-  (get-state :app :boxes))
+    (update-state :app :boxes (fnil conj []) {:name name
+                                              :size size
+                                              :box (add-to-root box*)})))
 
 
 #_(defn rotate [spatial degree axes]
@@ -133,7 +135,8 @@
 
 (comment
  (run app
-      (create-box 0)
+      (create-box {:name "my box"
+                   :size 5})
       (let [{:keys [player]} (get-state)
             r (ray (.getLocation (cam)) (.getDirection (cam)))]
         (println "hey:" (.getDirection r))
