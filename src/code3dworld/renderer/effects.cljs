@@ -3,7 +3,7 @@
 
 
 (reg-fx
- ::set-editor-font-size!
+ ::update-editor-font-size!
  (fn [{:keys [class-name value]}]
    (set!
     (.. (dom/getElementByClass class-name) -style -fontSize)
@@ -19,7 +19,7 @@
        (println e)))))
 
 (reg-fx
- ::remove-item-to-local!
+ ::remove-item-from-local!
  (fn [key]
    (try
      (.removeItem (.-localStorage js/window) key)
