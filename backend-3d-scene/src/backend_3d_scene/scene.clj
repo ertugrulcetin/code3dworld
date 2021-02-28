@@ -93,13 +93,12 @@
 
 
 (defn create-box [i]
-  (let [{:keys [player]} (get-state)
-        texture (load-texture "Textures/2D/box1.jpg")
+  (let [texture (load-texture "Textures/2D/box.jpg")
         mat (set* (unshaded-mat) :texture "ColorMap" texture)
         r (ray (.getLocation (cam)) (.getDirection (cam)))
         dir (.getDirection r)
         origin (.getOrigin r)
-        box* (setc (geo "box-1" (box 15 15 15))
+        box* (setc (geo "box-1" (box 5 5 5))
                    :local-translation (add origin (mult dir 100))
                    :material mat)]
     (update-state :app :boxes (fnil conj []) {:index i :box (add-to-root box*)})))
@@ -115,27 +114,27 @@
 
 
 (defstate ^{:on-reload :noop}
-  app
-  :start (do
-           (defsimpleapp app*
-             :opts {:show-settings? false
-                    :pause-on-lost-focus? false
-                    :display-stat-view? false
-                    :display-fps? false
-                    :settings {:title "3D Scene"
-                               :load-defaults? true
-                               :frame-rate 60
-                               :width 800
-                               :height 600
-                               :resizable? true}}
-             :init init)
-           (start app*))
-  :stop (unbind-app #'app*))
+          app
+          :start (do
+                   (defsimpleapp app*
+                                 :opts {:show-settings? false
+                                        :pause-on-lost-focus? false
+                                        :display-stat-view? false
+                                        :display-fps? false
+                                        :settings {:title "3D Scene"
+                                                   :load-defaults? true
+                                                   :frame-rate 60
+                                                   :width 800
+                                                   :height 600
+                                                   :resizable? true}}
+                                 :init init)
+                   (start app*))
+          :stop (unbind-app #'app*))
 
 (comment
-  (run app
-       (create-box 0)
-       (let [{:keys [player]} (get-state)
-             r (ray (.getLocation (cam)) (.getDirection (cam)))]
-         (println "hey:" (.getDirection r))
-         (println "r:" r))))
+ (run app
+      (create-box 0)
+      (let [{:keys [player]} (get-state)
+            r (ray (.getLocation (cam)) (.getDirection (cam)))]
+        (println "hey:" (.getDirection r))
+        (println "r:" r))))
