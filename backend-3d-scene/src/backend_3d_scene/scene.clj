@@ -4,9 +4,19 @@
    [jme-clj.core :refer :all]
    [mount.core :refer [defstate]])
   (:import
-   (com.jme3.math ColorRGBA)
+   (com.jme3.math ColorRGBA Vector3f)
    (com.jme3.terrain.heightmap HillHeightMap)
-   (com.jme3.texture Texture$WrapMode)))
+   (com.jme3.texture Texture$WrapMode)
+   (com.jme3.bullet.collision.shapes BoxCollisionShape)))
+
+
+(defn- raise
+  ([msg]
+   (raise msg {}))
+  ([msg map]
+   (raise msg map nil))
+  ([msg map cause]
+   (throw (ex-info msg map cause))))
 
 
 (defn- create-player []
@@ -97,6 +107,8 @@
 
 
 (defn create-box [{:keys [name size] :or {size 5} :as opts}]
+  (when ((set (map :name (get-all-boxes))) name)
+    (raise (format "There is a box with name `%s` already. You need to create a box with a different name." name)))
   (let [texture (load-texture "Textures/2D/box.jpg")
         mat (set* (unshaded-mat) :texture "ColorMap" texture)
         r (ray (.getLocation (cam)) (.getDirection (cam)))
@@ -104,10 +116,34 @@
         origin (.getOrigin r)
         box* (setc (geo name (box size size size))
                    :local-translation (add origin (mult dir 100))
-                   :material mat)]
+                   :material mat)
+        box-cs (BoxCollisionShape. ^Vector3f (vec3 size size size))
+        box-control (rigid-body-control box-cs 0)
+        box* (-> box*
+                 (add-control box-control)
+                 (add-to-root))
+        {bas :bullet-app-state} (get-state)]
+    (-> bas
+        (get* :physics-space)
+        (call* :add box*))
     (update-state :app :boxes (fnil conj []) {:name name
                                               :size size
-                                              :box (add-to-root box*)})))
+                                              :control box-control
+                                              :box box*})))
+
+
+(defn remove-box [name]
+  (if-let [{:keys [box control]} (some #(when (= name (:name %)) %) (get-all-boxes))]
+    (let [{bas :bullet-app-state} (get-state)]
+      (-> bas
+          (get* :physics-space)
+          (call* :remove-all box))
+      (remove-from-root box)
+      (call* box :remove-control control)
+      (update-state :app
+                    :boxes
+                    #(vec (remove (fn [b] (= (:name b) name)) %))))
+    (raise (format "There is no box with `%s` name." name))))
 
 
 #_(defn rotate [spatial degree axes]
@@ -135,7 +171,11 @@
 
 (comment
  (run app
-      (create-box {:name "my box"
+      (remove-box "ertus")
+      ;(re-init init)
+      )
+ (run app
+      (create-box {:name "ertus"
                    :size 5})
       (let [{:keys [player]} (get-state)
             r (ray (.getLocation (cam)) (.getDirection (cam)))]
