@@ -1,5 +1,6 @@
 (ns code3dworld.renderer.subs
   (:require
+   [code3dworld.renderer.util :as util]
    [re-frame.core :refer [reg-sub]]))
 
 
@@ -44,7 +45,7 @@
 (reg-sub
  ::chapters-order
  (fn [db _]
-   (:chapters-order db)))
+   (util/get-chapters-order (:chapters db))))
 
 
 (reg-sub
@@ -56,7 +57,7 @@
 
 
 (reg-sub
- ::chapter-order-info
+ ::current-chapter-page-info
  :<- [::chapters-order]
  :<- [::active-chapter]
  (fn [[chapters-order active-chapter] _]

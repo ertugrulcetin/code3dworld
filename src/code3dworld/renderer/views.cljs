@@ -52,8 +52,7 @@
               :styleActiveSelected true
               :mode "clojure"
               :theme "darcula c3-code-editor"})))
-  (when-let [code (:code @(subscribe [::subs/chapter]))]
-    (.setValue @c3-editor code))
+  (some->> (:code @(subscribe [::subs/chapter])) (.setValue @c3-editor))
   (dispatch [::events/update-editor-font-size])
   (.on @c3-editor "change" #(on-change-editor ::events/save-editor-content (.getValue @c3-editor))))
 
@@ -194,13 +193,13 @@
 
 
 (defn- bottom-action-box []
-  (let [chapter-order-info @(subscribe [::subs/chapter-order-info])]
+  (let [current-chapter-page-info @(subscribe [::subs/current-chapter-page-info])]
     [:<>
      [:div.c3-back-button
       [:button.c3-button
        {:on-click #(dispatch [::events/change-chapter :back])}
        "Back"]]
-     [:div chapter-order-info]
+     [:div current-chapter-page-info]
      [:div.c3-next-button
       [:button.c3-button.c3-next-button
        {:on-click #(dispatch [::events/change-chapter :next])}
