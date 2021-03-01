@@ -53,7 +53,7 @@
               :mode "clojure"
               :theme "darcula c3-code-editor"})))
   (some->> (:code @(subscribe [::subs/chapter])) (.setValue @c3-editor))
-  (dispatch [::events/update-editor-font-size])
+  (dispatch [::events/update-editor-font-size-in-local])
   (.on @c3-editor "change" #(on-change-editor ::events/save-editor-content (.getValue @c3-editor))))
 
 
@@ -158,12 +158,8 @@
        {:on-click #(dispatch [::events/update-editor-font-size +])}
        [:img
         {:src "img/increase-font-size.svg"}]]]
-     [tooltip
-      {:text "Run 3D Scene"
-       :class "c3-play-button"}
-      [:div
-       [:img
-        {:src "img/play.svg"}]]]]))
+     [:div.c3-play-button
+      "Run 3D Scene"]]))
 
 
 (defn- console []
