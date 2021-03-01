@@ -8,7 +8,7 @@
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(+ 1 4) ;;=> 5"}]]]
- [:p3.c3-body
+ [:p.c3-body
   "Plus sign " [:code "+"] " is the " [:b "first"] " argument, which is a " [:b "function name. "]
   [:code "1"] " is the " [:b "second"] " argument, and " [:code "4"] " is the " [:b "third"] " argument."]
 
