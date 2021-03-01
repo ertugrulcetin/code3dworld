@@ -5,7 +5,8 @@
    [clojure.walk :as walk]
    [jme-clj.core :as jme]
    [kezban.core :as k]
-   [mount.core :as mount :refer [defstate]]))
+   [mount.core :as mount :refer [defstate]])
+  (:import (java.io ByteArrayOutputStream PrintStream)))
 
 
 (defn- get-wrong-arity-fn-name [msg]
@@ -58,6 +59,19 @@
          (map first))))
 
 
+(defmacro with-out [& body]
+  `(let [err-buffer# (ByteArrayOutputStream.)
+         original-err# System/err
+         tmp-err# (PrintStream. err-buffer# true "UTF-8")
+         out# (with-out-str (try
+                              (System/setErr tmp-err#)
+                              ~@body
+                              (finally
+                                (System/setErr original-err#))))]
+     {:out out#
+      :out-err (.toString err-buffer# "UTF-8")}))
+
+
 ;;TODO add timeout
 (defn run [code]
   (try
@@ -66,14 +80,14 @@
           p (promise)]
       (binding [jme/*app* scene/app]
         (jme/enqueue (fn []
-                       (let [out (with-out-str
-                                   (try
-                                     (eval (cons 'do forms))
-                                     (catch Throwable t
-                                       (swap! result assoc
-                                              :error? true
-                                              :error-msg (->> t Throwable->map :cause parse-error-msg)))))]
-                         (swap! result assoc :out out)
+                       (let [out (with-out
+                                  (try
+                                    (eval (cons 'do forms))
+                                    (catch Throwable t
+                                      (swap! result assoc
+                                             :error? true
+                                             :error-msg (->> t Throwable->map :cause parse-error-msg)))))]
+                         (swap! result merge out)
                          (deliver p true)))))
       (deref p)
       (assoc @result :used-fns (get-used-fns code)))
@@ -83,23 +97,23 @@
 
 
 (comment
-  (println "hey")
-  (macroexpand-1 '(run "(print 'selam 2"))
-  (run "(println \"Ertu\") (/ 2 0)")
-  (run "(println \"Ertu\")")
-  (jme/run scene/app
-           (scene/create-box 0)
-           #_(dotimes [i 5]
-               (create-box i))
-           #_(doseq [box (map :box (filter (comp odd? :index) (get-all-boxes)))]
-               (scale box 1.5))
+ (println "hey")
+ (macroexpand-1 '(run "(print 'selam 2"))
+ (run "(println \"Ertu\") (/ 2 0)")
+ (run "(println \"Ertu\")")
+ (jme/run scene/app
+          (scene/create-box 0)
+          #_(dotimes [i 5]
+              (create-box i))
+          #_(doseq [box (map :box (filter (comp odd? :index) (get-all-boxes)))]
+              (scale box 1.5))
 
-           #_(doseq [box (map :box (filter (comp even? :index) (get-all-boxes)))]
-               (rotate box 0 45 0))
-           #_(set* (fly-cam) :move-speed 10)
-           #_(let [{:keys [player]} (get-state)]
-               (setc player
-                     :physics-location (vec3 100 -50 0))))
-  (do
-    (mount/stop #'scene/app)
-    (mount/start #'scene/app)))
+          #_(doseq [box (map :box (filter (comp even? :index) (get-all-boxes)))]
+              (rotate box 0 45 0))
+          #_(set* (fly-cam) :move-speed 10)
+          #_(let [{:keys [player]} (get-state)]
+              (setc player
+                    :physics-location (vec3 100 -50 0))))
+ (do
+   (mount/stop #'scene/app)
+   (mount/start #'scene/app)))
