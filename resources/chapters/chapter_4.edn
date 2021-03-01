@@ -1,0 +1,59 @@
+[:div.c3-instruction-body
+ [:h2 "Filtering Boxes"]
+ [:p.c3-body "Clojure has a function called " [:code "filter"] ", which basically keeps your data that you want, and throws away rest of it. For example, you can have only even numbers or odd numbers, also filter people older than 18 years old. Let's check some examples."]
+
+ [:p.c3-body
+  "Keeping just odd numbers:"
+  [:div.c3-code-container
+   [:textarea.c3-code-preview
+    {:defaultValue "(filter odd? [1 2 3 4 5 6 7]) ;;=> (1 3 5 7)"}]]]
+
+ [:p.c3-body
+  "And even numbers:"
+  [:div.c3-code-container
+   [:textarea.c3-code-preview
+    {:defaultValue "(filter even? [1 2 3 4 5 6 7]) ;;=> (2 4 6)"}]]]
+
+ [:p.c3-body
+  [:code "even?"] " and " [:code "odd?"] " are functions. They return either " [:b "true"] " or " [:b "false"] "."
+  [:div.c3-code-container
+   [:textarea.c3-code-preview
+    {:defaultValue "(even? 2) ;;=> true\n(even? 5) ;;=> false\n\n(odd? 3) ;;=> true\n(odd? 4) ;;=> false"}]]]
+
+ [:p.c3-body
+  [:code "filter"] " takes 2 arguments, in our first example above first argument is " [:code "odd?"] " and second argument is a " [:code "vector"] " that hold numbers between " [:b "1"] " to " [:b "7"] ". " [:code "vector"] " is a data structure, basically it holds data. Think like it's a wrapper, wraps anything."]
+
+ [:p.c3-body
+  [:div.c3-code-container
+   [:textarea.c3-code-preview
+    {:defaultValue "(filter odd? [1 2 3 4 5 6 7])"}]]
+  "Each number passed to " [:code "odd?"] " function, if it returns " [:b "true"] " we keep it, if false we discard the value:"
+  [:div.c3-code-container
+   [:textarea.c3-code-preview
+    {:defaultValue "(odd? 1);;=> keep it\n(odd? 2);;=> discard it\n(odd? 3);;=> keep it\n(odd? 4);;=> discard it\n(odd? 5);;=> keep it\n(odd? 6);;=> discard it\n(odd? 7);;=> keep it"}]]
+  ]
+
+ [:p.c3-body
+  "Let's find out people who are older than 35 years old."
+  [:div.c3-code-container
+   [:textarea.c3-code-preview
+    {:defaultValue "(println \"People older than 35 years old:\"\n   (filter (fn [person] (> (:age person) 35))\n     [{:name \"Dwight\" :age 32}\n      {:name \"Michael\" :age 39}\n      {:name \"Angela\" :age 31}\n      {:name \"Pam\" :age 28}]))\n\n;;People older than 35 years old: ({:name Michael, :age 39})\n;;=>nil"}]]]
+ [:hr]
+ [:h3 "Instructions"]
+ [:ul
+  [:li "Create your own people data inside a vector."]
+  [:li "Filter people who are older than 40 years old. " [:code ">"]]
+  [:li "Filter people who are younger than 20 years old. " [:code "<"]]
+  [:li "Filter people who are younger than or equal to 35 years old. " [:code "<="]]
+  [:li "Filter people who are older than or equal to 18 years old. " [:code ">="]]]
+
+ [:p.c3-body
+  [:b "Note:"] " If you don't use " [:code "println"] ", you won't see the results in the console."]
+ [:p.c3-body
+  "We've seen how to create a box and we can do more than that. There are additional attributes we can provide, such as " [:code ":size"] ", " [:code ":random-location?"] " etc."]
+ [:p.c3-body
+  "Here is the example that creates a box with size " [:code "10"] " and places in a " [:code "random location"] ":"
+  [:div.c3-code-container
+   [:textarea.c3-code-preview
+    {:defaultValue "(create-box {:name \"Box 1\"\n             :size 10\n             :random-location? true})"}]]]
+ ]

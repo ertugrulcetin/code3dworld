@@ -13,7 +13,7 @@
   [:b "S"] " " [:i "(backward)"] ", and "
   [:b "D"] " " [:i "(right)"] " keys for moving. Also, " [:b "Space"] " key for jumping and "
   [:b "ESC"] " key for " [:i "enabling/disabling"] " focus."]
-
+ [:hr]
  [:h3 "Instructions"]
  [:p.c3-body
   "Copy and paste the following code in the editor, and run it:"
@@ -33,6 +33,7 @@
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(create-box {:name \"My Box\"})"}]]]
+ [:hr]
  [:p.c3-body
   [:code "create-box"] " creates a box, but we're providing additional information. After function name "
   [:code "create-box"] ", the first argument is "

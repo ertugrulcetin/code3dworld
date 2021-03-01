@@ -30,7 +30,7 @@
     {:defaultValue "(+ (- 3 2) 1) ;;=> 2"}]]]
  [:p.c3-body
   "Alright, without further ado. Let's print the results of some math operations."]
-
+ [:hr]
  [:h3 "Instructions"]
  [:p.c3-body
   "Apply "

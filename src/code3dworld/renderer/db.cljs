@@ -11,9 +11,10 @@
    :chapters {:intro {:title "Intro"}
               :chapter_1 {:title "Hello, World!"}
               :chapter_2 {:title "Math Time"}
-              :chapter_3 {:title "3D Scene"}}
+              :chapter_3 {:title "3D Scene"}
+              :chapter_4 {:title "Filtering Boxes"}}
    :active-chapter :intro
-   :chapters-order [:intro :chapter_1 :chapter_2 :chapter_3]})
+   :chapters-order [:intro :chapter_1 :chapter_2 :chapter_3 :chapter_4]})
 
 
 (reg-cofx
