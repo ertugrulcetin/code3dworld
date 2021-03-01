@@ -41,3 +41,11 @@
 (defn format
   [& args]
   (apply gstring/format args))
+
+
+(defn get-chapters-order [chapters]
+  (->> chapters
+       (reduce-kv (fn [m k v] (assoc m k (assoc v :id k))) {})
+       vals
+       (sort-by :order)
+       (mapv :id)))

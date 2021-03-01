@@ -6,11 +6,10 @@
    [re-frame.core :refer [reg-event-db reg-event-fx inject-cofx]]))
 
 
-(defn- check-initialize-db [db]
+(defn- need-init-db? [db]
   (and
    (:active-chapter db)
-   (:chapters-order db)
-   (some #{(:active-chapter db)} (:chapters-order db))))
+   ((set (util/get-chapters-order (:chapters db))) (:active-chapter db))))
 
 
 (reg-event-fx
@@ -20,7 +19,7 @@
    (let [settings (when-not (-> settings :active-chapter empty?)
                     (update settings :active-chapter keyword))
          db       (merge db/default-db settings)]
-     (if (or (nil? settings) (check-initialize-db db))
+     (if (or (nil? settings) (need-init-db? db))
        {:db db
         :dispatch [::update-editor-font-size-in-local]}
        {:db db/default-db
@@ -89,7 +88,7 @@
  ::change-chapter
  (fn [{:keys [db]} [_ operation]]
    (let [current-chapter (:active-chapter db)
-         [prev [_ next-chapter]] (split-with #(not= % current-chapter) (:chapters-order db))
+         [prev [_ next-chapter]] (split-with #(not= % current-chapter) (util/get-chapters-order (:chapters db)))
          new-chapter (if (= operation :next) next-chapter (last prev))]
      {:db (assoc db :active-chapter (or new-chapter current-chapter))
       :dispatch [::save-settings-to-local]})))

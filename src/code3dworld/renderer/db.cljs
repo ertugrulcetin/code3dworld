@@ -8,13 +8,12 @@
   {:name "code3dworld"
    :visibility {:console? true
                 :instruction? true}
-   :chapters {:intro {:title "Intro"}
-              :chapter_1 {:title "Hello, World!"}
-              :chapter_2 {:title "Math Time"}
-              :chapter_3 {:title "3D Scene"}
-              :chapter_4 {:title "Filtering Boxes"}}
-   :active-chapter :intro
-   :chapters-order [:intro :chapter_1 :chapter_2 :chapter_3 :chapter_4]})
+   :chapters {:intro {:title "Intro" :order 1}
+              :chapter_1 {:title "Hello, World!" :order 2}
+              :chapter_2 {:title "Math Time" :order 3}
+              :chapter_3 {:title "3D Scene" :order 4}
+              :chapter_4 {:title "Filtering Boxes" :order 5}}
+   :active-chapter :intro})
 
 
 (reg-cofx
