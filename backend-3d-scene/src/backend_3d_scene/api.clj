@@ -1,6 +1,6 @@
 (ns backend-3d-scene.api
   (:require
-   [backend-3d-scene.scene :as scene]
+   [backend-3d-scene.scene :refer :all]
    [clojure.string :as str]
    [clojure.walk :as walk]
    [jme-clj.core :as jme]
@@ -78,7 +78,7 @@
     (let [forms (read-string (str "(" code ")"))
           result (atom {})
           p (promise)]
-      (binding [jme/*app* scene/app]
+      (binding [jme/*app* app]
         (jme/enqueue (fn []
                        (let [out (with-out
                                   (try
@@ -100,8 +100,8 @@
  (println "hey")
  (macroexpand-1 '(run "(print 'selam 2"))
  (run "(println \"Ertu\") (/ 2 0)")
- (run "(println \"Ertu\")")
- (jme/run scene/app
+ (run "(println (get-all-boxes))")
+ (jme/run app
           (scene/create-box 0)
           #_(dotimes [i 5]
               (create-box i))
@@ -115,5 +115,5 @@
               (setc player
                     :physics-location (vec3 100 -50 0))))
  (do
-   (mount/stop #'scene/app)
-   (mount/start #'scene/app)))
+   (mount/stop #'app)
+   (mount/start #'app)))

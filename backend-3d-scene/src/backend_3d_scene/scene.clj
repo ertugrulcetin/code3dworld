@@ -81,14 +81,13 @@
         terrain-shape (create-mesh-shape terrain)
         landscape (rigid-body-control terrain-shape 0)
         player (create-player)
-        spatial (load-model "Models/Oto/Oto.mesh.xml")]
+        spatial (node "player node")]
     (add-lights)
     (add-to-root (create-sky "Textures/Sky/Bright/BrightSky.dds" :cube))
     (-> spatial
         (add-control player)
         (add-control (co/create-user-input player terrain))
-        (add-to-root)
-        (cull-hint :always))
+        (add-to-root))
     (-> terrain
         (add-control landscape)
         (add-to-root))
@@ -97,10 +96,9 @@
         (call* :add landscape))
     (-> bas
         (get* :physics-space)
-        (call* :add-all spatial))
+        (call* :add player))
     {:bullet-app-state bas
      :player player
-     :spatial spatial
      :terrain terrain}))
 
 
@@ -187,7 +185,7 @@
       )
  (run app
       (create-box {:name (str (rand))
-                   :size 50
+                   :size 5
                    :random-location? false})
       (let [{:keys [player]} (get-state)
             r (ray (.getLocation (cam)) (.getDirection (cam)))]
