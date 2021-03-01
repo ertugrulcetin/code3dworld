@@ -40,12 +40,13 @@
     {:defaultValue "(println \"People older than 35 years old:\"\n   (filter (fn [person] (> (:age person) 35))\n     [{:name \"Dwight\" :age 32}\n      {:name \"Michael\" :age 39}\n      {:name \"Angela\" :age 31}\n      {:name \"Pam\" :age 28}]))\n\n;;People older than 35 years old: ({:name Michael, :age 39})\n;;=>nil"}]]]
  [:hr]
  [:h3 "Instructions"]
- [:ul
-  [:li "Create your own people data inside a vector."]
-  [:li "Filter people who are older than 40 years old. " [:code ">"]]
-  [:li "Filter people who are younger than 20 years old. " [:code "<"]]
-  [:li "Filter people who are younger than or equal to 35 years old. " [:code "<="]]
-  [:li "Filter people who are older than or equal to 18 years old. " [:code ">="]]]
+ [:p.c3-body
+  [:ul
+   [:li "Create your own people data inside a vector."]
+   [:li "Filter people who are older than 40 years old. " [:code ">"]]
+   [:li "Filter people who are younger than 20 years old. " [:code "<"]]
+   [:li "Filter people who are younger than or equal to 35 years old. " [:code "<="]]
+   [:li "Filter people who are older than or equal to 18 years old. " [:code ">="]]]]
 
  [:p.c3-body
   [:b "Note:"] " If you don't use " [:code "println"] ", you won't see the results in the console."]
