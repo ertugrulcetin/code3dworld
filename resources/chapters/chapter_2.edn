@@ -12,7 +12,7 @@
   "Plus sign " [:code "+"] " is the " [:b "first"] " argument, which is a " [:b "function name. "]
   [:code "1"] " is the " [:b "second"] " argument, and " [:code "4"] " is the " [:b "third"] " argument."]
 
- [:br] [:br]
+ [:br]
 
  [:p.c3-body
   "Clojure has built-in mathematical functions such as "

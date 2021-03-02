@@ -159,7 +159,7 @@
        [:img
         {:src "img/increase-font-size.svg"}]]]
      [:div.c3-play-button
-      "Run 3D Scene"]]))
+      "Start 3D Scene"]]))
 
 
 (defn- console []

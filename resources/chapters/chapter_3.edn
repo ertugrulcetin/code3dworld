@@ -4,7 +4,7 @@
   "Now we are ready to run the "
   [:b "3D Scene"]
   " (where the magic happens!). You will notice that there is a green button called "
-  [:b "\"Run 3D Scene\""]
+  [:b "\"Start 3D Scene\""]
   " above the console. Let's click it."]
  [:p.c3-body
   "When the 3D Scene application runs, you can use "

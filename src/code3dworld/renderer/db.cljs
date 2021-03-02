@@ -12,7 +12,8 @@
               :chapter_1 {:title "Hello, World!" :order 2}
               :chapter_2 {:title "Math Time" :order 3}
               :chapter_3 {:title "3D Scene" :order 4}
-              :chapter_4 {:title "Filtering Boxes" :order 5}}
+              :chapter_4 {:title "The filter function" :order 5}
+              :chapter_5 {:title "Filtering boxes" :order 6}}
    :active-chapter :intro})
 
 
