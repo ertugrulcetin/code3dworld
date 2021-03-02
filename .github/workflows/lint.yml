@@ -15,6 +15,7 @@ jobs:
           lein: latest
       - run: lein deps
       - run: lein lint
-      - name: Lint Backend 3D Scene
-        working-directory: ./backend-3d-scene
-        run: lein lint
+#        TODO enable when backend ready!
+#      - name: Lint Backend 3D Scene
+#        working-directory: ./backend-3d-scene
+#        run: lein lint
