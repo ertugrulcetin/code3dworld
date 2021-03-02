@@ -8,7 +8,8 @@
     {:defaultValue "(create-box {:name \"color box 1\"\n             :size 8\n             :random-location? true})\n(create-box {:name \"color box 2\"\n             :size 9\n             :random-location? true})\n(create-box {:name \"color box 3\"\n             :size 10\n             :random-location? true})\n(create-box {:name \"color box 4\"\n             :size 11\n             :random-location? true})\n(create-box {:name \"color box 5\"\n             :size 12\n             :random-location? true})\n\n(apply-blue \"color box 1\")\n(apply-red \"color box 2\")\n(apply-green \"color box 3\")"}]]]
  [:span.c3-body
   "There is also " [:code "apply-original"] " function if you'd like to revert back to original surface."]
-
+ [:span.c3-body
+  " " [:code "apply-red"] ", " [:code "apply-blue"] ", " [:code "apply-green"] " takes the name of a box as an argument."]
  [:hr]
  [:h3 "Instructions"]
  [:span.c3-body
