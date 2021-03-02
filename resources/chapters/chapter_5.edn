@@ -21,4 +21,6 @@
    [:li "Create at least 10 boxes with different size and name."]
    [:li "Print a list of boxes which have size greater than 10."]
    [:li "Print a list of boxes which have size less than 10."]]]
+ [:p.c3-body
+  [:b "Note:"] " If you don't use " [:code "println"] ", you won't see the results in the console."]
  ]

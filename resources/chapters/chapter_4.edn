@@ -30,8 +30,7 @@
   "Each number passed to " [:code "odd?"] " function, if it returns " [:b "true"] " we keep it, if false we discard the value:"
   [:div.c3-code-container
    [:textarea.c3-code-preview
-    {:defaultValue "(odd? 1);;=> keep it\n(odd? 2);;=> discard it\n(odd? 3);;=> keep it\n(odd? 4);;=> discard it\n(odd? 5);;=> keep it\n(odd? 6);;=> discard it\n(odd? 7);;=> keep it"}]]
-  ]
+    {:defaultValue "(odd? 1) ;;=> keep it\n(odd? 2) ;;=> discard it\n(odd? 3) ;;=> keep it\n(odd? 4) ;;=> discard it\n(odd? 5) ;;=> keep it\n(odd? 6) ;;=> discard it\n(odd? 7) ;;=> keep it"}]]]
 
  [:p.c3-body
   "Let's find out people who are older than 35 years old."
