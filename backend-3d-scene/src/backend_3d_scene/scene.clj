@@ -2,7 +2,8 @@
   (:require
    [backend-3d-scene.controls :as co]
    [jme-clj.core :refer :all]
-   [mount.core :refer [defstate]])
+   [mount.core :refer [defstate]]
+   [com.rpl.specter :as s])
   (:import
    (com.jme3.math ColorRGBA Vector3f)
    (com.jme3.terrain.heightmap HillHeightMap)
@@ -107,7 +108,7 @@
 
 
 (defn get-boxes []
-  (select-keys (get-all-boxes) [:name :size]))
+  (vec (select-keys (get-all-boxes) [:name :size])))
 
 
 (defn- print-err [msg]
@@ -142,7 +143,8 @@
       (update-state :app :boxes (fnil conj []) {:name name
                                                 :size size
                                                 :control box-control
-                                                :box box*}))))
+                                                :box box*
+                                                :color :original}))))
 
 
 (defn remove-box [name]
@@ -159,6 +161,11 @@
     (print-err (format "There is no box with `%s` name." name))))
 
 
+(defn remove-all-boxes []
+  (doseq [b (get-all-boxes)]
+    (remove-box (:name b))))
+
+
 (defn get-box [name]
   (if-let [{:keys [box]} (some #(when (= name (:name %)) %) (get-all-boxes))]
     box
@@ -173,7 +180,10 @@
                                   :green "Textures/2D/gbox.jpg"
                                   :original "Textures/2D/box.jpg"))
           mat (set* (unshaded-mat) :texture "ColorMap" texture)]
-      (set* box :material mat))))
+      (set* box :material mat)
+      (s/transform [s/ATOM :jme-clj.core/app :boxes s/ALL #(= box-name (:name %))]
+                   #(assoc % :color color-key)
+                   states))))
 
 
 (defn apply-red [box-name]
@@ -218,10 +228,22 @@
       ;(re-init init)
       )
  (run app
-      (create-box {:name "ertu"
-                   :size 5
-                   :random-location? false})
-      (let [{:keys [player]} (get-state)
-            r (ray (.getLocation (cam)) (.getDirection (cam)))]
-        (println "hey:" (.getDirection r))
-        (println "r:" r))))
+      (remove-all-boxes)
+      (println (get-all-boxes))
+      (do
+        (create-box {:name "box 1"
+                     :size 8
+                     :random-location? true})
+        (create-box {:name "box 2"
+                     :size 9
+                     :random-location? true})
+        (create-box {:name "box 3"
+                     :size 10
+                     :random-location? true})
+
+        (apply-blue "box 1")
+        (apply-red "box 2")
+        (apply-green "box 3"))
+      #_(create-box {:name (str (rand))
+                     :size 5
+                     :random-location? true})))

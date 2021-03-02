@@ -1,0 +1,26 @@
+[:div.c3-instruction-body
+ [:h2 "Mapping Boxes"]
+
+ [:span.c3-body
+  "Let's create 5 boxes, and change colors of some of them:"
+  [:div.c3-code-container
+   [:textarea.c3-code-preview
+    {:defaultValue "(create-box {:name \"color box 1\"\n             :size 8\n             :random-location? true})\n(create-box {:name \"color box 2\"\n             :size 9\n             :random-location? true})\n(create-box {:name \"color box 3\"\n             :size 10\n             :random-location? true})\n(create-box {:name \"color box 4\"\n             :size 11\n             :random-location? true})\n(create-box {:name \"color box 5\"\n             :size 12\n             :random-location? true})\n\n(apply-blue \"color box 1\")\n(apply-red \"color box 2\")\n(apply-green \"color box 3\")"}]]]
+ [:span.c3-body
+  "There is also " [:code "apply-original"] " function if you'd like to revert back to original surface."]
+
+ [:hr]
+ [:h3 "Instructions"]
+ [:span.c3-body
+  [:ul
+   [:li "Apply color red to boxes that have size greater than 10."]
+   [:li "Apply color green to boxes that have size less than 10."]
+   [:li "Apply color blue to boxes that have size is equal to 10."]
+   [:li "Apply original color to red boxes."]]]
+
+ [:span.c3-body
+  [:b "Hint"] " (Combining filter and map: increasing even numbers):"
+  [:div.c3-code-container
+   [:textarea.c3-code-preview
+    {:defaultValue "(map inc (filter even? [1 2 3 4 5]))\n;;=> (3 5)"}]]]
+ ]

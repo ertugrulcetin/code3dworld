@@ -14,7 +14,8 @@
               :chapter_3 {:title "3D Scene" :order 4}
               :chapter_4 {:title "The filter function" :order 5}
               :chapter_5 {:title "Filtering boxes" :order 6}
-              :chapter_6 {:title "The map function" :order 7}}
+              :chapter_6 {:title "The map function" :order 7}
+              :chapter_7 {:title "Mapping boxes" :order 8}}
    :active-chapter :intro})
 
 

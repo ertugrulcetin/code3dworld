@@ -11,7 +11,8 @@
                  [org.clojure/tools.logging "1.1.0"]
                  [jme-clj "0.1.13"]
                  [mount "0.1.16"]
-                 [nrepl "0.8.3"]]
+                 [nrepl "0.8.3"]
+                 [com.rpl/specter "1.1.3"]]
 
   :plugins [[ertu/lein-bikeshed "0.1.13"]
             [ertu/lein-carve "0.1.0"]
