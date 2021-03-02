@@ -106,6 +106,10 @@
   (get-state :app :boxes))
 
 
+(defn get-boxes []
+  (select-keys (get-all-boxes) [:name :size]))
+
+
 (defn- print-err [msg]
   (.println (System/err) (str "Warning: " msg)))
 
@@ -155,9 +159,37 @@
     (print-err (format "There is no box with `%s` name." name))))
 
 
-#_(defn rotate [spatial degree axes]
-    (let [q (quat)]
-      (.rotate spatial (.fromAngleAxis q 45 Vector3f/UNIT_Y))))
+(defn get-box [name]
+  (if-let [{:keys [box]} (some #(when (= name (:name %)) %) (get-all-boxes))]
+    box
+    (print-err (format "There is no box with `%s` name." name))))
+
+
+(defn- apply-color [color-key box-name]
+  (when-let [box (get-box box-name)]
+    (let [texture (load-texture (case color-key
+                                  :red "Textures/2D/rbox.jpg"
+                                  :blue "Textures/2D/bbox.jpg"
+                                  :green "Textures/2D/gbox.jpg"
+                                  :original "Textures/2D/box.jpg"))
+          mat (set* (unshaded-mat) :texture "ColorMap" texture)]
+      (set* box :material mat))))
+
+
+(defn apply-red [box-name]
+  (apply-color :red box-name))
+
+
+(defn apply-green [box-name]
+  (apply-color :green box-name))
+
+
+(defn apply-blue [box-name]
+  (apply-color :blue box-name))
+
+
+(defn apply-original [box-name]
+  (apply-color :original box-name))
 
 
 (defstate ^{:on-reload :noop}
@@ -180,11 +212,13 @@
 
 (comment
  (run app
-      (remove-box "ertus")
+      (apply-blue "ertu")
+      (println (get-all-boxes))
+      ;(remove-box "ertus")
       ;(re-init init)
       )
  (run app
-      (create-box {:name (str (rand))
+      (create-box {:name "ertu"
                    :size 5
                    :random-location? false})
       (let [{:keys [player]} (get-state)
