@@ -1,12 +1,12 @@
 [:div.c3-instruction-body
  [:h2 "Running 3D Scene!"]
- [:p.c3-body
+ [:span.c3-body
   "Now we are ready to run the "
   [:b "3D Scene"]
   " (where the magic happens!). You will notice that there is a green button called "
   [:b "\"Start 3D Scene\""]
   " above the console. Let's click it."]
- [:p.c3-body
+ [:span.c3-body
   "When the 3D Scene application runs, you can use "
   [:b "W"] " " [:i "(forward)"] ", "
   [:b "A"] " " [:i "(left)"] ", "
@@ -15,31 +15,31 @@
   [:b "ESC"] " key for " [:i "enabling/disabling"] " focus."]
  [:hr]
  [:h3 "Instructions"]
- [:p.c3-body
+ [:span.c3-body
   "Copy and paste the following code in the editor, and run it:"
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(throw-ball)"}]]]
- [:p.c3-body
+ [:span.c3-body
   [:code "(throw-ball)"]
   " function throws a ball, as we can understand from its name. Make sure that you're able to see 3D Scene while your code is running."]
- [:p.c3-body
+ [:span.c3-body
   "Wrap your " [:code "(throw-ball)"] " code with " [:code "comment"] ", code in comment block not executed, for example:"
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(comment\n (println \"I won't see this.\")\n (throw-ball))"}]]]
- [:p.c3-body
+ [:span.c3-body
   "Then run this:"
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(create-box {:name \"My Box\"})"}]]]
  [:hr]
- [:p.c3-body
+ [:span.c3-body
   [:code "create-box"] " creates a box, but we're providing additional information. After function name "
   [:code "create-box"] ", the first argument is "
   [:code "{:name \"My Box\"}"] ", which is a " [:b "hash map"] ". Hash maps keep " [:i "key and value"] " pairs. In this case, the key is "
   [:code ":name"] " and its value is "
   [:code "\"My Box\""] ", so we're creating a box with a name."]
- [:p.c3-body
+ [:span.c3-body
   "Basically, " [:code ":name"] " is one of the attributes of the box."]
  ]

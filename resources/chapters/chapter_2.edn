@@ -1,20 +1,20 @@
 [:div.c3-instruction-body
  [:h2 "Let's do some math!"]
- [:p.c3-body
+ [:span.c3-body
   "In Clojure, " [:b "parens around everything."]
   " The command (function name) is always the first thing (first argument) and then everything else (rest of the arguments)."]
- [:p.c3-body
+ [:span.c3-body
   "For example, to add two numbers, you would type: "
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(+ 1 4) ;;=> 5"}]]]
- [:p.c3-body
+ [:span.c3-body
   "Plus sign " [:code "+"] " is the " [:b "first"] " argument, which is a " [:b "function name. "]
   [:code "1"] " is the " [:b "second"] " argument, and " [:code "4"] " is the " [:b "third"] " argument."]
 
  [:br]
 
- [:p.c3-body
+ [:span.c3-body
   "Clojure has built-in mathematical functions such as "
   [:code "+"] ", "
   [:code "-"] ", "
@@ -23,27 +23,27 @@
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(* 2 3 5) ;;=> 30"}]]]
- [:p.c3-body
+ [:span.c3-body
   "For addition and subtraction:"
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(+ (- 3 2) 1) ;;=> 2"}]]]
- [:p.c3-body
+ [:span.c3-body
   "Alright, without further ado. Let's print the results of some math operations."]
  [:hr]
  [:h3 "Instructions"]
- [:p.c3-body
+ [:span.c3-body
   "Apply "
   [:code "+"] ", "
   [:code "-"] ", "
   [:code "*"] ", and "
   [:code "/"] " on numbers and print the results. You used " [:code "println"]
   " function in the previous chapter."]
- [:p.c3-body
+ [:span.c3-body
   "For example: "
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(println \"3 * 3 is:\" (* 3 3))"}]]]
- [:p.c3-body
+ [:span.c3-body
   [:b "Note:"] " If you don't use " [:code "println"] ", you won't see the results in the console."]
  ]

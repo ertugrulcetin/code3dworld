@@ -1,14 +1,14 @@
 [:div.c3-instruction-body
  [:h2 "Introduction"]
- [:p.c3-body
+ [:span.c3-body
   [:b "Code 3D World"] " is an interactive 3D coding platform. You can code your own 3D game, world, anything you can imagine... You'll learn a real programming language, have fun, and feel the magic!"]
 
  [:h3 "What is programming?"]
- [:p.c3-body
+ [:span.c3-body
   "Programming is giving a set of instructions to a computer to execute. \nWhen we want to give these instructions to a computer, we need to use programming languages like Ruby, Python, or Clojure."]
 
  [:h3 "About Clojure"]
- [:p.c3-body
+ [:span.c3-body
   "In this course, we're going to use " [:b "Clojure"] " programming language. Clojure is very powerful and easy to learn, especially for beginners. It has few rules to remember compared to other languages out there."]
- [:p.c3-body
+ [:span.c3-body
   "After learning Clojure, you will be able to create any application you want. It's so much fun, and you'll love it. \uD83D\uDE0A"]]

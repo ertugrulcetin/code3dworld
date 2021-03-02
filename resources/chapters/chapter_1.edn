@@ -1,10 +1,10 @@
 [:div.c3-instruction-body
  [:h2 "Hello, World!"]
- [:p.c3-body
+ [:span.c3-body
   "As you can see, there is "
   [:code "(println \"Hello, World!\")"]
   " Clojure code in the editor. Let's hit the blue " [:b "Run"] " button then you'll see "
   [:b "\"Hello, world\""]
   " in the console."]
- [:p.c3-body "The console is under the editor."]
+ [:span.c3-body "The console is under the editor."]
  ]

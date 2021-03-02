@@ -1,6 +1,6 @@
 [:div.c3-instruction-body
  [:h2 "The map function"]
- [:p.c3-body "Clojure has a function called " [:code "map"] ", we will often need to apply the same function to each element of a vector. This is where " [:code "map"] " comes into play!"]
+ [:span.c3-body "Clojure has a function called " [:code "map"] ", we will often need to apply the same function to each element of a vector. This is where " [:code "map"] " comes into play!"]
 
  [:span.c3-body
   "There is a function called " [:code "inc"] " in Clojure, which increases a number by one:"
@@ -8,25 +8,25 @@
    [:textarea.c3-code-preview
     {:defaultValue "(inc 1) ;;=> 2\n(inc 25) ;;=> 26"}]]]
 
- [:p.c3-body
+ [:span.c3-body
   "And there is " [:code "dec"] ", which decreases a number by one:"
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(dec 10) ;;=> 9\n(dec 25) ;;=> 24"}]]]
  [:br]
- [:p.c3-body
+ [:span.c3-body
   "What if we want to apply " [:code "inc"] " or " [:code "dec"] " to " [:b "every single value"] " in a vector? We could do something like this:"
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(map inc [1 2 3 4 5]) ;;=> (2 3 4 5 6)\n\n(map dec [1 2 3 4 5]) ;;=> (0 1 2 3 4)"}]]]
 
- [:p.c3-body
+ [:span.c3-body
   "Let's increase a number by " [:code "5"] ":"
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(map (fn [number] (+ number 5)) [1 2 3])\n;;=> (6 7 8)"}]]]
  [:br]
- [:p.c3-body
+ [:span.c3-body
   "Probably you're wondering what does this " [:code "(fn [number]...)"] " do and what is it? Well, " [:code "fn"] " is an anonymous function (think like it's our custom function). Which means we're creating our own function, and it does what we want it to do. For example, " [:code "inc"] " is already defined in Clojure, but we can write our own " [:code "inc"] " with " [:code "fn"] ". Here:"
   [:div.c3-code-container
    [:textarea.c3-code-preview
@@ -39,13 +39,13 @@
 
  [:hr]
  [:h3 "Instructions"]
- [:p.c3-body
+ [:span.c3-body
   [:ul
    [:li "Create your own vector with full off different numbers."]
    [:li "Decrease numbers by 10."]
    [:li "Get square numbers."]
    [:li "Divide numbers by 2."]]]
 
- [:p.c3-body
+ [:span.c3-body
   [:b "Note:"] " If you don't use " [:code "println"] ", you won't see the results in the console."]
  ]
