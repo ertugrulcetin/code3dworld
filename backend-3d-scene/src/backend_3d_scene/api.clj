@@ -28,8 +28,8 @@
          "These are closed forms: {}, #{}, [], ()")
 
     "Wrong number of args"
-    (str "You called " (get-wrong-arity-fn-name msg) " with a wrong number of parameters.\n"
-         "Please check your parameters.")
+    (str "You called " (get-wrong-arity-fn-name msg) " with a wrong number of arguments.\n"
+         "Please check your arguments.")
 
     "Unable to resolve symbol:"
     (str "It seems like you did not define " (get-unresolved-var-name msg) "\n"
@@ -37,10 +37,10 @@
 
     "cannot be cast to class clojure.lang.IFn"
     (str "You are trying to call a function, but you have invalid code.\n"
-         "First parameter has to be always a function, following forms are invalid;\n"
-         "(12 \"Hello\") -> first parameter is a number\n"
-         "(\"Some string\") -> first parameter is a string\n"
-         "(true) -> first parameter is a boolean")
+         "First argument has to be always a function, following forms are invalid;\n"
+         "(12 \"Hello\") -> first argument is a number\n"
+         "(\"Some string\") -> first argument is a string\n"
+         "(true) -> first argument is a boolean")
 
     "Divide by zero" (str "Numbers can't be divided by zero. It is not acceptable in math :).")
     msg))
