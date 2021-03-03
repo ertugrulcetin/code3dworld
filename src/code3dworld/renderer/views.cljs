@@ -15,6 +15,13 @@
    ["codemirror/addon/edit/matchbrackets"]
    ["codemirror/addon/edit/closebrackets"]))
 
+
+(def fpath (js/require "path"))
+(def findp (js/require "find-process"))
+(def dir (str js/__dirname "/.."))
+(def exec (.-exec (js/require "child_process")))
+
+
 (enable-console-print!)
 
 
@@ -158,8 +165,18 @@
        {:on-click #(dispatch [::events/update-editor-font-size +])}
        [:img
         {:src "img/increase-font-size.svg"}]]]
-     [:div.c3-play-button
-      "Start 3D Scene"]]))
+     (if-let [pid @(subscribe [::subs/scene-3d-pid])]
+       [:div.c3-stop-button
+        {:on-click (fn [_]
+                     (.kill js/process pid)
+                     (dispatch [::events/reset :scene-3d-pid]))}
+        "Stop 3D Scene"]
+       [:div.c3-play-button
+        {:on-click (fn [_]
+                     (let [r (exec (.join fpath dir "/core.app/Contents/MacOS/core") "&")
+                           pid ^js/Number (.-pid r)]
+                       (dispatch [::events/set-data :scene-3d-pid pid])))}
+        "Start 3D Scene"])]))
 
 
 (defn- console []
@@ -229,14 +246,23 @@
    [bottom]])
 
 
-(defn- init-ipc []
+(defn- init []
   #_(.on ipc-renderer "asynchronous-reply" (fn [event arg]
                                              (println event)
                                              (println "Main message:" arg)))
-  #_(.send ipc-renderer "asynchronous-message" "ping"))
+  #_(.send ipc-renderer "asynchronous-message" "ping")
+  (js/setInterval (fn []
+                    (when-let [pid @(subscribe [::subs/scene-3d-pid])]
+                      (.then (findp "pid" pid)
+                             (fn [list]
+                               (when (empty? (js->clj list))
+                                 (println "removed")
+                                 (dispatch [::events/reset :scene-3d-pid])))
+                             (fn [err]
+                               (println "Err: " err))))) 500))
 
 
 (defn main-panel []
   (r/create-class
-   {:component-did-mount #(init-ipc)
+   {:component-did-mount #(init)
     :reagent-render (fn [] [body-view])}))

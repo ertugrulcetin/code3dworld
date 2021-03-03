@@ -64,3 +64,9 @@
    (str (->> active-chapter (.indexOf chapters-order) inc)
         "/"
         (count chapters-order))))
+
+
+(reg-sub
+ ::scene-3d-pid
+ (fn [db]
+   (:scene-3d-pid db)))

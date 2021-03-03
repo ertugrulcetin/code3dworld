@@ -25,3 +25,5 @@
 .cljs_node_repl/
 pom.xml
 package-lock.json
+
+resources/core.app.Contents

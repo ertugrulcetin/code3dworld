@@ -18,7 +18,7 @@
  (fn [{:keys [_ settings]}]
    (let [settings (when-not (-> settings :active-chapter empty?)
                     (update settings :active-chapter keyword))
-         db       (merge db/default-db settings)]
+         db (merge db/default-db settings)]
      (if (or (nil? settings) (need-init-db? db))
        {:db db
         :dispatch [::update-editor-font-size-in-local]}
@@ -41,7 +41,8 @@
 (reg-event-db
  ::set-data
  (fn [db [_ path value]]
-   (assoc-in db path value)))
+   (let [path (if (vector? path) path [path])]
+     (assoc-in db path value))))
 
 
 (reg-event-db
