@@ -5,6 +5,12 @@
 
 
 (reg-sub
+ ::console
+ (fn [db _]
+   (:console db)))
+
+
+(reg-sub
  ::visibility
  (fn [db _]
    (:visibility db)))
