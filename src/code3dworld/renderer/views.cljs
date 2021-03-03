@@ -13,20 +13,21 @@
    ["codemirror/mode/clojure/clojure"]
    ["codemirror/addon/selection/active-line"]
    ["codemirror/addon/edit/matchbrackets"]
-   ["codemirror/addon/edit/closebrackets"]))
+   ["codemirror/addon/edit/closebrackets"]
+   [clojure.string :as str]))
+
+
+(enable-console-print!)
 
 
 (def fpath (js/require "path"))
 (def findp (js/require "find-process"))
 (def dir (str js/__dirname "/.."))
 (def exec (.-exec (js/require "child_process")))
-
-
-(enable-console-print!)
+(def ipc-renderer (.-ipcRenderer (js/require "electron")))
 
 
 (def from-textarea (ob/get cm "fromTextArea"))
-#_(def ipc-renderer (.-ipcRenderer (js/require "electron")))
 (def on-change-editor (gf/debounce (fn [key e] (dispatch-sync [key e])) 500))
 
 
@@ -129,6 +130,10 @@
         instruction? (:instruction? visibility)]
     [:div.c3-editor-action
      [:div.c3-run-button
+      {:on-click (fn [_]
+                   (let [code (.getValue @c3-editor)]
+                     (when-not (str/blank? code)
+                       (.send ipc-renderer "asynchronous-message" code))))}
       "Run"]
      [tooltip
       {:text (if (and console? instruction?)
@@ -247,10 +252,8 @@
 
 
 (defn- init []
-  #_(.on ipc-renderer "asynchronous-reply" (fn [event arg]
-                                             (println event)
-                                             (println "Main message:" arg)))
-  #_(.send ipc-renderer "asynchronous-message" "ping")
+  (.on ipc-renderer "asynchronous-reply" (fn [event response]
+                                           (println "Response:" (js->clj response :keywordize-keys true))))
   (js/setInterval (fn []
                     (when-let [pid @(subscribe [::subs/scene-3d-pid])]
                       (.then (findp "pid" pid)
