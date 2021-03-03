@@ -1,119 +1,193 @@
 (ns backend-3d-scene.api
   (:require
-   [backend-3d-scene.scene :refer :all]
-   [clojure.string :as str]
-   [clojure.walk :as walk]
-   [jme-clj.core :as jme]
-   [kezban.core :as k]
-   [mount.core :as mount :refer [defstate]])
-  (:import (java.io ByteArrayOutputStream PrintStream)))
+   [backend-3d-scene.controls :as co]
+   [jme-clj.core :refer :all]
+   [mount.core :refer [defstate]]
+   [com.rpl.specter :as s])
+  (:import
+   (com.jme3.math ColorRGBA Vector3f)
+   (com.jme3.terrain.heightmap HillHeightMap)
+   (com.jme3.texture Texture$WrapMode)
+   (com.jme3.bullet.collision.shapes BoxCollisionShape)))
 
 
-(defn- get-wrong-arity-fn-name [msg]
-  (let [[_ v] (str/split msg #"passed to: ")]
-    (name (symbol v))))
+(defn- create-player []
+  (let [player (character-control (capsule-collision-shape 3 7 1) 0.05)]
+    (setc player
+          :jump-speed 20
+          :fall-speed 30
+          :gravity 30
+          :physics-location (vec3 0 0 0))))
 
 
-(defn- get-unresolved-var-name [msg]
-  (let [[_ v] (str/split msg #"Unable to resolve symbol: | in this context")]
-    v))
+(defn- create-material []
+  (let [grass (set* (load-texture "Textures/Terrain/splat/grass.jpg") :wrap Texture$WrapMode/Repeat)
+        dirt (set* (load-texture "Textures/Terrain/splat/dirt.jpg") :wrap Texture$WrapMode/Repeat)
+        rock (set* (load-texture "Textures/Terrain/splat/road.jpg") :wrap Texture$WrapMode/Repeat)]
+    (-> (material "Common/MatDefs/Terrain/Terrain.j3md")
+        (set* :texture "Alpha" (load-texture "Textures/Terrain/splat/alphamap.png"))
+        (set* :texture "Tex1" grass)
+        (set* :float "Tex1Scale" (float 64))
+        (set* :texture "Tex2" dirt)
+        (set* :float "Tex2Scale" (float 32))
+        (set* :texture "Tex3" rock)
+        (set* :float "Tex3Scale" (float 128)))))
 
 
-(defn- parse-error-msg [msg]
-  (condp #(str/includes? %2 %1) msg
-
-    "EOF while reading"
-    (str "Looks like you did not close your parenthesis.\n"
-         "Make sure that every opened form or function should be closed (my-function).\n"
-         "These are closed forms: {}, #{}, [], ()")
-
-    "Wrong number of args"
-    (str "You called " (get-wrong-arity-fn-name msg) " with a wrong number of arguments.\n"
-         "Please check your arguments.")
-
-    "Unable to resolve symbol:"
-    (str "It seems like you did not define " (get-unresolved-var-name msg) "\n"
-         "You need to define it first then you can use it.")
-
-    "cannot be cast to class clojure.lang.IFn"
-    (str "You are trying to call a function, but you have invalid code.\n"
-         "First argument has to be always a function, following forms are invalid;\n"
-         "(12 \"Hello\") -> first argument is a number\n"
-         "(\"Some string\") -> first argument is a string\n"
-         "(true) -> first argument is a boolean")
-
-    "Divide by zero" (str "Numbers can't be divided by zero. It is not acceptable in math :).")
-    msg))
+(defn- create-terrain [mat]
+  (let [_ (set! (HillHeightMap/NORMALIZE_RANGE) 100)
+        height-map (hill-height-map 513 100 50 100 (byte 3))
+        _ (call* height-map :load)
+        patch-size 65
+        terrain (terrain-quad "my terrain" patch-size 513 (get-height-map height-map))]
+    (-> terrain
+        (setc :material mat
+              :local-translation [0 -100 0]
+              :local-scale [2 1 2])
+        (add-control (terrain-lod-control terrain (cam))))))
 
 
-(defn- get-used-fns [code]
-  (let [s (atom [])
-        code (k/try-> code (#(str "(" % ")")) read-string)]
-    (walk/prewalk (fn [form]
-                    (when (list? form)
-                      (swap! s conj form))
-                    form)
-                  code)
-    (->> @s
-         (filter (comp symbol? first))
-         (map first))))
+(defn- add-lights []
+  (let [sun (-> (light :directional)
+                (setc :direction (vec3 -0.5 -0.5 -0.5)
+                      :color ColorRGBA/White))
+        sun-b (-> (light :directional)
+                  (setc :direction (vec3 0.5 0.5 0.5)
+                        :color ColorRGBA/White))
+        ambient (-> (light :ambient)
+                    (set* :color ColorRGBA/White))]
+    (add-light-to-root sun)
+    (add-light-to-root sun)
+    (add-light-to-root sun-b)
+    (add-light-to-root sun-b)
+    (add-light-to-root ambient)))
 
 
-(defmacro with-out [& body]
-  `(let [err-buffer# (ByteArrayOutputStream.)
-         original-err# System/err
-         tmp-err# (PrintStream. err-buffer# true "UTF-8")
-         out# (with-out-str (try
-                              (System/setErr tmp-err#)
-                              ~@body
-                              (finally
-                                (System/setErr original-err#))))]
-     {:out out#
-      :out-err (.toString err-buffer# "UTF-8")}))
+(defn init []
+  (setc (fly-cam)
+        :move-speed 100
+        :zoom-speed 0)
+  (let [bas (attach (bullet-app-state))
+        mat (create-material)
+        terrain (create-terrain mat)
+        terrain-shape (create-mesh-shape terrain)
+        landscape (rigid-body-control terrain-shape 0)
+        player (create-player)
+        spatial (node "player node")]
+    (add-lights)
+    (add-to-root (create-sky "Textures/Sky/Bright/BrightSky.dds" :cube))
+    (-> spatial
+        (add-control player)
+        (add-control (co/create-user-input player terrain))
+        (add-to-root))
+    (-> terrain
+        (add-control landscape)
+        (add-to-root))
+    (-> bas
+        (get* :physics-space)
+        (call* :add landscape))
+    (-> bas
+        (get* :physics-space)
+        (call* :add player))
+    {:bullet-app-state bas
+     :player player
+     :terrain terrain}))
 
 
-;;TODO add timeout
-(defn run [code]
-  (try
-    (let [forms (read-string (str "(" code ")"))
-          result (atom {})
-          p (promise)]
-      (binding [jme/*app* app]
-        (jme/enqueue (fn []
-                       (let [out (with-out
-                                  (try
-                                    (eval (cons 'do forms))
-                                    (catch Throwable t
-                                      (swap! result assoc
-                                             :error? true
-                                             :error-msg (->> t Throwable->map :cause parse-error-msg)))))]
-                         (swap! result merge out)
-                         (deliver p true)))))
-      (deref p)
-      (assoc @result :used-fns (get-used-fns code)))
-    (catch Throwable t
-      {:error? true
-       :error-msg (-> t Throwable->map :cause parse-error-msg)})))
+(defn get-all-boxes []
+  (get-state :app :boxes))
 
 
-(comment
- (println "hey")
- (macroexpand-1 '(run "(print 'selam 2"))
- (run "(println \"Ertu\") (/ 2 0)")
- (run "(println (get-all-boxes))")
- (jme/run app
-          (scene/create-box 0)
-          #_(dotimes [i 5]
-              (create-box i))
-          #_(doseq [box (map :box (filter (comp odd? :index) (get-all-boxes)))]
-              (scale box 1.5))
+(defn get-boxes []
+  (vec (select-keys (get-all-boxes) [:name :size])))
 
-          #_(doseq [box (map :box (filter (comp even? :index) (get-all-boxes)))]
-              (rotate box 0 45 0))
-          #_(set* (fly-cam) :move-speed 10)
-          #_(let [{:keys [player]} (get-state)]
-              (setc player
-                    :physics-location (vec3 100 -50 0))))
- (do
-   (mount/stop #'app)
-   (mount/start #'app)))
+
+(defn- print-err [msg]
+  (.println (System/err) (str "Warning: " msg)))
+
+
+(defn create-box [{:keys [name size random-location?] :or {size 5} :as opts}]
+  (if ((set (map :name (get-all-boxes))) name)
+    (print-err (format "There is a box with name `%s` already. You need to create a box with a different name." name))
+    (let [texture (load-texture "Textures/2D/box.jpg")
+          mat (set* (unshaded-mat) :texture "ColorMap" texture)
+          r (ray (.getLocation (cam)) (.getDirection (cam)))
+          dir (.getDirection r)
+          origin (.getOrigin r)
+          box* (setc (geo name (box size size size))
+                     :local-translation (add origin (if random-location?
+                                                      (add (mult dir 40)
+                                                           (rand 15)
+                                                           (rand 15)
+                                                           (rand -15))
+                                                      (mult dir (* 4 size))))
+                     :material mat)
+          box-cs (BoxCollisionShape. ^Vector3f (vec3 size size size))
+          box-control (rigid-body-control box-cs 0)
+          box* (-> box*
+                   (add-control box-control)
+                   (add-to-root))
+          {bas :bullet-app-state} (get-state)]
+      (-> bas
+          (get* :physics-space)
+          (call* :add box*))
+      (update-state :app :boxes (fnil conj []) {:name name
+                                                :size size
+                                                :control box-control
+                                                :box box*
+                                                :color :original}))))
+
+
+(defn remove-box [name]
+  (if-let [{:keys [box control]} (some #(when (= name (:name %)) %) (get-all-boxes))]
+    (let [{bas :bullet-app-state} (get-state)]
+      (-> bas
+          (get* :physics-space)
+          (call* :remove-all box))
+      (remove-from-root box)
+      (call* box :remove-control control)
+      (update-state :app
+                    :boxes
+                    #(vec (remove (fn [b] (= (:name b) name)) %))))
+    (print-err (format "There is no box with `%s` name." name))))
+
+
+(defn remove-all-boxes []
+  (doseq [b (get-all-boxes)]
+    (remove-box (:name b))))
+
+
+(defn get-box [name]
+  (if-let [{:keys [box]} (some #(when (= name (:name %)) %) (get-all-boxes))]
+    box
+    (print-err (format "There is no box with `%s` name." name))))
+
+
+(defn- apply-color [color-key box-name]
+  (when-let [box (get-box box-name)]
+    (let [texture (load-texture (case color-key
+                                  :red "Textures/2D/rbox.jpg"
+                                  :blue "Textures/2D/bbox.jpg"
+                                  :green "Textures/2D/gbox.jpg"
+                                  :original "Textures/2D/box.jpg"))
+          mat (set* (unshaded-mat) :texture "ColorMap" texture)]
+      (set* box :material mat)
+      (s/transform [s/ATOM :jme-clj.core/app :boxes s/ALL #(= box-name (:name %))]
+                   #(assoc % :color color-key)
+                   states))))
+
+
+(defn apply-red [box-name]
+  (apply-color :red box-name))
+
+
+(defn apply-green [box-name]
+  (apply-color :green box-name))
+
+
+(defn apply-blue [box-name]
+  (apply-color :blue box-name))
+
+
+(defn apply-original [box-name]
+  (apply-color :original box-name))
