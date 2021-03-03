@@ -21,12 +21,10 @@
   (.on ipcMain "asynchronous-message" (fn [event code]
                                         (println "Code: " code)
                                         (.eval @client
-                                               (let [c (str "(do\n"
-                                                            '(in-ns 'backend-3d-scene.scene)
-                                                            "(run " (pr-str code) ")"
-                                                            "\n)")]
-                                                 (println "C: " c)
-                                                 c)
+                                               (str "(do\n"
+                                                    '(in-ns 'backend-3d-scene.scene)
+                                                    "(run " (pr-str code) ")"
+                                                    "\n)")
                                                (fn [err result]
                                                  (println "Result" result " - Error: " err)
                                                  (.send (.-sender event) "asynchronous-reply"

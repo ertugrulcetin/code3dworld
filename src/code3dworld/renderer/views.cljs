@@ -1,5 +1,6 @@
 (ns code3dworld.renderer.views
   (:require
+   [cljs.reader :as reader]
    [reagent.core :as r]
    [goog.object :as ob]
    [goog.functions :as gf]
@@ -185,20 +186,29 @@
 
 
 (defn- console []
-  (r/create-class
-   {:component-did-mount #(reset!
-                           vertical-split
-                           (split #js ["#editor" "#console"]
-                                  (clj->js {:sizes [300 100]
-                                            :direction "vertical"
-                                            :gutterSize 20
-                                            :dragInterval 0.5})))
-    :component-will-unmount #(.destroy @vertical-split)
-    :reagent-render (fn []
-                      [:div.c3-console
-                       [:p "~ cd Projects/electron/code3dworld/"]
-                       [:p "~ lein watch"]
-                       [:p "~ electron ."]])}))
+  (let [console-ref (atom nil)]
+   (r/create-class
+    {:component-did-mount #(reset!
+                            vertical-split
+                            (split #js ["#editor" "#console"]
+                                   (clj->js {:sizes [300 100]
+                                             :direction "vertical"
+                                             :gutterSize 20
+                                             :dragInterval 0.5})))
+     :component-will-unmount #(.destroy @vertical-split)
+     :component-did-update #(when-let [div @console-ref]
+                              (set! (.-scrollTop div) (- (.-scrollHeight div) (.-clientHeight div))))
+     :reagent-render (fn []
+                       [:div.c3-console
+                        {:ref #(reset! console-ref %)}
+                        (for [out @(subscribe [::subs/console])]
+                          (map (fn [[i s]]
+                                 (if (str/blank? s)
+                                   ^{:key i} [:br]
+                                   ^{:key i} [:p (when (= (:type out) :out-err)
+                                                   {:style {:color "#d03636"}})
+                                              s]))
+                               (map-indexed vector (str/split (:content out) #"\n"))))])})))
 
 
 (defn- code []
@@ -253,7 +263,17 @@
 
 (defn- init []
   (.on ipc-renderer "asynchronous-reply" (fn [event response]
-                                           (println "Response:" (js->clj response :keywordize-keys true))))
+                                           (let [{:keys [result]} (js->clj response :keywordize-keys true)
+                                                 value (some-> result first :value reader/read-string)]
+                                             (when value
+                                               (when-not (str/blank? (:out value))
+                                                 (dispatch-sync [::events/update-data :console (fnil conj [])
+                                                                 {:type :out
+                                                                  :content (:out value)}]))
+                                               (when-not (str/blank? (:out-err value))
+                                                 (dispatch-sync [::events/update-data :console (fnil conj [])
+                                                                 {:type :out-err
+                                                                  :content (:out-err value)}]))))))
   (js/setInterval (fn []
                     (when-let [pid @(subscribe [::subs/scene-3d-pid])]
                       (.then (findp "pid" pid)

@@ -12,3 +12,6 @@
   ;(mount/stop)
   ;(println args)
   )
+
+(comment
+ (-main))
