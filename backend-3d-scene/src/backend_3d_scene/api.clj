@@ -1,14 +1,14 @@
 (ns backend-3d-scene.api
   (:require
    [backend-3d-scene.controls :as co]
+   [com.rpl.specter :as s]
    [jme-clj.core :refer :all]
-   [mount.core :refer [defstate]]
-   [com.rpl.specter :as s])
+   [mount.core :refer [defstate]])
   (:import
+   (com.jme3.bullet.collision.shapes BoxCollisionShape)
    (com.jme3.math ColorRGBA Vector3f)
    (com.jme3.terrain.heightmap HillHeightMap)
-   (com.jme3.texture Texture$WrapMode)
-   (com.jme3.bullet.collision.shapes BoxCollisionShape)))
+   (com.jme3.texture Texture$WrapMode)))
 
 
 (defn- create-player []

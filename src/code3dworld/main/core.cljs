@@ -19,26 +19,18 @@
   ; Path is relative to the compiled js file (main.js in our case)
   (.loadURL ^js/electron.BrowserWindow @main-window (str "file://" js/__dirname "/public/index.html"))
   (.on ^js/electron.BrowserWindow @main-window "closed" #(reset! main-window nil))
-  (.on ipcMain "asynchronous-message" (fn [event code]
-                                        (println "Code: " code)
-                                        (.eval @client
-                                               (str "(do\n"
-                                                    '(in-ns 'backend-3d-scene.scene)
-                                                    "(run " (pr-str code) ")"
-                                                    "\n)")
-                                               (fn [err result]
-                                                 (println "Result" result " - Error: " err)
-                                                 (.send (.-sender event) "asynchronous-reply"
-                                                        (clj->js {:result result
-                                                                  :error err}))))))
-  (js/setInterval (fn []
-                    (.then (findp "pid" backend-nrepl-port)
-                           (fn [list]
-                             (when (empty? (js->clj list))
-                               ;;TODO start backend
-                               ))
-                           (fn [err]
-                             (println "Err: " err)))) 500)
+  (.on ipcMain "eval" (fn [event code]
+                        (println "Code: " code)
+                        (.eval @client
+                               (str "(do\n"
+                                    '(in-ns 'backend-3d-scene.scene)
+                                    "(run " (pr-str code) ")"
+                                    "\n)")
+                               (fn [err result]
+                                 (println "Result" result " - Error: " err)
+                                 (.send (.-sender event) "asynchronous-reply"
+                                        (clj->js {:result result
+                                                  :error err}))))))
   #_(.on js/process "uncaughtException" (fn [error]
                                           (println "Here is the ERROR:" error))))
 
