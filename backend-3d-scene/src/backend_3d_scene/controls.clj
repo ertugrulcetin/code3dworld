@@ -51,10 +51,10 @@
                            cam-left (-> (:cam-left state) (setv (get* (cam) :left)) (mult-loc 0.4))
                            walk-direction (setv (:walk-direction state) 0 0 0)
                            walk-direction (cond-> walk-direction
-                                                  (:left state) (add-loc cam-left)
-                                                  (:right state) (add-loc (negate cam-left))
-                                                  (:up state) (add-loc cam-dir)
-                                                  (:down state) (add-loc (negate cam-dir)))
+                                            (:left state) (add-loc cam-left)
+                                            (:right state) (add-loc (negate cam-left))
+                                            (:up state) (add-loc cam-dir)
+                                            (:down state) (add-loc (negate cam-dir)))
                            loc (get-available-loc player terrain)]
                        (set* player :walk-direction walk-direction)
                        (set* player :physics-location loc)

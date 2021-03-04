@@ -134,7 +134,7 @@
       {:on-click (fn [_]
                    (let [code (.getValue @c3-editor)]
                      (when-not (str/blank? code)
-                       (.send ipc-renderer "asynchronous-message" code))))}
+                       (.send ipc-renderer "eval" code))))}
       "Run"]
      [tooltip
       {:text (if (and console? instruction?)
@@ -194,28 +194,28 @@
 
 (defn- console []
   (let [console-ref (atom nil)]
-   (r/create-class
-    {:component-did-mount #(reset!
-                            vertical-split
-                            (split #js ["#editor" "#console"]
-                                   (clj->js {:sizes [300 100]
-                                             :direction "vertical"
-                                             :gutterSize 20
-                                             :dragInterval 0.5})))
-     :component-will-unmount #(.destroy @vertical-split)
-     :component-did-update #(when-let [div @console-ref]
-                              (set! (.-scrollTop div) (- (.-scrollHeight div) (.-clientHeight div))))
-     :reagent-render (fn []
-                       [:div.c3-console
-                        {:ref #(reset! console-ref %)}
-                        (for [out @(subscribe [::subs/console])]
-                          (map (fn [[i s]]
-                                 (if (str/blank? s)
-                                   ^{:key i} [:br]
-                                   ^{:key i} [:p (when (= (:type out) :out-err)
-                                                   {:style {:color "#d03636"}})
-                                              s]))
-                               (map-indexed vector (str/split (:content out) #"\n"))))])})))
+    (r/create-class
+     {:component-did-mount #(reset!
+                             vertical-split
+                             (split #js ["#editor" "#console"]
+                                    (clj->js {:sizes [300 100]
+                                              :direction "vertical"
+                                              :gutterSize 20
+                                              :dragInterval 0.5})))
+      :component-will-unmount #(.destroy @vertical-split)
+      :component-did-update #(when-let [div @console-ref]
+                               (set! (.-scrollTop div) (- (.-scrollHeight div) (.-clientHeight div))))
+      :reagent-render (fn []
+                        [:div.c3-console
+                         {:ref #(reset! console-ref %)}
+                         (for [out @(subscribe [::subs/console])]
+                           (map (fn [[i s]]
+                                  (if (str/blank? s)
+                                    ^{:key i} [:br]
+                                    ^{:key i} [:p (when (= (:type out) :out-err)
+                                                    {:style {:color "#d03636"}})
+                                               s]))
+                                (map-indexed vector (str/split (:content out) #"\n"))))])})))
 
 
 (defn- code []
@@ -269,6 +269,7 @@
 
 
 (defn- init []
+  (println "Init")
   (.on ipc-renderer "asynchronous-reply" (fn [event response]
                                            (let [{:keys [result]} (js->clj response :keywordize-keys true)
                                                  value (some-> result first :value reader/read-string)]
@@ -286,7 +287,6 @@
                       (.then (findp "pid" pid)
                              (fn [list]
                                (when (empty? (js->clj list))
-                                 (println "removed")
                                  (dispatch [::events/reset :scene-3d-pid])))
                              (fn [err]
                                (println "Err: " err))))) 500))

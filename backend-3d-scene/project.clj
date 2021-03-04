@@ -9,6 +9,7 @@
 
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/tools.logging "1.1.0"]
+                 [org.clojure/tools.namespace "1.0.0"]
                  [jme-clj "0.1.13"]
                  [mount "0.1.16"]
                  [nrepl "0.8.3"]

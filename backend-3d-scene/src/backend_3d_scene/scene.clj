@@ -1,4 +1,4 @@
-(ns backend-3d-scene.scene
+(ns ^{:defstate? true} backend-3d-scene.scene
   (:require
    [backend-3d-scene.api :refer :all]
    [clojure.string :as str]
@@ -10,22 +10,22 @@
 
 
 (defstate ^{:on-reload :noop}
-          app
-          :start (do
-                   (jme/defsimpleapp app*
-                                 :opts {:show-settings? false
-                                        :pause-on-lost-focus? false
-                                        :display-stat-view? false
-                                        :display-fps? false
-                                        :settings {:title "3D Scene"
-                                                   :load-defaults? true
-                                                   :frame-rate 60
-                                                   :width 800
-                                                   :height 600
-                                                   :resizable? true}}
-                                 :init init)
-                   (jme/start app*))
-          :stop (jme/unbind-app #'app*))
+  app
+  :start (do
+           (jme/defsimpleapp app*
+             :opts {:show-settings? false
+                    :pause-on-lost-focus? false
+                    :display-stat-view? false
+                    :display-fps? false
+                    :settings {:title "3D Scene"
+                               :load-defaults? true
+                               :frame-rate 60
+                               :width 800
+                               :height 600
+                               :resizable? true}}
+             :init init)
+           (jme/start app*))
+  :stop (jme/unbind-app #'app*))
 
 
 (defn- get-wrong-arity-fn-name [msg]
@@ -91,50 +91,56 @@
       :out-err (.toString err-buffer# "UTF-8")}))
 
 
+(defn- start-or-stop-scene [code]
+  (if (= "start-scene" code)
+    (mount/start #'app)
+    (mount/stop #'app)))
+
 
 ;;TODO add timeout
 (defn run [code]
   (try
-    (let [forms (read-string (str "(" code ")"))
-          result (atom {})
-          p (promise)]
-      (binding [jme/*app* app]
-        (jme/enqueue (fn []
-                       (let [out (with-out
-                                  (try
-                                    (eval (cons 'do forms))
-                                    (catch Throwable t
-                                      (swap! result assoc
-                                             :error? true
-                                             :error-msg (->> t Throwable->map :cause parse-error-msg)))))]
-                         (swap! result merge out)
-                         (deliver p true)))))
-      (deref p)
-      (assoc @result :used-fns (get-used-fns code)))
+    (if (#{"start-scene" "stop-scene"} code)
+      (start-or-stop-scene code)
+      (let [forms (read-string (str "(" code ")"))
+            result (atom {})
+            p (promise)]
+        (binding [jme/*app* app]
+          (jme/enqueue (fn []
+                         (let [out (with-out
+                                     (try
+                                       (eval (cons 'do forms))
+                                       (catch Throwable t
+                                         (swap! result assoc
+                                                :error? true
+                                                :error-msg (->> t Throwable->map :cause parse-error-msg)))))]
+                           (swap! result merge out)
+                           (deliver p true)))))
+        (deref p)
+        (assoc @result :used-fns (get-used-fns code))))
     (catch Throwable t
       {:error? true
        :error-msg (-> t Throwable->map :cause parse-error-msg)})))
 
 
 (comment
+  (println "hey")
+  (macroexpand-1 '(run "(print 'selam 2"))
+  (run "(create-box {:name \"box 1\"\n                     :size 8\n                     :random-location? true})")
+  (run "(println (get-all-boxes))")
+  (jme/run app
+           (scene/create-box 0)
+           #_(dotimes [i 5]
+               (create-box i))
+           #_(doseq [box (map :box (filter (comp odd? :index) (get-all-boxes)))]
+               (scale box 1.5))
 
- (println "hey")
- (macroexpand-1 '(run "(print 'selam 2"))
- (run "(create-box {:name \"box 1\"\n                     :size 8\n                     :random-location? true})")
- (run "(println (get-all-boxes))")
- (jme/run app
-          (scene/create-box 0)
-          #_(dotimes [i 5]
-              (create-box i))
-          #_(doseq [box (map :box (filter (comp odd? :index) (get-all-boxes)))]
-              (scale box 1.5))
-
-          #_(doseq [box (map :box (filter (comp even? :index) (get-all-boxes)))]
-              (rotate box 0 45 0))
-          #_(set* (fly-cam) :move-speed 10)
-          #_(let [{:keys [player]} (get-state)]
-              (setc player
-                    :physics-location (vec3 100 -50 0))))
- (do
-   (mount/stop #'app)
-   (mount/start #'app)))
+           #_(doseq [box (map :box (filter (comp even? :index) (get-all-boxes)))]
+               (rotate box 0 45 0))
+           #_(set* (fly-cam) :move-speed 10)
+           #_(let [{:keys [player]} (get-state)]
+               (setc player
+                     :physics-location (vec3 100 -50 0))))
+  (do
+    (mount/stop #'app)
+    (mount/start #'app)))
