@@ -181,6 +181,7 @@
      (if-let [pid @(subscribe [::subs/scene-3d-pid])]
        [:div.c3-stop-button
         {:on-click (fn [_]
+                     ;;TODO move to effects
                      (.kill js/process pid)
                      (dispatch [::events/reset :scene-3d-pid]))}
         "Stop 3D Scene"]
