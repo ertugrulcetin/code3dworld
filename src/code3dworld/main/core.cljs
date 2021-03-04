@@ -4,7 +4,6 @@
    ["nrepl-client" :as nrepl]
    ["electron" :refer [app BrowserWindow crashReporter ipcMain]]))
 
-(def findp (js/require "find-process"))
 
 (def main-window (atom nil))
 (def backend-nrepl-port 3011)
@@ -28,7 +27,7 @@
                                     "\n)")
                                (fn [err result]
                                  (println "Result" result " - Error: " err)
-                                 (.send (.-sender event) "asynchronous-reply"
+                                 (.send (.-sender event) "eval-response"
                                         (clj->js {:result result
                                                   :error err}))))))
   #_(.on js/process "uncaughtException" (fn [error]
@@ -45,5 +44,5 @@
             :autoSubmit false}))
   (.on app "window-all-closed" #(when-not (= js/process.platform "darwin")
                                   (.quit app)))
-  (.on app "quit" (fn [] (println "kapatiyoruz")))
+  (.on app "will-quit" (fn [] (.send (.-webContents ^js/electron.BrowserWindow @main-window) "app-quit")))
   (.on app "ready" init-browser))

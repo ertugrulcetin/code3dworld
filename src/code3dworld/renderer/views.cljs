@@ -270,18 +270,21 @@
 
 (defn- init []
   (println "Init")
-  (.on ipc-renderer "asynchronous-reply" (fn [_ response]
-                                           (let [{:keys [result]} (js->clj response :keywordize-keys true)
-                                                 value (some-> result first :value reader/read-string)]
-                                             (when value
-                                               (when-not (str/blank? (:out value))
-                                                 (dispatch-sync [::events/update-data :console (fnil conj [])
-                                                                 {:type :out
-                                                                  :content (:out value)}]))
-                                               (when-not (str/blank? (:out-err value))
-                                                 (dispatch-sync [::events/update-data :console (fnil conj [])
-                                                                 {:type :out-err
-                                                                  :content (:out-err value)}]))))))
+  (.on ipc-renderer "eval-response" (fn [_ response]
+                                      (let [{:keys [result]} (js->clj response :keywordize-keys true)
+                                            value (some-> result first :value reader/read-string)]
+                                        (when value
+                                          (when-not (str/blank? (:out value))
+                                            (dispatch-sync [::events/update-data :console (fnil conj [])
+                                                            {:type :out
+                                                             :content (:out value)}]))
+                                          (when-not (str/blank? (:out-err value))
+                                            (dispatch-sync [::events/update-data :console (fnil conj [])
+                                                            {:type :out-err
+                                                             :content (:out-err value)}]))))))
+  (.on ipc-renderer "app-quit" (fn []
+                                 (when-let [pid @(subscribe [::subs/scene-3d-pid])]
+                                   (.kill js/process pid))))
   (js/setInterval (fn []
                     (when-let [pid @(subscribe [::subs/scene-3d-pid])]
                       (.then (findp "pid" pid)
