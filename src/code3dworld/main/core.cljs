@@ -4,6 +4,7 @@
    ["nrepl-client" :as nrepl]
    ["electron" :refer [app BrowserWindow crashReporter ipcMain]]))
 
+(def findp (js/require "find-process"))
 
 (def main-window (atom nil))
 (def backend-nrepl-port 3011)
@@ -29,12 +30,15 @@
                                                  (println "Result" result " - Error: " err)
                                                  (.send (.-sender event) "asynchronous-reply"
                                                         (clj->js {:result result
-                                                                  :error err}))))
-                                        #_(.once @client "connect"
-                                               (fn []
-                                                 (println "Connected!")
-
-                                                 ))))
+                                                                  :error err}))))))
+  (js/setInterval (fn []
+                    (.then (findp "pid" backend-nrepl-port)
+                           (fn [list]
+                             (when (empty? (js->clj list))
+                               ;;TODO start backend
+                               ))
+                           (fn [err]
+                             (println "Err: " err)))) 500)
   #_(.on js/process "uncaughtException" (fn [error]
                                           (println "Here is the ERROR:" error))))
 
@@ -49,4 +53,5 @@
             :autoSubmit false}))
   (.on app "window-all-closed" #(when-not (= js/process.platform "darwin")
                                   (.quit app)))
+  (.on app "quit" (fn [] (println "kapatiyoruz")))
   (.on app "ready" init-browser))

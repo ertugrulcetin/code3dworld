@@ -171,6 +171,13 @@
        {:on-click #(dispatch [::events/update-editor-font-size +])}
        [:img
         {:src "img/increase-font-size.svg"}]]]
+     [tooltip
+      {:text "Clear Console"
+       :class "c3-clear-console"}
+      [:div
+       {:on-click #(dispatch [::events/reset :console])}
+       [:img
+        {:src "img/trash.svg"}]]]
      (if-let [pid @(subscribe [::subs/scene-3d-pid])]
        [:div.c3-stop-button
         {:on-click (fn [_]
@@ -179,7 +186,7 @@
         "Stop 3D Scene"]
        [:div.c3-play-button
         {:on-click (fn [_]
-                     (let [r (exec (.join fpath dir "/core.app/Contents/MacOS/core") "&")
+                     (let [r (exec (.join fpath dir "/core.app/Contents/MacOS/core"))
                            pid ^js/Number (.-pid r)]
                        (dispatch [::events/set-data :scene-3d-pid pid])))}
         "Start 3D Scene"])]))

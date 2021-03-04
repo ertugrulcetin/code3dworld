@@ -33,7 +33,7 @@
     {:defaultValue "(odd? 1) ;;=> keep it\n(odd? 2) ;;=> discard it\n(odd? 3) ;;=> keep it\n(odd? 4) ;;=> discard it\n(odd? 5) ;;=> keep it\n(odd? 6) ;;=> discard it\n(odd? 7) ;;=> keep it"}]]]
 
  [:span.c3-body
-  "Let's find out people who are older than 35 years old."
+  "Let's find out people who are older than 35 years old:"
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(println \"People older than 35 years old:\"\n   (filter (fn [person] (> (:age person) 35))\n     [{:name \"Dwight\" :age 32}\n      {:name \"Michael\" :age 39}\n      {:name \"Angela\" :age 31}\n      {:name \"Pam\" :age 28}]))\n\n;;People older than 35 years old: ({:name Michael, :age 39})\n;;=>nil"}]]]
