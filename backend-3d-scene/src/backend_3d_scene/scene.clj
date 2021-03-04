@@ -91,33 +91,25 @@
       :out-err (.toString err-buffer# "UTF-8")}))
 
 
-(defn- start-or-stop-scene [code]
-  (if (= "start-scene" code)
-    (mount/start #'app)
-    (mount/stop #'app)))
-
-
 ;;TODO add timeout
 (defn run [code]
   (try
-    (if (#{"start-scene" "stop-scene"} code)
-      (start-or-stop-scene code)
-      (let [forms (read-string (str "(" code ")"))
-            result (atom {})
-            p (promise)]
-        (binding [jme/*app* app]
-          (jme/enqueue (fn []
-                         (let [out (with-out
-                                     (try
-                                       (eval (cons 'do forms))
-                                       (catch Throwable t
-                                         (swap! result assoc
-                                                :error? true
-                                                :error-msg (->> t Throwable->map :cause parse-error-msg)))))]
-                           (swap! result merge out)
-                           (deliver p true)))))
-        (deref p)
-        (assoc @result :used-fns (get-used-fns code))))
+    (let [forms (read-string (str "(" code ")"))
+          result (atom {})
+          p (promise)]
+      (binding [jme/*app* app]
+        (jme/enqueue (fn []
+                       (let [out (with-out
+                                  (try
+                                    (eval (cons 'do forms))
+                                    (catch Throwable t
+                                      (swap! result assoc
+                                             :error? true
+                                             :error-msg (->> t Throwable->map :cause parse-error-msg)))))]
+                         (swap! result merge out)
+                         (deliver p true)))))
+      (deref p)
+      (assoc @result :used-fns (get-used-fns code)))
     (catch Throwable t
       {:error? true
        :error-msg (-> t Throwable->map :cause parse-error-msg)})))
