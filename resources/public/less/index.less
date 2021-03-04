@@ -184,8 +184,16 @@
             padding: 0 10px 0 10px;
             margin-left: auto;
             color: @c3-white;
+            outline: none;
+            border: none;
             cursor: pointer;
             background-color: @c3-green-001;
+            &:hover {
+              opacity: 0.8;
+            }
+            &:disabled {
+              opacity: 0.6;
+            }
           }
           .c3-stop-button {
             display: flex;
@@ -193,8 +201,16 @@
             padding: 0 10px 0 10px;
             margin-left: auto;
             color: @c3-white;
+            outline: none;
+            border: none;
             cursor: pointer;
             background-color: @c3-red;
+            &:hover {
+              opacity: 0.8;
+            }
+            &:disabled {
+              opacity: 0.6;
+            }
           }
         }
 

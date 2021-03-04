@@ -166,12 +166,12 @@
        [:img
         {:src "img/increase-font-size.svg"}]]]
      (if-let [pid @(subscribe [::subs/scene-3d-pid])]
-       [:div.c3-stop-button
+       [:button.c3-stop-button
         {:on-click (fn [_]
                      (.kill js/process pid)
                      (dispatch [::events/reset :scene-3d-pid]))}
         "Stop 3D Scene"]
-       [:div.c3-play-button
+       [:button.c3-play-button
         {:on-click (fn [_]
                      (let [r (exec (.join fpath dir "/core.app/Contents/MacOS/core") "&")
                            pid ^js/Number (.-pid r)]
