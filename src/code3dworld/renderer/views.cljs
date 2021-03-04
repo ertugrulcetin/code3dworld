@@ -186,6 +186,7 @@
         "Stop 3D Scene"]
        [:div.c3-play-button
         {:on-click (fn [_]
+                     ;;TODO move to effects
                      (let [r (exec (.join fpath dir "/core.app/Contents/MacOS/core"))
                            pid ^js/Number (.-pid r)]
                        (dispatch [::events/set-data :scene-3d-pid pid])))}
@@ -284,6 +285,7 @@
                                                              :content (:out-err value)}]))))))
   (.on ipc-renderer "app-close" (fn []
                                   (when-let [pid @(subscribe [::subs/scene-3d-pid])]
+                                    ;;TODO move to effects
                                     (.kill js/process pid))
                                   (.send ipc-renderer "closed")))
   (js/setInterval (fn []
