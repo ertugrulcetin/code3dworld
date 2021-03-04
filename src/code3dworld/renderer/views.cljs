@@ -1,6 +1,5 @@
 (ns code3dworld.renderer.views
   (:require
-   [cljs.reader :as reader]
    [reagent.core :as r]
    [goog.object :as ob]
    [goog.functions :as gf]
@@ -8,14 +7,15 @@
    [code3dworld.renderer.util :as util]
    [code3dworld.renderer.subs :as subs]
    [code3dworld.renderer.events :as events]
+   [clojure.string :as str]
+   [cljs.reader :as reader]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
    ["codemirror" :as cm]
    ["/vendor/split" :as split]
    ["codemirror/mode/clojure/clojure"]
    ["codemirror/addon/selection/active-line"]
    ["codemirror/addon/edit/matchbrackets"]
-   ["codemirror/addon/edit/closebrackets"]
-   [clojure.string :as str]))
+   ["codemirror/addon/edit/closebrackets"]))
 
 
 (enable-console-print!)
