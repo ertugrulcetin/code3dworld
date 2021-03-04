@@ -270,7 +270,7 @@
 
 (defn- init []
   (println "Init")
-  (.on ipc-renderer "asynchronous-reply" (fn [event response]
+  (.on ipc-renderer "asynchronous-reply" (fn [_ response]
                                            (let [{:keys [result]} (js->clj response :keywordize-keys true)
                                                  value (some-> result first :value reader/read-string)]
                                              (when value
