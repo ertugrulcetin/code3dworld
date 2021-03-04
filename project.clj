@@ -95,7 +95,11 @@
                     ["cljfmt" "check"]
                     ["clj-kondo" "--lint" "src"]]
 
-            "clj-kondo" ["with-profile" "+dev" "run" "-m" "clj-kondo.main"]}
+            "clj-kondo" ["with-profile" "+dev" "run" "-m" "clj-kondo.main"]
+
+            "fix" ["do"
+                   ["nsort" "-r"]
+                   ["cljfmt" "fix"]]}
 
   :profiles
   {:dev
