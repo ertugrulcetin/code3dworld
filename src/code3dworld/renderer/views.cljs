@@ -282,9 +282,10 @@
                                             (dispatch-sync [::events/update-data :console (fnil conj [])
                                                             {:type :out-err
                                                              :content (:out-err value)}]))))))
-  (.on ipc-renderer "app-quit" (fn []
+  (.on ipc-renderer "app-close" (fn []
                                  (when-let [pid @(subscribe [::subs/scene-3d-pid])]
-                                   (.kill js/process pid))))
+                                   (.kill js/process pid))
+                                  (.send ipc-renderer "closed")))
   (js/setInterval (fn []
                     (when-let [pid @(subscribe [::subs/scene-3d-pid])]
                       (.then (findp "pid" pid)

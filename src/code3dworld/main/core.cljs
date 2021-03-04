@@ -7,7 +7,13 @@
 
 (def main-window (atom nil))
 (def backend-nrepl-port 3011)
+
+;;TODO change this, if the new instance runs? will be broken pipe
 (def client (delay ((ob/get nrepl "connect") #js {:port backend-nrepl-port})))
+
+
+(defn- ^js/electron.BrowserWindow get-main-window []
+  @main-window)
 
 
 (defn init-browser []
@@ -16,17 +22,17 @@
                                  :height 800
                                  :webPreferences {:nodeIntegration true}})))
   ; Path is relative to the compiled js file (main.js in our case)
-  (.loadURL ^js/electron.BrowserWindow @main-window (str "file://" js/__dirname "/public/index.html"))
-  (.on ^js/electron.BrowserWindow @main-window "closed" #(reset! main-window nil))
+  (.loadURL (get-main-window) (str "file://" js/__dirname "/public/index.html"))
+  (.on (get-main-window) "close" #(.send (.-webContents (get-main-window)) "app-close"))
+  (.on ipcMain "closed" #(when-not (= js/process.platform "darwin")
+                           (.quit app)))
   (.on ipcMain "eval" (fn [event code]
-                        (println "Code: " code)
                         (.eval @client
                                (str "(do\n"
                                     '(in-ns 'backend-3d-scene.scene)
                                     "(run " (pr-str code) ")"
                                     "\n)")
                                (fn [err result]
-                                 (println "Result" result " - Error: " err)
                                  (.send (.-sender event) "eval-response"
                                         (clj->js {:result result
                                                   :error err}))))))
@@ -42,7 +48,4 @@
             :productName "MyAwesomeApp"
             :submitURL "https://example.com/submit-url"
             :autoSubmit false}))
-  (.on app "window-all-closed" #(when-not (= js/process.platform "darwin")
-                                  (.quit app)))
-  (.on app "will-quit" (fn [] (.send (.-webContents ^js/electron.BrowserWindow @main-window) "app-quit")))
   (.on app "ready" init-browser))
