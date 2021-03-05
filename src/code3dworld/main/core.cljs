@@ -8,8 +8,9 @@
 (def main-window (atom nil))
 (def backend-nrepl-port 3011)
 
-;;TODO change this, if the new instance runs? will be broken pipe
-(def client (delay ((ob/get nrepl "connect") #js {:port backend-nrepl-port})))
+
+(defn- get-client []
+  ((ob/get nrepl "connect") #js {:port backend-nrepl-port}))
 
 
 (defn- ^js/electron.BrowserWindow get-main-window []
@@ -27,15 +28,16 @@
   (.on ipcMain "closed" #(when-not (= js/process.platform "darwin")
                            (.quit app)))
   (.on ipcMain "eval" (fn [event code]
-                        (.eval @client
-                               (str "(do\n"
-                                    '(in-ns 'backend-3d-scene.scene)
-                                    "(run " (pr-str code) ")"
-                                    "\n)")
-                               (fn [err result]
-                                 (.send (.-sender event) "eval-response"
-                                        (clj->js {:result result
-                                                  :error err}))))))
+                        (let [client (get-client)]
+                          (.eval client
+                                 (str "(do\n"
+                                      '(in-ns 'backend-3d-scene.scene)
+                                      "(run " (pr-str code) ")"
+                                      "\n)")
+                                 (fn [err result]
+                                   (.send (.-sender event) "eval-response" (clj->js {:result result
+                                                                                     :error err}))
+                                   (.end client))))))
   #_(.on js/process "uncaughtException" (fn [error]
                                           (println "Here is the ERROR:" error))))
 

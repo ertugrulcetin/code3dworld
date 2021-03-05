@@ -266,7 +266,11 @@
   (dispatch [::events/stop-leftover-3d-scene])
   (.on ipc-renderer "eval-response" (fn [_ response]
                                       (let [{:keys [result]} (js->clj response :keywordize-keys true)
-                                            value (some-> result first :value reader/read-string)]
+                                            value (some->> result
+                                                           (filter :value)
+                                                           first
+                                                           :value
+                                                           reader/read-string)]
                                         (when value
                                           (when-not (str/blank? (:out value))
                                             (dispatch-sync [::events/update-data :console (fnil conj [])
@@ -279,6 +283,8 @@
   (.on ipc-renderer "app-close" (fn []
                                   (dispatch-sync [::events/stop-3d-scene])
                                   (.send ipc-renderer "closed")))
+  (.on ipc-renderer "alert" (fn [_ response]
+                              (println "Response:" response)))
   (js/setInterval (fn []
                     (when-let [pid @(subscribe [::subs/scene-3d-pid])]
                       (.then (findp "pid" pid)

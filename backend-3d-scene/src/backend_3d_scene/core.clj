@@ -31,4 +31,5 @@
 
 
 (comment
-  (-main))
+  (-main)
+  (mount/stop))

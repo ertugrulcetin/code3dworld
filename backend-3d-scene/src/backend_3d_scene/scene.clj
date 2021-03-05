@@ -100,19 +100,19 @@
       (binding [jme/*app* app]
         (jme/enqueue (fn []
                        (let [out (with-out
-                                  (try
-                                    (eval (cons 'do forms))
-                                    (catch Throwable t
-                                      (swap! result assoc
-                                             :error? true
-                                             :error-msg (->> t Throwable->map :cause parse-error-msg)))))]
+                                   (try
+                                     (eval (cons 'do forms))
+                                     (catch Throwable t
+                                       (swap! result assoc
+                                              :error? true
+                                              :out-err (->> t Throwable->map :cause parse-error-msg)))))]
                          (swap! result merge out)
                          (deliver p true)))))
       (deref p)
       (assoc @result :used-fns (get-used-fns code)))
     (catch Throwable t
       {:error? true
-       :error-msg (-> t Throwable->map :cause parse-error-msg)})))
+       :out-err (-> t Throwable->map :cause parse-error-msg)})))
 
 
 (comment
