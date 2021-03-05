@@ -283,8 +283,6 @@
   (.on ipc-renderer "app-close" (fn []
                                   (dispatch-sync [::events/stop-3d-scene])
                                   (.send ipc-renderer "closed")))
-  (.on ipc-renderer "alert" (fn [_ response]
-                              (println "Response:" response)))
   (js/setInterval (fn []
                     (when-let [pid @(subscribe [::subs/scene-3d-pid])]
                       (.then (findp "pid" pid)
