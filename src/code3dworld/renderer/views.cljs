@@ -261,11 +261,11 @@
    [bottom]])
 
 
-(defn- add-msg-to-console [out-key value type]
-  (when-not (str/blank? (out-key value))
+(defn- add-msg-to-console [content type]
+  (when-not (str/blank? content)
     (dispatch-sync [::events/update-data :console (fnil conj [])
                     {:type type
-                     :content (out-key value)}])))
+                     :content content}])))
 
 
 (defn- on-eval-response [_ response]
@@ -275,9 +275,9 @@
                        first
                        :value
                        reader/read-string)]
-    (add-msg-to-console :out value :out)
-    (add-msg-to-console :out-err value :out-err)
-    (add-msg-to-console :error-msg value :out-err)))
+    (add-msg-to-console (:out value) :out)
+    (add-msg-to-console (:out-err value) :out-err)
+    (add-msg-to-console (:error-msg value) :out-err)))
 
 
 (defn- on-app-close []
