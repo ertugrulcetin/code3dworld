@@ -176,7 +176,7 @@
        {:on-click #(dispatch [::events/reset :console])}
        [:img
         {:src "img/trash.svg"}]]]
-     (if-let [pid @(subscribe [::subs/scene-3d-pid])]
+     (if @(subscribe [::subs/scene-3d-pid])
        [:button.c3-stop-button
         {:on-click #(dispatch [::events/stop-3d-scene])}
         "Stop 3D Scene"]
@@ -276,8 +276,7 @@
                                                             {:type :out-err
                                                              :content (:out-err value)}]))))))
   (.on ipc-renderer "app-close" (fn []
-                                  (when-let [pid @(subscribe [::subs/scene-3d-pid])]
-                                    #(dispatch [::events/stop-3d-scene pid]))
+                                  (dispatch-sync [::events/stop-3d-scene])
                                   (.send ipc-renderer "closed")))
   (js/setInterval (fn []
                     (when-let [pid @(subscribe [::subs/scene-3d-pid])]

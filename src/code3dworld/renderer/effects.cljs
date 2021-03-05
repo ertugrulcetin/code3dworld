@@ -3,6 +3,8 @@
             [re-frame.core :refer [reg-fx dispatch]]))
 
 
+(def fpath (js/require "path"))
+(def dir (str js/__dirname "/.."))
 (def exec (.-exec (js/require "child_process")))
 
 
@@ -35,7 +37,7 @@
 (reg-fx
  ::start-process
  (fn [path]
-   (let [r (exec path)
+   (let [r (exec (.join fpath dir path))
          pid ^js/Number (.-pid r)]
      (dispatch [:code3dworld.renderer.events/set-data :scene-3d-pid pid]))))
 

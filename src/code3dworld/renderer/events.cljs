@@ -6,10 +6,6 @@
    [re-frame.core :refer [reg-event-db reg-event-fx inject-cofx]]))
 
 
-(def fpath (js/require "path"))
-(def dir (str js/__dirname "/.."))
-
-
 (defn- need-init-db? [db]
   (and
    (:active-chapter db)
@@ -109,7 +105,7 @@
 (reg-event-fx
  ::start-3d-scene
  (fn [_ _]
-   {::effects/start-process (.join fpath dir "/core.app/Contents/MacOS/core")}))
+   {::effects/start-process "/core.app/Contents/MacOS/core"}))
 
 
 (reg-event-fx
