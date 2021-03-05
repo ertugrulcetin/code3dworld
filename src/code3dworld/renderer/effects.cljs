@@ -22,6 +22,7 @@
      (catch js/Error e
        (println e)))))
 
+
 (reg-fx
  ::remove-item-from-local!
  (fn [key]
