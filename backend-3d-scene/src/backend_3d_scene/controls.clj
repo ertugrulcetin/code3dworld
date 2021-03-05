@@ -3,6 +3,24 @@
   (:import (com.jme3.input KeyInput MouseInput)))
 
 
+(defn- throw-ball* []
+  (let [{:keys [sphere stone-mat bullet-app-state]} (get-state)
+        r (ray (.getLocation (cam)) (.getDirection (cam)))
+        ball-geo (-> (geo "cannon ball" sphere)
+                     (setc :material stone-mat
+                           :local-translation (add (get* (cam) :location)
+                                                   (mult (.getDirection r) 10)))
+                     (add-to-root))
+        ball-phy (rigid-body-control 1.0)]
+    (add-control ball-geo ball-phy)
+    (-> bullet-app-state
+        (get* :physics-space)
+        (call* :add ball-phy))
+    (set* ball-phy :linear-velocity (-> (cam)
+                                        (get* :direction)
+                                        (mult 50)))))
+
+
 (defn- on-action-listener []
   (action-listener
    (fn [name* pressed? _]
@@ -19,6 +37,8 @@
                                    (set* (fly-cam) :enabled true)
                                    (set* (input-manager) :cursor-visible false)
                                    (set-state :focus true))
+         (= ::shoot name*) (when (not pressed?)
+                             (throw-ball*))
          :else (set-state :control [::user-input (-> name* name keyword)] pressed?))))))
 
 

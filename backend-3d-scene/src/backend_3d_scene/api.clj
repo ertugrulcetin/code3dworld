@@ -8,6 +8,7 @@
    (com.jme3.app SimpleApplication)
    (com.jme3.bullet.collision.shapes BoxCollisionShape)
    (com.jme3.math ColorRGBA Vector3f)
+   (com.jme3.scene.shape Sphere$TextureMode)
    (com.jme3.terrain.heightmap HillHeightMap)
    (com.jme3.texture Texture$WrapMode)))
 
@@ -75,7 +76,11 @@
         terrain-shape (create-mesh-shape terrain)
         landscape (rigid-body-control terrain-shape 0)
         player (create-player)
-        spatial (node "player node")]
+        spatial (node "player node")
+        sphere* (set* (sphere 32 32 0.4 true false)
+                      :texture-mode Sphere$TextureMode/Projected)
+        stone-mat (set* (unshaded-mat)
+                        :texture "ColorMap" (load-texture "Textures/Terrain/Rock/Rock.PNG"))]
     (add-lights)
     (add-to-root (create-sky "Textures/Sky/Bright/BrightSky.dds" :cube))
     (-> spatial
@@ -94,6 +99,8 @@
     {:bullet-app-state bas
      :player player
      :terrain terrain
+     :sphere sphere*
+     :stone-mat stone-mat
      :focus true}))
 
 
