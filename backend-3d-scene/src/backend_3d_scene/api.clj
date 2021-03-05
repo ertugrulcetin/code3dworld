@@ -8,7 +8,8 @@
    (com.jme3.bullet.collision.shapes BoxCollisionShape)
    (com.jme3.math ColorRGBA Vector3f)
    (com.jme3.terrain.heightmap HillHeightMap)
-   (com.jme3.texture Texture$WrapMode)))
+   (com.jme3.texture Texture$WrapMode)
+   (com.jme3.app SimpleApplication)))
 
 
 (defn- create-player []
@@ -67,6 +68,7 @@
   (setc (fly-cam)
         :move-speed 100
         :zoom-speed 0)
+  (.deleteMapping (input-manager) SimpleApplication/INPUT_MAPPING_EXIT)
   (let [bas (attach (bullet-app-state))
         mat (create-material)
         terrain (create-terrain mat)
@@ -91,7 +93,8 @@
         (call* :add player))
     {:bullet-app-state bas
      :player player
-     :terrain terrain}))
+     :terrain terrain
+     :focus true}))
 
 
 (defn get-all-boxes []

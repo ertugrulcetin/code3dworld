@@ -6,11 +6,20 @@
 (defn- on-action-listener []
   (action-listener
    (fn [name* pressed? _]
-     (let [{:keys [player]} (get-state)]
-       (if (= ::jump name*)
-         (when pressed?
-           (call* player :jump))
-         (set-state :control [::user-input (-> name* name keyword)] pressed?))))))
+     (let [{:keys [player focus]} (get-state)]
+       (cond
+         (= ::jump name*) (when pressed?
+                            (call* player :jump))
+         (= ::esc name*) (when pressed?
+                           (set* (fly-cam) :enabled false)
+                           (set* (input-manager) :cursor-visible true)
+                           (set-state :focus false))
+         (and (not focus)
+              (= ::shoot name*)) (when pressed?
+                                   (set* (fly-cam) :enabled true)
+                                   (set* (input-manager) :cursor-visible false)
+                                   (set-state :focus true))
+         :else (set-state :control [::user-input (-> name* name keyword)] pressed?))))))
 
 
 (defn- set-up-keys []
@@ -20,8 +29,9 @@
                ::right (key-trigger KeyInput/KEY_D)
                ::up (key-trigger KeyInput/KEY_W)
                ::down (key-trigger KeyInput/KEY_S)
-               ::jump (key-trigger KeyInput/KEY_SPACE)}
-    :listeners {(on-action-listener) [::shoot ::left ::right ::up ::down ::jump]}}))
+               ::jump (key-trigger KeyInput/KEY_SPACE)
+               ::esc (key-trigger KeyInput/KEY_ESCAPE)}
+    :listeners {(on-action-listener) [::shoot ::left ::right ::up ::down ::jump ::esc]}}))
 
 
 (defn- get-available-loc [player terrain]
@@ -51,10 +61,10 @@
                            cam-left (-> (:cam-left state) (setv (get* (cam) :left)) (mult-loc 0.4))
                            walk-direction (setv (:walk-direction state) 0 0 0)
                            walk-direction (cond-> walk-direction
-                                            (:left state) (add-loc cam-left)
-                                            (:right state) (add-loc (negate cam-left))
-                                            (:up state) (add-loc cam-dir)
-                                            (:down state) (add-loc (negate cam-dir)))
+                                                  (:left state) (add-loc cam-left)
+                                                  (:right state) (add-loc (negate cam-left))
+                                                  (:up state) (add-loc cam-dir)
+                                                  (:down state) (add-loc (negate cam-dir)))
                            loc (get-available-loc player terrain)]
                        (set* player :walk-direction walk-direction)
                        (set* player :physics-location loc)
