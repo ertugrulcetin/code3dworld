@@ -38,6 +38,7 @@
          pid ^js/Number (.-pid r)]
      (dispatch [:code3dworld.renderer.events/set-data :scene-3d-pid pid]))))
 
+
 (reg-fx
  ::kill-process
  (fn [pid]
