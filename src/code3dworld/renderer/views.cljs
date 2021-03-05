@@ -263,6 +263,7 @@
 
 (defn- init []
   (println "Init")
+  (dispatch [::events/stop-leftover-3d-scene])
   (.on ipc-renderer "eval-response" (fn [_ response]
                                       (let [{:keys [result]} (js->clj response :keywordize-keys true)
                                             value (some-> result first :value reader/read-string)]

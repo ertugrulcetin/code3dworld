@@ -23,3 +23,9 @@
  :settings
  (fn [cofx _]
    (assoc cofx :settings (util/settings))))
+
+
+(reg-cofx
+ :pid
+ (fn [cofx _]
+   (assoc cofx :pid (util/get-pid))))
