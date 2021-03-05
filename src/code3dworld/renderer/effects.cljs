@@ -1,5 +1,11 @@
 (ns code3dworld.renderer.effects
-  (:require [goog.dom :as dom] [re-frame.core :refer [reg-fx]]))
+  (:require [goog.dom :as dom]
+            [re-frame.core :refer [reg-fx dispatch]]))
+
+
+(def fpath (js/require "path"))
+(def dir (str js/__dirname "/.."))
+(def exec (.-exec (js/require "child_process")))
 
 
 (reg-fx
@@ -18,6 +24,7 @@
      (catch js/Error e
        (println e)))))
 
+
 (reg-fx
  ::remove-item-from-local!
  (fn [key]
@@ -25,3 +32,17 @@
      (.removeItem (.-localStorage js/window) key)
      (catch js/Error e
        (println e)))))
+
+
+(reg-fx
+ ::start-process
+ (fn [path]
+   (let [r (exec (.join fpath dir path))
+         pid ^js/Number (.-pid r)]
+     (dispatch [:code3dworld.renderer.events/set-data :scene-3d-pid pid]))))
+
+
+(reg-fx
+ ::kill-process
+ (fn [pid]
+   (.kill js/process pid)))

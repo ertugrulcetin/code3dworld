@@ -100,3 +100,16 @@
  (fn [{:keys [db]} _]
    {::effects/set-item-to-local! {:key "settings"
                                   :val (select-keys db [:visibility :editor :chapters :active-chapter])}}))
+
+
+(reg-event-fx
+ ::start-3d-scene
+ (fn [_ _]
+   {::effects/start-process "/core.app/Contents/MacOS/core"}))
+
+
+(reg-event-fx
+ ::stop-3d-scene
+ (fn [{:keys [db]} _]
+   {:db (dissoc db :scene-3d-pid)
+    ::effects/kill-process (:scene-3d-pid db)}))

@@ -21,9 +21,7 @@
 (enable-console-print!)
 
 
-(def fpath (js/require "path"))
 (def findp (js/require "find-process"))
-(def dir (str js/__dirname "/.."))
 (def exec (.-exec (js/require "child_process")))
 (def ipc-renderer (.-ipcRenderer (js/require "electron")))
 
@@ -178,19 +176,12 @@
        {:on-click #(dispatch [::events/reset :console])}
        [:img
         {:src "img/trash.svg"}]]]
-     (if-let [pid @(subscribe [::subs/scene-3d-pid])]
+     (if @(subscribe [::subs/scene-3d-pid])
        [:button.c3-stop-button
-        {:on-click (fn [_]
-                     ;;TODO move to effects
-                     (.kill js/process pid)
-                     (dispatch [::events/reset :scene-3d-pid]))}
+        {:on-click #(dispatch [::events/stop-3d-scene])}
         "Stop 3D Scene"]
        [:button.c3-play-button
-        {:on-click (fn [_]
-                     ;;TODO move to effects
-                     (let [r (exec (.join fpath dir "/core.app/Contents/MacOS/core"))
-                           pid ^js/Number (.-pid r)]
-                       (dispatch [::events/set-data :scene-3d-pid pid])))}
+        {:on-click #(dispatch [::events/start-3d-scene])}
         "Start 3D Scene"])]))
 
 
@@ -285,9 +276,7 @@
                                                             {:type :out-err
                                                              :content (:out-err value)}]))))))
   (.on ipc-renderer "app-close" (fn []
-                                  (when-let [pid @(subscribe [::subs/scene-3d-pid])]
-                                    ;;TODO move to effects
-                                    (.kill js/process pid))
+                                  (dispatch-sync [::events/stop-3d-scene])
                                   (.send ipc-renderer "closed")))
   (js/setInterval (fn []
                     (when-let [pid @(subscribe [::subs/scene-3d-pid])]
