@@ -6,6 +6,10 @@
    [re-frame.core :refer [reg-event-db reg-event-fx inject-cofx]]))
 
 
+(def fpath (js/require "path"))
+(def dir (str js/__dirname "/.."))
+
+
 (defn- need-init-db? [db]
   (and
    (:active-chapter db)
@@ -100,3 +104,16 @@
  (fn [{:keys [db]} _]
    {::effects/set-item-to-local! {:key "settings"
                                   :val (select-keys db [:visibility :editor :chapters :active-chapter])}}))
+
+
+(reg-event-fx
+ ::start-3d-scene
+ (fn [_ _]
+   {::effects/start-process (.join fpath dir "/core.app/Contents/MacOS/core")}))
+
+
+(reg-event-fx
+ ::stop-3d-scene
+ (fn [{:keys [db]} _]
+   {:db (dissoc db :scene-3d-pid)
+    ::effects/kill-process (:scene-3d-pid db)}))

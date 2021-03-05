@@ -1,5 +1,9 @@
 (ns code3dworld.renderer.effects
-  (:require [goog.dom :as dom] [re-frame.core :refer [reg-fx]]))
+  (:require [goog.dom :as dom]
+            [re-frame.core :refer [reg-fx dispatch]]))
+
+
+(def exec (.-exec (js/require "child_process")))
 
 
 (reg-fx
@@ -25,3 +29,16 @@
      (.removeItem (.-localStorage js/window) key)
      (catch js/Error e
        (println e)))))
+
+
+(reg-fx
+ ::start-process
+ (fn [path]
+   (let [r (exec path)
+         pid ^js/Number (.-pid r)]
+     (dispatch [:code3dworld.renderer.events/set-data :scene-3d-pid pid]))))
+
+(reg-fx
+ ::kill-process
+ (fn [pid]
+   (.kill js/process pid)))
