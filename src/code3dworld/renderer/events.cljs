@@ -14,11 +14,12 @@
 
 (reg-event-fx
  ::initialize-db
- [(inject-cofx :settings)]
- (fn [{:keys [_ settings]}]
+ [(inject-cofx :settings) (inject-cofx :pid)]
+ (fn [{:keys [_ settings pid]}]
    (let [settings (when-not (-> settings :active-chapter empty?)
                     (update settings :active-chapter keyword))
-         db (merge db/default-db settings)]
+         db (merge db/default-db settings)
+         db (if pid (assoc db :pid pid) db)]
      (if (or (nil? settings) (need-init-db? db))
        {:db db
         :dispatch [::update-editor-font-size-in-local]}
@@ -113,3 +114,11 @@
  (fn [{:keys [db]} _]
    {:db (dissoc db :scene-3d-pid)
     ::effects/kill-process (:scene-3d-pid db)}))
+
+
+(reg-event-fx
+ ::stop-leftover-3d-scene
+ (fn [{:keys [db]} _]
+   (when (:pid db)
+     {:db (dissoc db :pid)
+      ::effects/kill-process (:pid db)})))

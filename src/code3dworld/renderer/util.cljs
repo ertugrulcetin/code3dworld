@@ -1,7 +1,26 @@
 (ns code3dworld.renderer.util
-  (:require [goog.string :as gstring] [cljs.reader :as reader]))
+  (:require [goog.string :as gstring]
+            [cljs.reader :as reader]))
 
 (def fs "Provides access to Node/Electron [fs library](https://nodejs.org/api/fs.html)." (js/require "fs"))
+
+
+(defn set-item! [key val]
+  (try
+    (.setItem (.-localStorage js/window) key (.stringify js/JSON (clj->js val)))
+    (catch js/Error e
+      (println e))))
+
+
+(defn remove-item! [key]
+  (try
+    (.removeItem (.-localStorage js/window) key)
+    (catch js/Error e
+      (println e))))
+
+
+(defn get-item! [key]
+  (.getItem js/localStorage key))
 
 
 (defn settings
@@ -9,7 +28,7 @@
   []
   (try
     (into (sorted-map)
-          (as-> (.getItem js/localStorage "settings") data
+          (as-> (get-item! "settings") data
             (.parse js/JSON data)
             (js->clj data :keywordize-keys true)))
     (catch js/Error _
@@ -49,3 +68,7 @@
        vals
        (sort-by :order)
        (mapv :id)))
+
+
+(defn get-pid []
+  (get-item! "pid"))
