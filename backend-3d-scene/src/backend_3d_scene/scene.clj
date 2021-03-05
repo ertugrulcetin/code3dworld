@@ -23,9 +23,10 @@
                                :width 800
                                :height 600
                                :resizable? true}}
-             :init init)
+             :init init
+             :destroy #(System/exit 0))
            (jme/start app*))
-  :stop (jme/unbind-app #'app*))
+  :stop (jme/unbind-all))
 
 
 (defn- get-wrong-arity-fn-name [msg]
@@ -116,23 +117,6 @@
 
 
 (comment
-  (println "hey")
-  (macroexpand-1 '(run "(print 'selam 2"))
-  (run "(create-box {:name \"box 1\"\n                     :size 8\n                     :random-location? true})")
-  (run "(println \"Result: \" (1 2 0))\n")
-  (jme/run app
-           (scene/create-box 0)
-           #_(dotimes [i 5]
-               (create-box i))
-           #_(doseq [box (map :box (filter (comp odd? :index) (get-all-boxes)))]
-               (scale box 1.5))
-
-           #_(doseq [box (map :box (filter (comp even? :index) (get-all-boxes)))]
-               (rotate box 0 45 0))
-           #_(set* (fly-cam) :move-speed 10)
-           #_(let [{:keys [player]} (get-state)]
-               (setc player
-                     :physics-location (vec3 100 -50 0))))
   (do
     (mount/stop #'app)
     (mount/start #'app)))

@@ -6,11 +6,20 @@
 (defn- on-action-listener []
   (action-listener
    (fn [name* pressed? _]
-     (let [{:keys [player]} (get-state)]
-       (if (= ::jump name*)
-         (when pressed?
-           (call* player :jump))
-         (set-state :control [::user-input (-> name* name keyword)] pressed?))))))
+     (let [{:keys [player focus]} (get-state)]
+       (cond
+         (= ::jump name*) (when pressed?
+                            (call* player :jump))
+         (= ::esc name*) (when pressed?
+                           (set* (fly-cam) :enabled false)
+                           (set* (input-manager) :cursor-visible true)
+                           (set-state :focus false))
+         (and (not focus)
+              (= ::shoot name*)) (when pressed?
+                                   (set* (fly-cam) :enabled true)
+                                   (set* (input-manager) :cursor-visible false)
+                                   (set-state :focus true))
+         :else (set-state :control [::user-input (-> name* name keyword)] pressed?))))))
 
 
 (defn- set-up-keys []
@@ -20,8 +29,9 @@
                ::right (key-trigger KeyInput/KEY_D)
                ::up (key-trigger KeyInput/KEY_W)
                ::down (key-trigger KeyInput/KEY_S)
-               ::jump (key-trigger KeyInput/KEY_SPACE)}
-    :listeners {(on-action-listener) [::shoot ::left ::right ::up ::down ::jump]}}))
+               ::jump (key-trigger KeyInput/KEY_SPACE)
+               ::esc (key-trigger KeyInput/KEY_ESCAPE)}
+    :listeners {(on-action-listener) [::shoot ::left ::right ::up ::down ::jump ::esc]}}))
 
 
 (defn- get-available-loc [player terrain]
