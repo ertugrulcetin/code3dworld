@@ -13,19 +13,18 @@
   app
   :start (do
            (jme/defsimpleapp app*
-                             :opts {:show-settings? false
-                                    :pause-on-lost-focus? false
-                                    :display-stat-view? false
-                                    :display-fps? false
-                                    :settings {:title "3D Scene"
-                                               :load-defaults? true
-                                               :frame-rate 60
-                                               :width 800
-                                               :height 600
-                                               :resizable? true}}
-                             :init init
-                             :destroy (fn []
-                                        (println "DEStroy!!!")))
+             :opts {:show-settings? false
+                    :pause-on-lost-focus? false
+                    :display-stat-view? false
+                    :display-fps? false
+                    :settings {:title "3D Scene"
+                               :load-defaults? true
+                               :frame-rate 60
+                               :width 800
+                               :height 600
+                               :resizable? true}}
+             :init init
+             :destroy #(System/exit 0))
            (jme/start app*))
   :stop (jme/unbind-all))
 
