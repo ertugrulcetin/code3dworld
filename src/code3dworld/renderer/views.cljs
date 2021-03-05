@@ -261,28 +261,31 @@
    [bottom]])
 
 
-(defn- init []
-  (println "Init")
-  (dispatch [::events/stop-leftover-3d-scene])
-  (.on ipc-renderer "eval-response" (fn [_ response]
-                                      (let [{:keys [result]} (js->clj response :keywordize-keys true)
-                                            value (some->> result
-                                                           (filter :value)
-                                                           first
-                                                           :value
-                                                           reader/read-string)]
-                                        (when value
-                                          (when-not (str/blank? (:out value))
-                                            (dispatch-sync [::events/update-data :console (fnil conj [])
-                                                            {:type :out
-                                                             :content (:out value)}]))
-                                          (when-not (str/blank? (:out-err value))
-                                            (dispatch-sync [::events/update-data :console (fnil conj [])
-                                                            {:type :out-err
-                                                             :content (:out-err value)}]))))))
-  (.on ipc-renderer "app-close" (fn []
-                                  (dispatch-sync [::events/stop-3d-scene])
-                                  (.send ipc-renderer "closed")))
+(defn- add-msg-to-console [out-key value type]
+  (when-not (str/blank? (out-key value))
+    (dispatch-sync [::events/update-data :console (fnil conj [])
+                    {:type type
+                     :content (out-key value)}])))
+
+
+(defn- on-eval-response [_ response]
+  (let [{:keys [result]} (js->clj response :keywordize-keys true)
+        value (some->> result
+                       (filter :value)
+                       first
+                       :value
+                       reader/read-string)]
+    (add-msg-to-console :out value :out)
+    (add-msg-to-console :out-err value :out-err)
+    (add-msg-to-console :error-msg value :out-err)))
+
+
+(defn- on-app-close []
+  (dispatch-sync [::events/stop-3d-scene])
+  (.send ipc-renderer "closed"))
+
+
+(defn- check-scene-3d-pid-regularly []
   (js/setInterval (fn []
                     (when-let [pid @(subscribe [::subs/scene-3d-pid])]
                       (.then (findp "pid" pid)
@@ -290,7 +293,15 @@
                                (when (empty? (js->clj list))
                                  (dispatch [::events/reset :scene-3d-pid])))
                              (fn [err]
-                               (println "Err: " err))))) 500))
+                               (println "Err: " err)))))
+                  500))
+
+
+(defn- init []
+  (dispatch [::events/stop-leftover-3d-scene])
+  (.on ipc-renderer "eval-response" on-eval-response)
+  (.on ipc-renderer "app-close" on-app-close)
+  (check-scene-3d-pid-regularly))
 
 
 (defn main-panel []

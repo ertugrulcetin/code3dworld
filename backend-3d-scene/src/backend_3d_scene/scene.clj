@@ -105,21 +105,21 @@
                                      (catch Throwable t
                                        (swap! result assoc
                                               :error? true
-                                              :out-err (->> t Throwable->map :cause parse-error-msg)))))]
+                                              :error-msg (->> t Throwable->map :cause parse-error-msg)))))]
                          (swap! result merge out)
                          (deliver p true)))))
       (deref p)
       (assoc @result :used-fns (get-used-fns code)))
     (catch Throwable t
       {:error? true
-       :out-err (-> t Throwable->map :cause parse-error-msg)})))
+       :error-msg (-> t Throwable->map :cause parse-error-msg)})))
 
 
 (comment
   (println "hey")
   (macroexpand-1 '(run "(print 'selam 2"))
   (run "(create-box {:name \"box 1\"\n                     :size 8\n                     :random-location? true})")
-  (run "(println (get-all-boxes))")
+  (run "(println \"Result: \" (1 2 0))\n")
   (jme/run app
            (scene/create-box 0)
            #_(dotimes [i 5]
