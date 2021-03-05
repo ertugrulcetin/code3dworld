@@ -119,6 +119,5 @@
 (reg-event-fx
  ::stop-leftover-3d-scene
  (fn [{:keys [db]} _]
-   (when (:pid db)
-     {:db (dissoc db :pid)
-      ::effects/kill-process (:pid db)})))
+   {:db (dissoc db :pid)
+    ::effects/kill-process (:pid db)}))

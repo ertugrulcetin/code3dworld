@@ -42,4 +42,4 @@
  ::kill-process
  (fn [pid]
    (util/remove-item! "pid")
-   (.kill js/process pid)))
+   (some->> pid (.kill js/process))))
