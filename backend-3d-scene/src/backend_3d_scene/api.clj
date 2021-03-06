@@ -201,3 +201,24 @@
 
 (defn apply-original [box-name]
   (apply-color :original box-name))
+
+
+(defn throw-ball
+  ([]
+   (throw-ball {}))
+  ([{:keys [speed] :or {speed 50}}]
+   (let [{:keys [sphere stone-mat bullet-app-state]} (get-state)
+         r (ray (.getLocation (cam)) (.getDirection (cam)))
+         ball-geo (-> (geo "cannon ball" sphere)
+                      (setc :material stone-mat
+                            :local-translation (add (get* (cam) :location)
+                                                    (mult (.getDirection r) 10)))
+                      (add-to-root))
+         ball-phy (rigid-body-control 1.0)]
+     (add-control ball-geo ball-phy)
+     (-> bullet-app-state
+         (get* :physics-space)
+         (call* :add ball-phy))
+     (set* ball-phy :linear-velocity (-> (cam)
+                                         (get* :direction)
+                                         (mult speed))))))
