@@ -8,6 +8,7 @@
    [code3dworld.renderer.subs :as subs]
    [code3dworld.renderer.events :as events]
    [clojure.string :as str]
+   [clojure.set :as set]
    [cljs.reader :as reader]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
    ["codemirror" :as cm]
@@ -15,7 +16,8 @@
    ["codemirror/mode/clojure/clojure"]
    ["codemirror/addon/selection/active-line"]
    ["codemirror/addon/edit/matchbrackets"]
-   ["codemirror/addon/edit/closebrackets"]))
+   ["codemirror/addon/edit/closebrackets"])
+  (:require-macros [kezban.core :refer [when-let*]]))
 
 
 (enable-console-print!)
@@ -269,6 +271,19 @@
                      :content content}])))
 
 
+(defn- check-required-fns-used [used-fns]
+  (let [chapter @(subscribe [::subs/chapter])
+        required-fns (:required-fns chapter)
+        missing-fns (seq (set/difference (set required-fns) used-fns))
+        done? (:done? chapter)]
+    (when (and required-fns (not done?))
+      (if missing-fns
+        (add-msg-to-console (str "Required functions haven't been used: " (str/join ", " missing-fns)) :out-err)
+        ;;TODO add success toast that you've completed successfully
+        ;;and update done? attr
+        ))))
+
+
 (defn- on-eval-response [_ response]
   (let [{:keys [result]} (js->clj response :keywordize-keys true)
         value (some->> result
@@ -278,7 +293,8 @@
                        reader/read-string)]
     (add-msg-to-console (:out value) :out)
     (add-msg-to-console (:out-err value) :out-err)
-    (add-msg-to-console (:error-msg value) :out-err)))
+    (add-msg-to-console (:error-msg value) :out-err)
+    (check-required-fns-used (:used-fns value))))
 
 
 (defn- on-app-close []

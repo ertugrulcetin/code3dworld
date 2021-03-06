@@ -7,7 +7,8 @@
                  [thheller/shadow-cljs "2.11.7"]
                  [reagent "0.10.0"]
                  [re-frame "1.1.2"]
-                 [day8.re-frame/tracing "0.6.0"]]
+                 [day8.re-frame/tracing "0.6.0"]
+                 [kezban "0.1.92"]]
 
   :plugins [[lein-shadow "0.3.1"]
             [lein-shell "0.5.0"]
