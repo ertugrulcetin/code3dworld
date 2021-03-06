@@ -187,6 +187,12 @@
         "Start 3D Scene"])]))
 
 
+(defn- get-out-style [type]
+  (cond
+    (= type :out-err) {:style {:color "#d03636"}}
+    (= type :success) {:style {:color "#0eb525"}}))
+
+
 (defn- console []
   (let [console-ref (atom nil)]
     (r/create-class
@@ -207,8 +213,7 @@
                            (map (fn [[i s]]
                                   (if (str/blank? s)
                                     ^{:key i} [:br]
-                                    ^{:key i} [:p (when (= (:type out) :out-err)
-                                                    {:style {:color "#d03636"}})
+                                    ^{:key i} [:p (get-out-style (:type out))
                                                s]))
                                 (map-indexed vector (str/split (:content out) #"\n"))))])})))
 
@@ -272,15 +277,15 @@
 
 (defn- check-required-fns-used [used-fns]
   (let [chapter @(subscribe [::subs/chapter])
-        required-fns (:required-fns chapter)
-        missing-fns (seq (set/difference (set required-fns) used-fns))
+        required-fns (set (map symbol (:required-fns chapter)))
+        missing-fns (seq (set/difference required-fns used-fns))
         done? (:done? chapter)]
     (when (and required-fns (not done?))
       (if missing-fns
         (add-msg-to-console (str "Required functions haven't been used: " (str/join ", " missing-fns)) :out-err)
-        ;;TODO add success toast that you've completed successfully
-        ;;and update done? attr
-        ))))
+        (do
+          (add-msg-to-console "You've successfully completed the chapter!" :success)
+          (dispatch [::events/mark-as-done]))))))
 
 
 (defn- on-eval-response [_ response]
