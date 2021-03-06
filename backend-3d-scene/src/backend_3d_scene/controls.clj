@@ -19,7 +19,8 @@
                                    (set* (fly-cam) :enabled true)
                                    (set* (input-manager) :cursor-visible false)
                                    (set-state :focus true))
-         :else (set-state :control [::user-input (-> name* name keyword)] pressed?))))))
+         :else (when (call* (fly-cam) :is-enabled)
+                 (set-state :control [::user-input (-> name* name keyword)] pressed?)))))))
 
 
 (defn- set-up-keys []

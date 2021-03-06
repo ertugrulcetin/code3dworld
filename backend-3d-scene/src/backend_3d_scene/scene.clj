@@ -119,6 +119,12 @@
 
 
 (comment
+  (jme/run app
+           (jme/set* (jme/fly-cam) :enabled true)
+           (println (.isEnabled (jme/fly-cam))))
+
+  (jme/run app (jme/re-init init))
+
   (do
     (mount/stop #'app)
     (mount/start #'app)))
