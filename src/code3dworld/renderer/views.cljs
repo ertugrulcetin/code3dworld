@@ -91,7 +91,7 @@
   (when chapter
     (util/read-edn
      (str "resources/chapters/" (name chapter) ".edn")
-     #(dispatch [::events/set-data [:instruction] %]))))
+     #(dispatch [::events/set-data :instruction %]))))
 
 
 (defn- boot-instruction-body []

@@ -1,0 +1,16 @@
+[:div.c3-instruction-body
+ [:h2 "Running 3D Scene!"]
+ [:span.c3-body
+  "Now we are ready to run the "
+  [:b "3D Scene"]
+  " (where the magic happens!). You will notice that there is a green button called "
+  [:b "\"Start 3D Scene\""]
+  " above the console. Let's click it."]
+ [:br] [:br]
+ [:span.c3-body
+  "When the 3D Scene application runs, you can use "
+  [:b "W"] " " [:i "(forward)"] ", "
+  [:b "A"] " " [:i "(left)"] ", "
+  [:b "S"] " " [:i "(backward)"] ", and "
+  [:b "D"] " " [:i "(right)"] " keys for moving. Also, " [:b "Space"] " key for jumping and "
+  [:b "ESC"] " key for " [:i "pause"] "."]]

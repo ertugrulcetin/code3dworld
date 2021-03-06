@@ -2,7 +2,8 @@
   (:require [goog.string :as gstring]
             [cljs.reader :as reader]))
 
-(def fs "Provides access to Node/Electron [fs library](https://nodejs.org/api/fs.html)." (js/require "fs"))
+
+(def fs (js/require "fs"))
 
 
 (defn set-item! [key val]

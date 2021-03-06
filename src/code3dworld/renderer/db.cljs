@@ -9,13 +9,32 @@
    :visibility {:console? true
                 :instruction? true}
    :chapters {:intro {:title "Intro" :order 1}
-              :chapter_1 {:title "Hello, World!" :order 2}
-              :chapter_2 {:title "Math Time" :order 3}
-              :chapter_3 {:title "3D Scene" :order 4}
-              :chapter_4 {:title "The filter function" :order 5}
-              :chapter_5 {:title "Filtering boxes" :order 6}
-              :chapter_6 {:title "The map function" :order 7}
-              :chapter_7 {:title "Mapping boxes" :order 8}}
+              :running-3d-scene {:title "3D Scene" :order 2}
+              :hello-world {:title "Hello, World"
+                            :order 3
+                            :required-fns '#{println}}
+              :math {:title "Math Time"
+                     :order 4
+                     :required-fns '#{+ - * /}}
+              :objects {:title "3D Objects"
+                        :order 5
+                        :required-fns '#{throw-ball comment create-box}}
+              :filter {:title "The filter function"
+                       :order 6
+                       :required-fns '#{> < >= <= println}}
+              :filter-boxes {:title "Filtering boxes"
+                             :order 7
+                             :required-fns '#{create-box println}}
+              :map {:title "The map function"
+                    :order 8
+                    :required-fns '#{- * / println}}
+              :map-boxes {:title "Mapping boxes"
+                          :order 9
+                          :required-fns '#{create-box
+                                           apply-blue
+                                           apply-green
+                                           apply-red
+                                           apply-original}}}
    :active-chapter :intro})
 
 
