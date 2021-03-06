@@ -24,7 +24,9 @@
                                :height 600
                                :resizable? true}}
              :init init
-             :destroy #(System/exit 0))
+             ;;TODO enable here and move to config [dev]
+             ;:destroy #(System/exit 0)
+             )
            (jme/start app*))
   :stop (jme/unbind-all))
 
