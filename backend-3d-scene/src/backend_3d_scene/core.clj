@@ -1,5 +1,6 @@
 (ns backend-3d-scene.core
   (:require
+   [backend-3d-scene.config :refer [config]]
    [clojure.java.io :as io]
    [clojure.tools.logging :as log]
    [clojure.tools.namespace.find :as ns-find]
@@ -27,6 +28,7 @@
 (defn -main [& args]
   (TimeZone/setDefault (TimeZone/getTimeZone "UTC"))
   (Locale/setDefault (Locale. "en" "US"))
+  (mount/start #'backend-3d-scene.config/config)
   (start-defstates args))
 
 

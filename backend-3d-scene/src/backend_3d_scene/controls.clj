@@ -1,6 +1,8 @@
 (ns backend-3d-scene.controls
-  (:require [jme-clj.core :refer :all])
-  (:import (com.jme3.input KeyInput MouseInput)))
+  (:require
+   [jme-clj.core :refer :all])
+  (:import
+   (com.jme3.input KeyInput MouseInput)))
 
 
 (defn- on-action-listener []
