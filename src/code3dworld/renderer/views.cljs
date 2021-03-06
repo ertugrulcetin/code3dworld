@@ -16,8 +16,7 @@
    ["codemirror/mode/clojure/clojure"]
    ["codemirror/addon/selection/active-line"]
    ["codemirror/addon/edit/matchbrackets"]
-   ["codemirror/addon/edit/closebrackets"])
-  (:require-macros [kezban.core :refer [when-let*]]))
+   ["codemirror/addon/edit/closebrackets"]))
 
 
 (enable-console-print!)
