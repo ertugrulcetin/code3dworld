@@ -8,6 +8,7 @@
    [code3dworld.renderer.subs :as subs]
    [code3dworld.renderer.events :as events]
    [clojure.string :as str]
+   [clojure.set :as set]
    [cljs.reader :as reader]
    [re-frame.core :refer [dispatch dispatch-sync subscribe]]
    ["codemirror" :as cm]
@@ -76,9 +77,10 @@
      [:img.icon-2x.mr-5
       {:src "img/book.svg"}]
      [:span "Learn"]
-     [:div.c3-chapter-status
-      [:img.icon-2x
-       {:src (util/format "img/%s.svg" (if (:done? chapter) "done" "check"))}]]]))
+     (when (:required-fns chapter)
+       [:div.c3-chapter-status
+        [:img.icon-2x
+         {:src (util/format "img/%s.svg" (if (:done? chapter) "done" "check"))}]])]))
 
 
 (defn- boot-instructions [chapter]
@@ -91,7 +93,7 @@
   (when chapter
     (util/read-edn
      (str "resources/chapters/" (name chapter) ".edn")
-     #(dispatch [::events/set-data [:instruction] %]))))
+     #(dispatch [::events/set-data :instruction %]))))
 
 
 (defn- boot-instruction-body []
@@ -185,6 +187,12 @@
         "Start 3D Scene"])]))
 
 
+(defn- get-out-style [type]
+  (cond
+    (= type :out-err) {:style {:color "#d03636"}}
+    (= type :success) {:style {:color "#0eb525"}}))
+
+
 (defn- console []
   (let [console-ref (atom nil)]
     (r/create-class
@@ -205,8 +213,7 @@
                            (map (fn [[i s]]
                                   (if (str/blank? s)
                                     ^{:key i} [:br]
-                                    ^{:key i} [:p (when (= (:type out) :out-err)
-                                                    {:style {:color "#d03636"}})
+                                    ^{:key i} [:p (get-out-style (:type out))
                                                s]))
                                 (map-indexed vector (str/split (:content out) #"\n"))))])})))
 
@@ -268,6 +275,19 @@
                      :content content}])))
 
 
+(defn- check-required-fns-used [used-fns]
+  (let [chapter @(subscribe [::subs/chapter])
+        required-fns (set (map symbol (:required-fns chapter)))
+        missing-fns (seq (set/difference required-fns used-fns))
+        done? (:done? chapter)]
+    (when (and required-fns (not done?))
+      (if missing-fns
+        (add-msg-to-console (str "Required functions haven't been used: " (str/join ", " missing-fns)) :out-err)
+        (do
+          (add-msg-to-console "You've successfully completed the chapter!" :success)
+          (dispatch [::events/mark-as-done]))))))
+
+
 (defn- on-eval-response [_ response]
   (let [{:keys [result]} (js->clj response :keywordize-keys true)
         value (some->> result
@@ -277,7 +297,8 @@
                        reader/read-string)]
     (add-msg-to-console (:out value) :out)
     (add-msg-to-console (:out-err value) :out-err)
-    (add-msg-to-console (:error-msg value) :out-err)))
+    (add-msg-to-console (:error-msg value) :out-err)
+    (check-required-fns-used (:used-fns value))))
 
 
 (defn- on-app-close []

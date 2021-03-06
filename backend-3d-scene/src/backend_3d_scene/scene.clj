@@ -78,7 +78,8 @@
                   code)
     (->> @s
          (filter (comp symbol? first))
-         (map first))))
+         (map first)
+         (set))))
 
 
 (defmacro with-out [& body]

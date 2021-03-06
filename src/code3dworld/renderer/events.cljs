@@ -121,3 +121,11 @@
  (fn [{:keys [db]} _]
    {:db (dissoc db :pid)
     ::effects/kill-process (:pid db)}))
+
+
+(reg-event-fx
+ ::mark-as-done
+ (fn [{:keys [db]} _]
+   (let [db (assoc-in db [:chapters (:active-chapter db) :done?] true)]
+     {:db db
+      :dispatch [::save-settings-to-local]})))
