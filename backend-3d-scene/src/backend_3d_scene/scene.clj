@@ -1,6 +1,7 @@
 (ns ^{:defstate? true} backend-3d-scene.scene
   (:require
    [backend-3d-scene.api :refer :all]
+   [backend-3d-scene.config :refer [config]]
    [clojure.string :as str]
    [clojure.walk :as walk]
    [jme-clj.core :as jme]
@@ -24,9 +25,8 @@
                                :height 600
                                :resizable? true}}
              :init init
-             ;;TODO enable here and move to config [dev]
-             ;:destroy #(System/exit 0)
-             )
+             :destroy #(when-not (:dev config)
+                         (System/exit 0)))
            (jme/start app*))
   :stop (jme/unbind-all))
 

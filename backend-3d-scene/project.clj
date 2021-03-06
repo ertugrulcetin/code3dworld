@@ -13,7 +13,8 @@
                  [jme-clj "0.1.13"]
                  [mount "0.1.16"]
                  [nrepl "0.8.3"]
-                 [com.rpl/specter "1.1.3"]]
+                 [com.rpl/specter "1.1.3"]
+                 [cprop "0.1.17"]]
 
   :plugins [[ertu/lein-bikeshed "0.1.13"]
             [ertu/lein-carve "0.1.0"]
@@ -78,5 +79,5 @@
 
   :profiles {:dev {:dependencies [[clj-kondo "2021.02.13"]
                                   [org.clojure/tools.logging "1.1.0"]]
-                   :repl-options {:init-ns jme-clj.core}
-                   :resource-paths ["test/resources"]}})
+                   :jvm-opts ["-Dconf=dev-config.edn"]
+                   :repl-options {:init-ns backend-3d-scene.core}}})
