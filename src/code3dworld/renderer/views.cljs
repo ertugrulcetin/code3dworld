@@ -130,7 +130,7 @@
         console? (:console? visibility)
         instruction? (:instruction? visibility)]
     [:div.c3-editor-action
-     [:div.c3-run-button
+     [:button.c3-run-button
       {:on-click (fn [_]
                    (let [code (.getValue @c3-editor)]
                      (when-not (str/blank? code)
