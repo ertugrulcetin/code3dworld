@@ -131,9 +131,7 @@
         instruction? (:instruction? visibility)]
     [:div.c3-editor-action
      [:button.c3-run-button
-      {
-       ;;TODO enable this
-       ;:disabled (not @(subscribe [::subs/scene-3d-pid]))
+      {:disabled (not @(subscribe [::subs/scene-3d-pid]))
        :on-click (fn [_]
                    (let [code (.getValue @c3-editor)]
                      (when-not (str/blank? code)

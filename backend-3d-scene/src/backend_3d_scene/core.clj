@@ -1,8 +1,8 @@
 (ns backend-3d-scene.core
   (:require
    [backend-3d-scene.config :as config]
-   [backend-3d-scene.scene :as scene]
    [backend-3d-scene.nrepl :as nrepl]
+   [backend-3d-scene.scene :as scene]
    [mount.core :as mount])
   (:import (java.util TimeZone Locale))
   (:gen-class))
