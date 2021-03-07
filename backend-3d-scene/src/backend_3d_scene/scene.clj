@@ -1,4 +1,4 @@
-(ns ^{:defstate? true} backend-3d-scene.scene
+(ns backend-3d-scene.scene
   (:require
    [backend-3d-scene.api :refer :all]
    [backend-3d-scene.config :refer [config]]

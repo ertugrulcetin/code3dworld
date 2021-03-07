@@ -131,7 +131,8 @@
         instruction? (:instruction? visibility)]
     [:div.c3-editor-action
      [:button.c3-run-button
-      {:on-click (fn [_]
+      {:disabled (not @(subscribe [::subs/scene-3d-pid]))
+       :on-click (fn [_]
                    (let [code (.getValue @c3-editor)]
                      (when-not (str/blank? code)
                        (.send ipc-renderer "eval" code))))}

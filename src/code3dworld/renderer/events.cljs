@@ -106,7 +106,7 @@
 (reg-event-fx
  ::start-3d-scene
  (fn [_ _]
-   {::effects/start-process "/core.app/Contents/MacOS/core"}))
+   {::effects/start-process "/scene.app/Contents/MacOS/scene"}))
 
 
 (reg-event-fx
