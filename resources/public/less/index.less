@@ -141,6 +141,16 @@
             color: @c3-white;
             padding: 15px 25px 15px 25px;
             cursor: pointer;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            &:hover {
+              opacity: 0.8;
+            }
+            &:disabled {
+              opacity: 0.6;
+              cursor: not-allowed;
+            }
           }
           .c3-full-screen {
             display: flex;
