@@ -12,7 +12,8 @@
               :running-3d-scene {:title "3D Scene" :order 2}
               :hello-world {:title "Hello, World"
                             :order 3
-                            :required-fns '#{println}}
+                            :required-fns '#{println}
+                            :code "(println \"Hello, World!\")"}
               :math {:title "Math Time"
                      :order 4
                      :required-fns '#{+ - * /}}

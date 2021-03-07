@@ -1,4 +1,4 @@
-(ns ^{:defstate? true} backend-3d-scene.nrepl
+(ns backend-3d-scene.nrepl
   (:require
    [clojure.tools.logging :as log]
    [mount.core :refer [defstate]]

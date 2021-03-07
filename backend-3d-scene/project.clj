@@ -9,7 +9,6 @@
 
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/tools.logging "1.1.0"]
-                 [org.clojure/tools.namespace "1.0.0"]
                  [jme-clj "0.1.13"]
                  [mount "0.1.16"]
                  [nrepl "0.8.3"]
@@ -28,13 +27,9 @@
 
   :repl-options {:init-ns backend-3d-scene.core}
 
-  :main backend-3d-scene.core
+  :main ^:skip-aot backend-3d-scene.core
 
-  :aot :all
-
-  :omit-source true
-
-  :uberjar-name "backend-3d-scene.jar"
+  :target-path "target/%s"
 
   :cljfmt {:remove-consecutive-blank-lines? false}
 
@@ -77,7 +72,12 @@
                        "-Djava.net.preferIPv4Stack=true"
                        "-Dfile.encoding=UTF-8"]
 
-  :profiles {:dev {:dependencies [[clj-kondo "2021.02.13"]
+  :profiles {:uberjar {:omit-source true
+                       :aot :all
+                       :uberjar-name "backend-3d-scene.jar"
+                       :source-paths ["env/prod/clj"]
+                       :resource-paths ["env/prod/resources"]}
+             :dev {:dependencies [[clj-kondo "2021.02.13"]
                                   [org.clojure/tools.logging "1.1.0"]]
                    :jvm-opts ["-Dconf=dev-config.edn"]
                    :repl-options {:init-ns backend-3d-scene.core}}})

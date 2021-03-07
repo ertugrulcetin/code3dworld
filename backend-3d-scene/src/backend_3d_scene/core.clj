@@ -1,35 +1,17 @@
 (ns backend-3d-scene.core
   (:require
-   [backend-3d-scene.config :refer [config]]
-   [clojure.java.io :as io]
-   [clojure.tools.logging :as log]
-   [clojure.tools.namespace.find :as ns-find]
+   [backend-3d-scene.config :as config]
+   [backend-3d-scene.scene :as scene]
+   [backend-3d-scene.nrepl :as nrepl]
    [mount.core :as mount])
   (:import (java.util TimeZone Locale))
   (:gen-class))
 
 
-(defn- load-defstate-nses []
-  (doseq [ns* (->> (io/file "src")
-                   (#(ns-find/find-ns-decls-in-dir % ns-find/clj))
-                   (filter (comp :defstate? meta second))
-                   (map second))]
-    (require ns*)))
-
-
-(defn- start-defstates [args]
-  (load-defstate-nses)
-  (doseq [component (-> args
-                        mount/start-with-args
-                        :started)]
-    (log/info component "started")))
-
-
 (defn -main [& args]
   (TimeZone/setDefault (TimeZone/getTimeZone "UTC"))
   (Locale/setDefault (Locale. "en" "US"))
-  (mount/start #'backend-3d-scene.config/config)
-  (start-defstates args))
+  (mount/start #'config/config #'nrepl/repl-server #'scene/app))
 
 
 (comment
