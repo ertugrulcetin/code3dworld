@@ -18,13 +18,14 @@
    ["codemirror/addon/edit/matchbrackets"]
    ["codemirror/addon/edit/closebrackets"]))
 
-
 (enable-console-print!)
 
 
 (def findp (js/require "find-process"))
 (def exec (.-exec (js/require "child_process")))
 (def ipc-renderer (.-ipcRenderer (js/require "electron")))
+(def dir (str js/__dirname "/.."))
+(def fpath (js/require "path"))
 
 
 (def from-textarea (ob/get cm "fromTextArea"))
@@ -80,7 +81,7 @@
      (when (:required-fns chapter)
        [:div.c3-chapter-status
         [:img.icon-2x
-         {:src (util/format "img/%s.svg" (if (:done? chapter) "done" "check"))}]])]))
+         {:src (str "img/" (if (:done? chapter) "done" "check") ".svg")}]])]))
 
 
 (defn- boot-instructions [chapter]
@@ -92,7 +93,7 @@
                     :dragInterval 0.5})))
   (when chapter
     (util/read-edn
-     (str "resources/chapters/" (name chapter) ".edn")
+     (.join fpath dir (str "/chapters/" (name chapter) ".edn"))
      #(dispatch [::events/set-data :instruction %]))))
 
 

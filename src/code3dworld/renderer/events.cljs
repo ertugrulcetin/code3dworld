@@ -28,12 +28,6 @@
 
 
 (reg-event-db
- ::reset-in
- (fn [db [_ ks]]
-   (util/dissoc-in db ks)))
-
-
-(reg-event-db
  ::reset
  (fn [db [_ k]]
    (dissoc db k)))
