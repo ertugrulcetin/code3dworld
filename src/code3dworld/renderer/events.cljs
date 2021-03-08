@@ -30,7 +30,7 @@
 (reg-event-fx
  ::console-scroll-to-bottom
  (fn [_ _]
-   {:scroll! {:source-id "console-body"}}))
+   {::effects/scroll! {:source-id "console-body"}}))
 
 
 (reg-event-db

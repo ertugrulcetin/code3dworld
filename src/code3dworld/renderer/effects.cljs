@@ -10,7 +10,7 @@
 
 
 (reg-fx
- :scroll!
+ ::scroll!
  (fn [opts]
    (util/scroll! (:source-id opts))))
 
