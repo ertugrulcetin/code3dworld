@@ -162,13 +162,13 @@
         _ (call* q :from-angle-axis total Vector3f/UNIT_Y)
         {:keys [box control]} (or (some #(when (= "Center Box" (:name %)) %) (get-all-boxes))
                                   (create-box {:name "Center Box"
-                                               :local-translation (vec3 0 -50 -256)}))]
+                                               :local-translation (vec3 0 -50 -256)}))
+        world-trans (get* box :world-translation)]
     (setc control
           :physics-rotation q
-          :physics-location (vec3 (.-x (get* box :world-translation))
-                                  (+ (.-y (get* box :world-translation))
-                                     (/ (FastMath/sin total) 2))
-                                  (.-z (get* box :world-translation))))
+          :physics-location (vec3 (.-x world-trans)
+                                  (+ (.-y world-trans) (/ (FastMath/sin total) 2))
+                                  (.-z world-trans)))
     {:total total}))
 
 
