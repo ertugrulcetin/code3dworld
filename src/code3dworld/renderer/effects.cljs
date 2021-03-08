@@ -10,6 +10,12 @@
 
 
 (reg-fx
+ :scroll!
+ (fn [opts]
+   (util/scroll! (:source-id opts))))
+
+
+(reg-fx
  ::update-editor-font-size!
  (fn [{:keys [class-name value]}]
    (set!

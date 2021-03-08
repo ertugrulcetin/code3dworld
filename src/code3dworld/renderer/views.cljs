@@ -230,28 +230,26 @@
 
 
 (defn- console []
-  (let [console-ref (atom nil)]
-    (r/create-class
-     {:component-did-mount #(reset!
-                             vertical-split
-                             (split #js ["#editor" "#console"]
-                                    (clj->js {:sizes [300 100]
-                                              :direction "vertical"
-                                              :gutterSize 20
-                                              :dragInterval 0.5})))
-      :component-will-unmount #(.destroy @vertical-split)
-      :component-did-update #(when-let [div @console-ref]
-                               (set! (.-scrollTop div) (- (.-scrollHeight div) (.-clientHeight div))))
-      :reagent-render (fn []
-                        [:div.c3-console
-                         {:ref #(reset! console-ref %)}
-                         (for [out @(subscribe [::subs/console])]
-                           (map (fn [[i s]]
-                                  (if (str/blank? s)
-                                    ^{:key i} [:br]
-                                    ^{:key i} [:p (get-out-style (:type out))
-                                               s]))
-                                (map-indexed vector (str/split (:content out) #"\n"))))])})))
+  (r/create-class
+   {:component-did-mount #(do (dispatch [::events/console-scroll-to-bottom])
+                              (reset!
+                               vertical-split
+                               (split #js ["#editor" "#console"]
+                                      (clj->js {:sizes [300 100]
+                                                :direction "vertical"
+                                                :gutterSize 20
+                                                :dragInterval 0.5}))))
+    :component-will-unmount #(.destroy @vertical-split)
+    :component-did-update #(dispatch [::events/console-scroll-to-bottom])
+    :reagent-render (fn []
+                      [:div#console-body.c3-console
+                       (for [out @(subscribe [::subs/console])]
+                         (map (fn [[i s]]
+                                (if (str/blank? s)
+                                  ^{:key i} [:br]
+                                  ^{:key i} [:p (get-out-style (:type out))
+                                             s]))
+                              (map-indexed vector (str/split (:content out) #"\n"))))])}))
 
 
 (defn- code []

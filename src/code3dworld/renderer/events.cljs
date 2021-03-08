@@ -27,6 +27,12 @@
         ::effects/remove-item-from-local! "settings"}))))
 
 
+(reg-event-fx
+ ::console-scroll-to-bottom
+ (fn [_ _]
+   {:scroll! {:source-id "console-body"}}))
+
+
 (reg-event-db
  ::reset
  (fn [db [_ k]]
