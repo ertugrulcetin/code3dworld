@@ -125,67 +125,89 @@
                            [instruction-body body])]))}))
 
 
+(defn- run-button []
+  [:button.c3-run-button
+   {:disabled (not @(subscribe [::subs/scene-3d-pid]))
+    :on-click (fn [_]
+                (let [code (.getValue @c3-editor)]
+                  (when-not (str/blank? code)
+                    (.send ipc-renderer "eval" code))))}
+   "Run"])
+
+
+(defn- full-screen-button [console? instruction?]
+  [tooltip
+   {:text (if (and console? instruction?)
+            "Enter Full Screen"
+            "Exit Full Screen")
+    :class "c3-full-screen"}
+   [:div
+    {:on-click #(do (dispatch [::events/update-element-visibility :instruction?])
+                    (dispatch [::events/update-element-visibility :console?]))}
+    [:img
+     {:src (if (and console? instruction?)
+             "img/full-screen.svg"
+             "img/exit-full-screen.svg")}]]])
+
+
+(defn- console-buttons [console?]
+  [:<>
+   [tooltip
+    {:text (if console?
+             "Hide Console"
+             "Show Console")
+     :class "c3-command-window"}
+    [:div
+     {:on-click #(dispatch [::events/update-element-visibility :console?])}
+     [:img
+      {:src "img/command-window.svg"}]]]
+   [tooltip
+    {:text "Clear Console"
+     :class "c3-clear-console"}
+    [:div
+     {:on-click #(dispatch [::events/reset :console])}
+     [:img
+      {:src "img/trash.svg"}]]]])
+
+
+(defn- inc-dec-font-buttons []
+  [:<>
+   [tooltip
+    {:text "Decrease Font"
+     :class "c3-decrease-font"}
+    [:div
+     {:on-click #(dispatch [::events/update-editor-font-size -])}
+     [:img
+      {:src "img/decrease-font-size.svg"}]]]
+   [tooltip
+    {:text "Increase Font"
+     :class "c3-increase-font"}
+    [:div
+     {:on-click #(dispatch [::events/update-editor-font-size +])}
+     [:img
+      {:src "img/increase-font-size.svg"}]]]])
+
+
+(defn- start-stop-scene-button []
+  (if @(subscribe [::subs/scene-3d-pid])
+    [:button.c3-stop-button
+     {:on-click #(dispatch [::events/stop-3d-scene])}
+     "Stop 3D Scene"]
+    [:button.c3-play-button
+     {:on-click #(dispatch [::events/start-3d-scene])}
+     "Start 3D Scene"]))
+
+
 (defn- editor-action-box []
   (let [visibility @(subscribe [::subs/visibility])
         console? (:console? visibility)
         instruction? (:instruction? visibility)]
     [:div.c3-editor-action
-     [:button.c3-run-button
-      {:disabled (not @(subscribe [::subs/scene-3d-pid]))
-       :on-click (fn [_]
-                   (let [code (.getValue @c3-editor)]
-                     (when-not (str/blank? code)
-                       (.send ipc-renderer "eval" code))))}
-      "Run"]
-     [tooltip
-      {:text (if (and console? instruction?)
-               "Enter Full Screen"
-               "Exit Full Screen")
-       :class "c3-full-screen"}
-      [:div
-       {:on-click #(do (dispatch [::events/update-element-visibility :instruction?])
-                       (dispatch [::events/update-element-visibility :console?]))}
-       [:img
-        {:src (if (and console? instruction?)
-                "img/full-screen.svg"
-                "img/exit-full-screen.svg")}]]]
-     [tooltip
-      {:text (if console?
-               "Hide Console"
-               "Show Console")
-       :class "c3-command-window"}
-      [:div
-       {:on-click #(dispatch [::events/update-element-visibility :console?])}
-       [:img
-        {:src "img/command-window.svg"}]]]
-     [tooltip
-      {:text "Decrease Font"
-       :class "c3-decrease-font"}
-      [:div
-       {:on-click #(dispatch [::events/update-editor-font-size -])}
-       [:img
-        {:src "img/decrease-font-size.svg"}]]]
-     [tooltip
-      {:text "Increase Font"
-       :class "c3-increase-font"}
-      [:div
-       {:on-click #(dispatch [::events/update-editor-font-size +])}
-       [:img
-        {:src "img/increase-font-size.svg"}]]]
-     [tooltip
-      {:text "Clear Console"
-       :class "c3-clear-console"}
-      [:div
-       {:on-click #(dispatch [::events/reset :console])}
-       [:img
-        {:src "img/trash.svg"}]]]
-     (if @(subscribe [::subs/scene-3d-pid])
-       [:button.c3-stop-button
-        {:on-click #(dispatch [::events/stop-3d-scene])}
-        "Stop 3D Scene"]
-       [:button.c3-play-button
-        {:on-click #(dispatch [::events/start-3d-scene])}
-        "Start 3D Scene"])]))
+     [run-button]
+     [full-screen-button console? instruction?]
+     [console-buttons console?]
+     [inc-dec-font-buttons]
+     [start-stop-scene-button]]))
 
 
 (defn- get-out-style [type]

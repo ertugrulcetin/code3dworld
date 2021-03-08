@@ -5,7 +5,7 @@
 
 
 (def default-db
-  {:name "code3dworld"
+  {:name "Code 3D World"
    :visibility {:console? true
                 :instruction? true}
    :chapters {:intro {:title "Intro" :order 1}
