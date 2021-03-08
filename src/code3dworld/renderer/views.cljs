@@ -39,7 +39,8 @@
 
 (defn tooltip [opt element]
   [:div.c3-tooltip-wrapper
-   {:class (:class opt)}
+   {:class (:class opt)
+    :on-click (:on-click opt)}
    element
    [:div.tooltip (:text opt)]])
 
@@ -140,11 +141,10 @@
 (defn- reset-button []
   [tooltip
    {:text "Reset Exercise"
-    :class "c3-reset"}
-   [:div
-    {:on-click #(dispatch [::events/set-data [:visibility :reset-modal?] true])}
-    [:img
-     {:src "img/reset.svg"}]]])
+    :class "c3-reset"
+    :on-click #(dispatch [::events/set-data [:visibility :reset-modal?] true])}
+   [:img
+    {:src "img/reset.svg"}]])
 
 
 (defn- full-screen-button []
@@ -153,21 +153,20 @@
      {:text (if full-screen?
               "Exit Full Screen"
               "Enter Full Screen")
-      :class "c3-full-screen"}
-     [:div
-      {:on-click #(if full-screen?
-                    (do
-                      (dispatch [::events/set-element-visibility :instruction? true])
-                      (dispatch [::events/set-element-visibility :console? true])
-                      (dispatch [::events/set-element-visibility :full-screen? false]))
-                    (do
-                      (dispatch [::events/set-element-visibility :instruction? false])
-                      (dispatch [::events/set-element-visibility :console? false])
-                      (dispatch [::events/set-element-visibility :full-screen? true])))}
-      [:img
-       {:src (if full-screen?
-               "img/exit-full-screen.svg"
-               "img/full-screen.svg")}]]]))
+      :class "c3-full-screen"
+      :on-click #(if full-screen?
+                   (do
+                     (dispatch [::events/set-element-visibility :instruction? true])
+                     (dispatch [::events/set-element-visibility :console? true])
+                     (dispatch [::events/set-element-visibility :full-screen? false]))
+                   (do
+                     (dispatch [::events/set-element-visibility :instruction? false])
+                     (dispatch [::events/set-element-visibility :console? false])
+                     (dispatch [::events/set-element-visibility :full-screen? true])))}
+     [:img
+      {:src (if full-screen?
+              "img/exit-full-screen.svg"
+              "img/full-screen.svg")}]]))
 
 
 (defn- console-buttons []
@@ -176,36 +175,32 @@
     {:text (if (:console? @(subscribe [::subs/visibility]))
              "Hide Console"
              "Show Console")
-     :class "c3-command-window"}
-    [:div
-     {:on-click #(dispatch [::events/update-element-visibility :console?])}
-     [:img
-      {:src "img/command-window.svg"}]]]
+     :class "c3-command-window"
+     :on-click #(dispatch [::events/update-element-visibility :console?])}
+    [:img
+     {:src "img/command-window.svg"}]]
    [tooltip
     {:text "Clear Console"
-     :class "c3-clear-console"}
-    [:div
-     {:on-click #(dispatch [::events/reset :console])}
-     [:img
-      {:src "img/trash.svg"}]]]])
+     :class "c3-clear-console"
+     :on-click #(dispatch [::events/reset :console])}
+    [:img
+     {:src "img/trash.svg"}]]])
 
 
 (defn- inc-dec-font-buttons []
   [:<>
    [tooltip
     {:text "Decrease Font"
-     :class "c3-decrease-font"}
-    [:div
-     {:on-click #(dispatch [::events/update-editor-font-size -])}
-     [:img
-      {:src "img/decrease-font-size.svg"}]]]
+     :class "c3-decrease-font"
+     :on-click #(dispatch [::events/update-editor-font-size -])}
+    [:img
+     {:src "img/decrease-font-size.svg"}]]
    [tooltip
     {:text "Increase Font"
-     :class "c3-increase-font"}
-    [:div
-     {:on-click #(dispatch [::events/update-editor-font-size +])}
-     [:img
-      {:src "img/increase-font-size.svg"}]]]])
+     :class "c3-increase-font"
+     :on-click #(dispatch [::events/update-editor-font-size +])}
+    [:img
+     {:src "img/increase-font-size.svg"}]]])
 
 
 (defn- start-stop-scene-button []
