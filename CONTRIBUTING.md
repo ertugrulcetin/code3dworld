@@ -36,8 +36,6 @@ quick win.
 If is going to be your first pull request, You can learn how from this
 free video series:
 
-https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github
-
 ## Code of conduct ##
 
 As contributors and maintainers of this project, we pledge to respect
