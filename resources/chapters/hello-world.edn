@@ -6,5 +6,6 @@
   " Clojure code in the editor. Let's hit the blue " [:b "Run"] " button then you'll see "
   [:b "\"Hello, world\""]
   " in the console."]
+ [:br] [:br]
  [:span.c3-body "The console is under the editor."]
  ]

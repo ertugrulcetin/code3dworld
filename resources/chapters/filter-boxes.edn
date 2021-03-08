@@ -2,9 +2,10 @@
  [:h2 "Filtering Boxes"]
 
  [:span.c3-body
-  "We've seen how to create a box and we can do more than that! There are additional attributes we can provide, such as " [:code ":size"] ", " [:code ":random-location?"] " etc."]
+  "We've seen how to create a box, and we can do more than that! There are additional attributes we can provide, such as " [:code ":size"] ", " [:code ":random-location?"] " etc."]
+ [:br][:br]
  [:span.c3-body
-  "Here is the example that creates a box with size " [:code "10"] " and places in a " [:code "random location"] ":"
+  "Here is the example that creates a box with size " [:code "10"] " and places it in a " [:code "random location"] ":"
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(create-box {:name \"Box 1\"\n             :size 10\n             :random-location? true})"}]]]
@@ -18,9 +19,9 @@
  [:h3 "Instructions"]
  [:span.c3-body
   [:ul
-   [:li "Create at least 10 boxes with different size and name."]
-   [:li "Print a list of boxes which have size greater than 10."]
-   [:li "Print a list of boxes which have size less than 10."]]]
+   [:li "Create at least ten boxes with different sizes and names."]
+   [:li "Print a list of boxes that have a size greater than 10."]
+   [:li "Print a list of boxes that have a size less than 10."]]]
  [:span.c3-body
   [:b "Note:"] " If you don't use " [:code "println"] ", you won't see the results in the console."]
  ]

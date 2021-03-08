@@ -1,7 +1,7 @@
 [:div.c3-instruction-body
  [:h2 "The map function"]
  [:span.c3-body "Clojure has a function called " [:code "map"] ", we will often need to apply the same function to each element of a vector. This is where " [:code "map"] " comes into play!"]
-
+ [:br] [:br]
  [:span.c3-body
   "There is a function called " [:code "inc"] " in Clojure, which increases a number by one:"
   [:div.c3-code-container
@@ -27,7 +27,7 @@
     {:defaultValue "(map (fn [number] (+ number 5)) [1 2 3])\n;;=> (6 7 8)"}]]]
  [:br]
  [:span.c3-body
-  "Probably you're wondering what does this " [:code "(fn [number]...)"] " do and what is it? Well, " [:code "fn"] " is an anonymous function (think like it's our custom function). Which means we're creating our own function, and it does what we want it to do. For example, " [:code "inc"] " is already defined in Clojure, but we can write our own " [:code "inc"] " with " [:code "fn"] ". Here:"
+  "Probably you're wondering what does this " [:code "(fn [number]...)"] " do and what is it? Well, " [:code "fn"] " is an anonymous function (think like it's our custom function). Which means we're creating our own function, and it does what we want it to do. For example, " [:code "inc"] " function already defined in Clojure, but we can write our own " [:code "inc"] " with " [:code "fn"] ". Here:"
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "(fn [x] (+ x 1))"}]]
@@ -35,13 +35,13 @@
   [:div.c3-code-container
    [:textarea.c3-code-preview
     {:defaultValue "((fn [x] (+ x 1)) 5) ;;=> 6"}]]
-  "First argument has to be always a function (remember?) so we're passing our custom inc function. " [:code "x"] " is the name of the argument for our " [:code "fn"] " function, you can give any name you want. So " [:code "x"] " is replaced with " [:code "5"] " and we add " [:b "1"] " to " [:b "5"] ". Result is 6."]
+  "The first argument has to be always a function (remember?), so we're passing our custom inc function. x is the name of the argument for our " [:code "fn"] " function. You can give any name you want. So " [:code "x"] " is replaced with " [:code "5"] ", and we add " [:b "1"] " to " [:b "5"] ". The result is 6."]
 
  [:hr]
  [:h3 "Instructions"]
  [:span.c3-body
   [:ul
-   [:li "Create your own vector with full off different numbers."]
+   [:li "Create your vector full of different numbers."]
    [:li "Decrease numbers by 10."]
    [:li "Get square numbers."]
    [:li "Divide numbers by 2."]]]

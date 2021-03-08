@@ -1,7 +1,7 @@
 [:div.c3-instruction-body
  [:h2 "The filter function"]
  [:span.c3-body "Clojure has a function called " [:code "filter"] ", which basically keeps your data that you want, and throws away rest of it. For example, you can have only even numbers or odd numbers, also filter people older than 18 years old. Let's check some examples."]
-
+ [:br][:br]
  [:span.c3-body
   "Keeping just odd numbers:"
   [:div.c3-code-container
