@@ -7,7 +7,7 @@
   (:import
    (com.jme3.app SimpleApplication)
    (com.jme3.bullet.collision.shapes BoxCollisionShape)
-   (com.jme3.math ColorRGBA Vector3f)
+   (com.jme3.math ColorRGBA Vector3f FastMath)
    (com.jme3.scene.shape Sphere$TextureMode)
    (com.jme3.terrain.heightmap HillHeightMap)
    (com.jme3.texture Texture$WrapMode)))
@@ -65,6 +65,54 @@
     (add-light-to-root ambient)))
 
 
+(defn get-all-boxes []
+  (get-state :app :boxes))
+
+
+(defn get-boxes []
+  (vec (select-keys (get-all-boxes) [:name :size])))
+
+
+(defn- print-err [msg]
+  (.println (System/err) (str "Warning: " msg)))
+
+
+(defn create-box [{:keys [name size random-location?] :or {size 5} :as opts}]
+  (if ((set (map :name (get-all-boxes))) name)
+    (print-err (format "There is a box with name `%s` already. You need to create a box with a different name." name))
+    (let [texture (load-texture "Textures/2D/box.jpg")
+          mat (set* (unshaded-mat) :texture "ColorMap" texture)
+          r (ray (.getLocation (cam)) (.getDirection (cam)))
+          dir (.getDirection r)
+          origin (.getOrigin r)
+          box* (setc (geo name (box size size size))
+                     :local-translation (if (:local-translation opts)
+                                          (:local-translation opts)
+                                          (add origin (if random-location?
+                                                        (add (mult dir 40)
+                                                             (rand 15)
+                                                             (rand 15)
+                                                             (rand -15))
+                                                        (mult dir (* 4 size)))))
+                     :material mat)
+          box-cs (BoxCollisionShape. ^Vector3f (vec3 size size size))
+          box-control (rigid-body-control box-cs 0)
+          box* (-> box*
+                   (add-control box-control)
+                   (add-to-root))
+          {bas :bullet-app-state} (get-state)
+          box-m {:name name
+                 :size size
+                 :control box-control
+                 :box box*
+                 :color :original}]
+      (-> bas
+          (get* :physics-space)
+          (call* :add box*))
+      (update-state :app :boxes (fnil conj []) box-m)
+      box-m)))
+
+
 (defn init []
   (setc (fly-cam)
         :move-speed 100
@@ -101,51 +149,27 @@
      :terrain terrain
      :sphere sphere*
      :stone-mat stone-mat
-     :focus true}))
+     :focus true
+     :total 0}))
 
 
-(defn get-all-boxes []
-  (get-state :app :boxes))
-
-
-(defn get-boxes []
-  (vec (select-keys (get-all-boxes) [:name :size])))
-
-
-(defn- print-err [msg]
-  (.println (System/err) (str "Warning: " msg)))
-
-
-(defn create-box [{:keys [name size random-location?] :or {size 5} :as opts}]
-  (if ((set (map :name (get-all-boxes))) name)
-    (print-err (format "There is a box with name `%s` already. You need to create a box with a different name." name))
-    (let [texture (load-texture "Textures/2D/box.jpg")
-          mat (set* (unshaded-mat) :texture "ColorMap" texture)
-          r (ray (.getLocation (cam)) (.getDirection (cam)))
-          dir (.getDirection r)
-          origin (.getOrigin r)
-          box* (setc (geo name (box size size size))
-                     :local-translation (add origin (if random-location?
-                                                      (add (mult dir 40)
-                                                           (rand 15)
-                                                           (rand 15)
-                                                           (rand -15))
-                                                      (mult dir (* 4 size))))
-                     :material mat)
-          box-cs (BoxCollisionShape. ^Vector3f (vec3 size size size))
-          box-control (rigid-body-control box-cs 0)
-          box* (-> box*
-                   (add-control box-control)
-                   (add-to-root))
-          {bas :bullet-app-state} (get-state)]
-      (-> bas
-          (get* :physics-space)
-          (call* :add box*))
-      (update-state :app :boxes (fnil conj []) {:name name
-                                                :size size
-                                                :control box-control
-                                                :box box*
-                                                :color :original}))))
+(defn simple-update [tpf]
+  (let [{:keys [total]} (get-state)
+        total (+ total tpf)
+        ;;overflow
+        total (if (< total 0) 0 total)
+        q (quat)
+        _ (call* q :from-angle-axis total Vector3f/UNIT_Y)
+        {:keys [box control]} (or (some #(when (= "Center Box" (:name %)) %) (get-all-boxes))
+                                  (create-box {:name "Center Box"
+                                               :local-translation (vec3 0 -50 -256)}))]
+    (setc control
+          :physics-rotation q
+          :physics-location (vec3 (.-x (get* box :world-translation))
+                                  (+ (.-y (get* box :world-translation))
+                                     (/ (FastMath/sin total) 2))
+                                  (.-z (get* box :world-translation))))
+    {:total total}))
 
 
 (defn remove-box [name]

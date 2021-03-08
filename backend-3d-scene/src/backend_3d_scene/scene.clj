@@ -25,6 +25,7 @@
                                :height 600
                                :resizable? true}}
              :init init
+             :update simple-update
              :destroy #(when-not (:dev config)
                          (System/exit 0)))
            (jme/start app*))
@@ -121,8 +122,7 @@
 
 (comment
   (jme/run app
-           (jme/set* (jme/fly-cam) :enabled true)
-           (println (.isEnabled (jme/fly-cam))))
+           (jme/set* (get-box "Center Box") :local-translation (jme/vec3 0 -50 -256)))
 
   (jme/run app (jme/re-init init))
 
