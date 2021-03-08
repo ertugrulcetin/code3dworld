@@ -2,7 +2,7 @@
   (:require
    [backend-3d-scene.controls :as co]
    [com.rpl.specter :as s]
-   [jme-clj.core :refer :all]
+   [jme-clj.core :refer :all :exclude [rotate scale]]
    [mount.core :refer [defstate]])
   (:import
    (com.jme3.app SimpleApplication)
@@ -172,6 +172,10 @@
     {:total total}))
 
 
+(defn- no-box-with [name]
+  (print-err (format "There is no box with `%s` name." name)))
+
+
 (defn remove-box [name]
   (if-let [{:keys [box control]} (some #(when (= name (:name %)) %) (get-all-boxes))]
     (let [{bas :bullet-app-state} (get-state)]
@@ -183,7 +187,7 @@
       (update-state :app
                     :boxes
                     #(vec (remove (fn [b] (= (:name b) name)) %))))
-    (print-err (format "There is no box with `%s` name." name))))
+    (no-box-with name)))
 
 
 (defn remove-all-boxes []
@@ -194,7 +198,7 @@
 (defn get-box [name]
   (if-let [{:keys [box]} (some #(when (= name (:name %)) %) (get-all-boxes))]
     box
-    (print-err (format "There is no box with `%s` name." name))))
+    (no-box-with name)))
 
 
 (defn- apply-color [color-key box-name]
@@ -246,3 +250,19 @@
      (set* ball-phy :linear-velocity (-> (cam)
                                          (get* :direction)
                                          (mult speed))))))
+
+
+(defn rotate [{:keys [name degree axes]}]
+  (if-let [box (get-box name)]
+    (let [q (quat)]
+      (.rotate box (.fromAngleAxis q degree (case axes
+                                              :x Vector3f/UNIT_X
+                                              :y Vector3f/UNIT_Y
+                                              :z Vector3f/UNIT_Z))))
+    (no-box-with name)))
+
+
+(defn scale [{:keys [name factor]}]
+  (if-let [box (get-box name)]
+    (.scale box factor)
+    (no-box-with name)))

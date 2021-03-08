@@ -122,7 +122,12 @@
 
 (comment
   (jme/run app
-           (jme/set* (get-box "Center Box") :local-translation (jme/vec3 0 -50 -256)))
+           #_(create-box {:name "ertu"})
+           #_(rotate {:name "ertu"
+                      :degree 5
+                      :axes :y})
+           (scale {:name "ertu"
+                   :scale 1.5}))
 
   (jme/run app (jme/re-init init))
 
