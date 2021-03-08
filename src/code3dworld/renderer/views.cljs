@@ -137,6 +137,16 @@
    "Run"])
 
 
+(defn- reset-button []
+  [tooltip
+   {:text "Reset Exercise"
+    :class "c3-reset"}
+   [:div
+    {:on-click #(dispatch [::events/set-data [:visibility :reset-modal?] true])}
+    [:img
+     {:src "img/reset.svg"}]]])
+
+
 (defn- full-screen-button []
   (let [full-screen? (:full-screen? @(subscribe [::subs/visibility]))]
     [tooltip
@@ -211,6 +221,7 @@
 (defn- editor-action-box []
   [:div.c3-editor-action
    [run-button]
+   [reset-button]
    [full-screen-button]
    [console-buttons]
    [inc-dec-font-buttons]
@@ -292,10 +303,29 @@
      [code]]))
 
 
+(defn- reset-exercise-modal []
+  [:div.c3-modal
+   {:on-click #(.stopPropagation %)}
+   [:div.c3-container
+    [:h2.c3-header "Reset Exercise"]
+    [:p "Are you sure you want to restart? All of your this exercise code will be erased."]
+    [:div.c3-action-box
+     [:button.c3-reset-button
+      {:on-click #(do (.setValue @c3-editor "")
+                      (dispatch [::events/reset-exercise]))}
+      "Reset"]
+     [:button.c3-cancel-button
+      {:on-click #(dispatch [::events/set-data [:visibility :reset-modal?] false])}
+      "Cancel"]]]])
+
+
 (defn- body-view []
-  [:div.c3-dashboard-container
-   [main]
-   [bottom]])
+  [:<>
+   (when (true? @(subscribe [::subs/reset-modal-visible?]))
+     [reset-exercise-modal])
+   [:div.c3-dashboard-container
+    [main]
+    [bottom]]])
 
 
 (defn- add-msg-to-console [content type]

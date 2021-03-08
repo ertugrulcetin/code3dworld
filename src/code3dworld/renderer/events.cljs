@@ -48,6 +48,15 @@
 
 
 (reg-event-fx
+ ::reset-exercise
+ (fn [{:keys [db]}]
+   {:db (-> db
+            (update-in [:chapters (:active-chapter db)] dissoc :done? :code)
+            (assoc-in [:visibility :reset-modal?] false))
+    :dispatch [::save-settings-to-local]}))
+
+
+(reg-event-fx
  ::update-editor-font-size
  (fn [{:keys [db]} [_ sym]]
    (let [font-size (or (-> db :editor :font-size) 18)
@@ -101,7 +110,9 @@
  ::save-settings-to-local
  (fn [{:keys [db]} _]
    {::effects/set-item-to-local! {:key "settings"
-                                  :val (select-keys db [:visibility :editor :chapters :active-chapter])}}))
+                                  :val (-> db
+                                           (select-keys [:visibility :editor :chapters :active-chapter])
+                                           (update :visibility select-keys [:console? :instruction?]))}}))
 
 
 (reg-event-fx

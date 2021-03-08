@@ -31,6 +31,13 @@
 
 
 (reg-sub
+ ::reset-modal-visible?
+ :<- [::visibility]
+ (fn [visibility _]
+   (:reset-modal? visibility)))
+
+
+(reg-sub
  ::instruction
  (fn [db _]
    (:instruction db)))
