@@ -55,13 +55,14 @@
     }
 
     .c3-instructions {
-      height: ~"calc(100% - 80px)";
-
+      overflow: hidden;
       .c3-instruction-title {
         color: @c3-black-002;
         background-color: @c3-gray-001;
         display: flex;
         align-items: center;
+        height: 50px;
+        padding: 0 10px 0 10px;
         .c3-chapter-status {
           display: flex;
           justify-content: center;
@@ -70,8 +71,8 @@
         }
       }
       .c3-instruction-body {
-        padding: 0 20px 20px 20px;
-        height: 100%;
+        padding: 0 20px 0 20px;
+        height: ~"calc(100% - 50px)";
         overflow: auto;
 
         .c3-body {
@@ -91,7 +92,6 @@
         }
 
         .c3-code-container {
-          word-break: break-all;
           margin-bottom: 20px;
           .CodeMirror {
             font-size: 18px;

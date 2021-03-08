@@ -74,7 +74,7 @@
 
 (defn- instruction-title []
   (let [chapter @(subscribe [::subs/chapter])]
-    [:div.c3-instruction-title.p-10
+    [:div.c3-instruction-title
      [:img.icon-2x.mr-5
       {:src "img/book.svg"}]
      [:span "Learn"]
