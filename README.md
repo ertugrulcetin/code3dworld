@@ -3,6 +3,10 @@
 
 ![Code 3D World](imgs/c3dw.png)
 
+## [Development](docs/Development.md)
+
+## [Contributing](CONTRIBUTING.md)
+
 ## Contributors
 Thanks to all the people that contributed to the project:
 
