@@ -19,7 +19,8 @@
                      :required-fns '#{+ - * /}}
               :objects {:title "3D Objects"
                         :order 5
-                        :required-fns '#{throw-ball comment create-box}}
+                        :required-fns '#{throw-ball comment create-box}
+                        :code "\n\n\n(comment\n (println \"I won't see this.\")\n (println \"Also this one too.\"))"}
               :filter {:title "The filter function"
                        :order 6
                        :required-fns '#{> < >= <= println}}

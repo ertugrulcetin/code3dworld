@@ -10,10 +10,8 @@
   " function throws a ball, as we can understand from its name. Make sure that you're able to see 3D Scene while your code is running."]
  [:br] [:br]
  [:span.c3-body
-  "Wrap your " [:code "(throw-ball)"] " code with " [:code "comment"] ", code in comment block not executed, for example:"
-  [:div.c3-code-container
-   [:textarea.c3-code-preview
-    {:defaultValue "(comment\n (println \"I won't see this.\")\n (throw-ball))"}]]]
+  "Move your " [:code "(throw-ball)"] " code inside " [:code "comment"] ", code in comment block not executed."]
+ [:br] [:br]
  [:span.c3-body
   "Then run this:"
   [:div.c3-code-container
