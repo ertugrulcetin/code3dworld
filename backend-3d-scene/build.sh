@@ -10,6 +10,6 @@ $JPACKAGE_PATH --main-class backend_3d_scene.core \
                --input target/uberjar \
                --name scene
 hdiutil attach scene-1.0.dmg
-cp -R /Volumes/scene/scene.app ../resources/
+cp -rf /Volumes/scene/scene.app ../resources/
 hdiutil unmount /Volumes/scene
 rm -rf scene-1.0.dmg
