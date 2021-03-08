@@ -81,6 +81,13 @@
 
 
 (reg-event-fx
+ ::set-element-visibility
+ (fn [{:keys [db]} [_ element-key v]]
+   {:db (assoc-in db [:visibility element-key] v)
+    :dispatch [::save-settings-to-local]}))
+
+
+(reg-event-fx
  ::change-chapter
  (fn [{:keys [db]} [_ operation]]
    (let [current-chapter (:active-chapter db)

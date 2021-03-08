@@ -137,25 +137,33 @@
    "Run"])
 
 
-(defn- full-screen-button [console? instruction?]
-  [tooltip
-   {:text (if (and console? instruction?)
-            "Enter Full Screen"
-            "Exit Full Screen")
-    :class "c3-full-screen"}
-   [:div
-    {:on-click #(do (dispatch [::events/update-element-visibility :instruction?])
-                    (dispatch [::events/update-element-visibility :console?]))}
-    [:img
-     {:src (if (and console? instruction?)
-             "img/full-screen.svg"
-             "img/exit-full-screen.svg")}]]])
+(defn- full-screen-button []
+  (let [full-screen? (:full-screen? @(subscribe [::subs/visibility]))]
+    [tooltip
+     {:text (if full-screen?
+              "Exit Full Screen"
+              "Enter Full Screen")
+      :class "c3-full-screen"}
+     [:div
+      {:on-click #(if full-screen?
+                    (do
+                      (dispatch [::events/set-element-visibility :instruction? true])
+                      (dispatch [::events/set-element-visibility :console? true])
+                      (dispatch [::events/set-element-visibility :full-screen? false]))
+                    (do
+                      (dispatch [::events/set-element-visibility :instruction? false])
+                      (dispatch [::events/set-element-visibility :console? false])
+                      (dispatch [::events/set-element-visibility :full-screen? true])))}
+      [:img
+       {:src (if full-screen?
+               "img/exit-full-screen.svg"
+               "img/full-screen.svg")}]]]))
 
 
-(defn- console-buttons [console?]
+(defn- console-buttons []
   [:<>
    [tooltip
-    {:text (if console?
+    {:text (if (:console? @(subscribe [::subs/visibility]))
              "Hide Console"
              "Show Console")
      :class "c3-command-window"}
@@ -201,15 +209,12 @@
 
 
 (defn- editor-action-box []
-  (let [visibility @(subscribe [::subs/visibility])
-        console? (:console? visibility)
-        instruction? (:instruction? visibility)]
-    [:div.c3-editor-action
-     [run-button]
-     [full-screen-button console? instruction?]
-     [console-buttons console?]
-     [inc-dec-font-buttons]
-     [start-stop-scene-button]]))
+  [:div.c3-editor-action
+   [run-button]
+   [full-screen-button]
+   [console-buttons]
+   [inc-dec-font-buttons]
+   [start-stop-scene-button]])
 
 
 (defn- get-out-style [type]
