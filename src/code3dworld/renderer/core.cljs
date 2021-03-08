@@ -8,7 +8,7 @@
 
 
 (defn dev-setup []
-  (when config/debug?
+  (when config/dev?
     (println "dev mode")))
 
 

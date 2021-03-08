@@ -1,5 +1,5 @@
 (ns code3dworld.renderer.config)
 
 
-(def debug?
+(def dev?
   ^boolean goog.DEBUG)

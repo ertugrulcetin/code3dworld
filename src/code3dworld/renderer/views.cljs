@@ -7,6 +7,7 @@
    [code3dworld.renderer.util :as util]
    [code3dworld.renderer.subs :as subs]
    [code3dworld.renderer.events :as events]
+   [code3dworld.renderer.config :as config]
    [clojure.string :as str]
    [clojure.set :as set]
    [cljs.reader :as reader]
@@ -127,7 +128,8 @@
 
 (defn- run-button []
   [:button.c3-run-button
-   {:disabled (not @(subscribe [::subs/scene-3d-pid]))
+   {:disabled (and (not config/dev?)
+                   (not @(subscribe [::subs/scene-3d-pid])))
     :on-click (fn [_]
                 (let [code (.getValue @c3-editor)]
                   (when-not (str/blank? code)
