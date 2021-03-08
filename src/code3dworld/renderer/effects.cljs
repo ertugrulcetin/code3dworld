@@ -1,7 +1,9 @@
 (ns code3dworld.renderer.effects
-  (:require [goog.dom :as dom]
-            [code3dworld.renderer.util :as util]
-            [re-frame.core :refer [reg-fx dispatch]]))
+  (:require
+   [goog.dom :as dom]
+   [code3dworld.renderer.util :as util]
+   [clojure.string :as str]
+   [re-frame.core :refer [reg-fx dispatch]]))
 
 
 (def fpath (js/require "path"))
@@ -38,7 +40,8 @@
 (reg-fx
  ::start-process
  (fn [path]
-   (let [r (exec (.join fpath dir path))
+   (let [p (str/replace (.join fpath dir path) #"\s+" "\\ ")
+         r (exec p)
          pid ^js/Number (.-pid r)]
      (util/set-item! "pid" pid)
      (dispatch [:code3dworld.renderer.events/set-data :scene-3d-pid pid]))))
