@@ -22,7 +22,6 @@
 
 
 (def findp (js/require "find-process"))
-(def exec (.-exec (js/require "child_process")))
 (def ipc-renderer (.-ipcRenderer (js/require "electron")))
 (def dir (str js/__dirname "/.."))
 (def fpath (js/require "path"))
