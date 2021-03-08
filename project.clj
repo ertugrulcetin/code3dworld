@@ -1,4 +1,14 @@
 (defproject code3dworld "0.1.0-SNAPSHOT"
+
+  :description "Code 3D World is interactive, and batteries included a 3D coding platform."
+
+  :url "https://github.com/ertugrulcetin/code3dworld"
+
+  :author "Ertuğrul Çetin and Burkay Durdu"
+
+  :license {:name "MIT License"
+            :url  "https://opensource.org/licenses/MIT"}
+
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.773"
                   :exclusions [com.google.javascript/closure-compiler-unshaded
