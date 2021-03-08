@@ -1,8 +1,18 @@
 (ns code3dworld.renderer.util
-  (:require [cljs.reader :as reader]))
+  (:require [goog.dom :as dom] [cljs.reader :as reader]))
 
 
 (def fs (js/require "fs"))
+
+
+(defn scroll!
+  ([source-id] (scroll! source-id 500 15))
+  ([source-id speed moving-freq]
+   (let [source-obj (dom/getElement source-id)
+         hop-count  (/ speed moving-freq)]
+     (doseq [i (range 1 (inc hop-count))]
+       (let [timeout (* moving-freq i)]
+         (js/setTimeout #(set! (.-scrollTop source-obj) (.-scrollHeight source-obj)) timeout))))))
 
 
 (defn set-item! [key val]

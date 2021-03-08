@@ -27,6 +27,12 @@
         ::effects/remove-item-from-local! "settings"}))))
 
 
+(reg-event-fx
+ ::console-scroll-to-bottom
+ (fn [_ _]
+   {:scroll! {:source-id "console-body"}}))
+
+
 (reg-event-db
  ::reset
  (fn [db [_ k]]
@@ -45,6 +51,15 @@
  (fn [db [_ key-seq f & args]]
    (let [key-seq (if (vector? key-seq) key-seq [key-seq])]
      (apply update-in (concat [db key-seq f] args)))))
+
+
+(reg-event-fx
+ ::reset-exercise
+ (fn [{:keys [db]}]
+   {:db (-> db
+            (update-in [:chapters (:active-chapter db)] dissoc :done? :code)
+            (assoc-in [:visibility :reset-modal?] false))
+    :dispatch [::save-settings-to-local]}))
 
 
 (reg-event-fx
@@ -101,7 +116,9 @@
  ::save-settings-to-local
  (fn [{:keys [db]} _]
    {::effects/set-item-to-local! {:key "settings"
-                                  :val (select-keys db [:visibility :editor :chapters :active-chapter])}}))
+                                  :val (-> db
+                                           (select-keys [:visibility :editor :chapters :active-chapter])
+                                           (update :visibility select-keys [:console? :instruction?]))}}))
 
 
 (reg-event-fx

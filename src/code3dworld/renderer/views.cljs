@@ -39,7 +39,8 @@
 
 (defn tooltip [opt element]
   [:div.c3-tooltip-wrapper
-   {:class (:class opt)}
+   {:class (:class opt)
+    :on-click (:on-click opt)}
    element
    [:div.tooltip (:text opt)]])
 
@@ -74,7 +75,7 @@
 
 (defn- instruction-title []
   (let [chapter @(subscribe [::subs/chapter])]
-    [:div.c3-instruction-title.p-10
+    [:div.c3-instruction-title
      [:img.icon-2x.mr-5
       {:src "img/book.svg"}]
      [:span "Learn"]
@@ -137,27 +138,35 @@
    "Run"])
 
 
+(defn- reset-button []
+  [tooltip
+   {:text "Reset Exercise"
+    :class "c3-reset"
+    :on-click #(dispatch [::events/set-data [:visibility :reset-modal?] true])}
+   [:img
+    {:src "img/reset.svg"}]])
+
+
 (defn- full-screen-button []
   (let [full-screen? (:full-screen? @(subscribe [::subs/visibility]))]
     [tooltip
      {:text (if full-screen?
               "Exit Full Screen"
               "Enter Full Screen")
-      :class "c3-full-screen"}
-     [:div
-      {:on-click #(if full-screen?
-                    (do
-                      (dispatch [::events/set-element-visibility :instruction? true])
-                      (dispatch [::events/set-element-visibility :console? true])
-                      (dispatch [::events/set-element-visibility :full-screen? false]))
-                    (do
-                      (dispatch [::events/set-element-visibility :instruction? false])
-                      (dispatch [::events/set-element-visibility :console? false])
-                      (dispatch [::events/set-element-visibility :full-screen? true])))}
-      [:img
-       {:src (if full-screen?
-               "img/exit-full-screen.svg"
-               "img/full-screen.svg")}]]]))
+      :class "c3-full-screen"
+      :on-click #(if full-screen?
+                   (do
+                     (dispatch [::events/set-element-visibility :instruction? true])
+                     (dispatch [::events/set-element-visibility :console? true])
+                     (dispatch [::events/set-element-visibility :full-screen? false]))
+                   (do
+                     (dispatch [::events/set-element-visibility :instruction? false])
+                     (dispatch [::events/set-element-visibility :console? false])
+                     (dispatch [::events/set-element-visibility :full-screen? true])))}
+     [:img
+      {:src (if full-screen?
+              "img/exit-full-screen.svg"
+              "img/full-screen.svg")}]]))
 
 
 (defn- console-buttons []
@@ -166,36 +175,32 @@
     {:text (if (:console? @(subscribe [::subs/visibility]))
              "Hide Console"
              "Show Console")
-     :class "c3-command-window"}
-    [:div
-     {:on-click #(dispatch [::events/update-element-visibility :console?])}
-     [:img
-      {:src "img/command-window.svg"}]]]
+     :class "c3-command-window"
+     :on-click #(dispatch [::events/update-element-visibility :console?])}
+    [:img
+     {:src "img/command-window.svg"}]]
    [tooltip
     {:text "Clear Console"
-     :class "c3-clear-console"}
-    [:div
-     {:on-click #(dispatch [::events/reset :console])}
-     [:img
-      {:src "img/trash.svg"}]]]])
+     :class "c3-clear-console"
+     :on-click #(dispatch [::events/reset :console])}
+    [:img
+     {:src "img/trash.svg"}]]])
 
 
 (defn- inc-dec-font-buttons []
   [:<>
    [tooltip
     {:text "Decrease Font"
-     :class "c3-decrease-font"}
-    [:div
-     {:on-click #(dispatch [::events/update-editor-font-size -])}
-     [:img
-      {:src "img/decrease-font-size.svg"}]]]
+     :class "c3-decrease-font"
+     :on-click #(dispatch [::events/update-editor-font-size -])}
+    [:img
+     {:src "img/decrease-font-size.svg"}]]
    [tooltip
     {:text "Increase Font"
-     :class "c3-increase-font"}
-    [:div
-     {:on-click #(dispatch [::events/update-editor-font-size +])}
-     [:img
-      {:src "img/increase-font-size.svg"}]]]])
+     :class "c3-increase-font"
+     :on-click #(dispatch [::events/update-editor-font-size +])}
+    [:img
+     {:src "img/increase-font-size.svg"}]]])
 
 
 (defn- start-stop-scene-button []
@@ -211,6 +216,7 @@
 (defn- editor-action-box []
   [:div.c3-editor-action
    [run-button]
+   [reset-button]
    [full-screen-button]
    [console-buttons]
    [inc-dec-font-buttons]
@@ -224,28 +230,26 @@
 
 
 (defn- console []
-  (let [console-ref (atom nil)]
-    (r/create-class
-     {:component-did-mount #(reset!
-                             vertical-split
-                             (split #js ["#editor" "#console"]
-                                    (clj->js {:sizes [300 100]
-                                              :direction "vertical"
-                                              :gutterSize 20
-                                              :dragInterval 0.5})))
-      :component-will-unmount #(.destroy @vertical-split)
-      :component-did-update #(when-let [div @console-ref]
-                               (set! (.-scrollTop div) (- (.-scrollHeight div) (.-clientHeight div))))
-      :reagent-render (fn []
-                        [:div.c3-console
-                         {:ref #(reset! console-ref %)}
-                         (for [out @(subscribe [::subs/console])]
-                           (map (fn [[i s]]
-                                  (if (str/blank? s)
-                                    ^{:key i} [:br]
-                                    ^{:key i} [:p (get-out-style (:type out))
-                                               s]))
-                                (map-indexed vector (str/split (:content out) #"\n"))))])})))
+  (r/create-class
+   {:component-did-mount #(do (dispatch [::events/console-scroll-to-bottom])
+                              (reset!
+                               vertical-split
+                               (split #js ["#editor" "#console"]
+                                      (clj->js {:sizes [300 100]
+                                                :direction "vertical"
+                                                :gutterSize 20
+                                                :dragInterval 0.5}))))
+    :component-will-unmount #(.destroy @vertical-split)
+    :component-did-update #(dispatch [::events/console-scroll-to-bottom])
+    :reagent-render (fn []
+                      [:div#console-body.c3-console
+                       (for [out @(subscribe [::subs/console])]
+                         (map (fn [[i s]]
+                                (if (str/blank? s)
+                                  ^{:key i} [:br]
+                                  ^{:key i} [:p (get-out-style (:type out))
+                                             s]))
+                              (map-indexed vector (str/split (:content out) #"\n"))))])}))
 
 
 (defn- code []
@@ -292,10 +296,29 @@
      [code]]))
 
 
+(defn- reset-exercise-modal []
+  [:div.c3-modal
+   {:on-click #(.stopPropagation %)}
+   [:div.c3-container
+    [:h2.c3-header "Reset Exercise"]
+    [:p "Are you sure you want to restart? All of your this exercise code will be erased."]
+    [:div.c3-action-box
+     [:button.c3-reset-button
+      {:on-click #(do (.setValue @c3-editor "")
+                      (dispatch [::events/reset-exercise]))}
+      "Reset"]
+     [:button.c3-cancel-button
+      {:on-click #(dispatch [::events/set-data [:visibility :reset-modal?] false])}
+      "Cancel"]]]])
+
+
 (defn- body-view []
-  [:div.c3-dashboard-container
-   [main]
-   [bottom]])
+  [:<>
+   (when (true? @(subscribe [::subs/reset-modal-visible?]))
+     [reset-exercise-modal])
+   [:div.c3-dashboard-container
+    [main]
+    [bottom]]])
 
 
 (defn- add-msg-to-console [content type]
