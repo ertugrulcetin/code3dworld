@@ -25,7 +25,8 @@ jobs:
         run: |
             mv backend-3d-scene/scene-1.0.exe resources
             lein release
-            electron-packager . --prune=true -out=release-builds
+            npm install --save-dev electron-packager@electron/electron-packager
+            node_modules/.bin/electron-packager . --prune=true -out=release-builds
       - name: View root's artifacts
         run: dir
       - uses: actions/upload-artifact@v2
