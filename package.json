@@ -7,7 +7,6 @@
   "productName": "Code 3D World",
   "dependencies": {
     "codemirror": "^5.59.2",
-    "electron": "^11.2.3",
     "electron-localstorage": "^1.0.5",
     "find-process": "^1.4.4",
     "highlight.js": "9.18.1",
@@ -17,6 +16,7 @@
     "react-highlight.js": "1.0.7"
   },
   "devDependencies": {
+    "electron": "^11.2.3",
     "shadow-cljs": "2.11.7"
   }
 }
