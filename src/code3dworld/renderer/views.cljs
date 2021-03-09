@@ -292,8 +292,11 @@
       [:a.feedback
        {:on-click (fn [e]
                     (.preventDefault e)
-                    (.send ipc-renderer "feedback-link-clicked")
-                    (some-> (dom/getElement "feedback-link") .click))}
+                    (if js/navigator.onLine
+                      (do
+                        (.send ipc-renderer "feedback-link-clicked")
+                        (some-> (dom/getElement "feedback-link") .click))
+                      (js/alert "Please check your internet connection.")))}
        "Share Feedback"]]]))
 
 
