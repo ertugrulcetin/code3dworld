@@ -13,7 +13,7 @@ jobs:
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: latest
-      - name: Build 3D Scene
+      - name: Create Exe
         run: |
              lein uberjar
              jpackage --input target --main-jar backend-3d-scene.jar --name "scene" --main-class backend_3d_scene.core --type exe --win-menu
@@ -21,11 +21,14 @@ jobs:
       - name: View artifacts
         run: dir
         working-directory: ./backend-3d-scene
-      - name: Move exe to root's resources
-        run: mv backend-3d-scene/scene-1.0.exe resources
+      - name: Build App
+        run: |
+            mv backend-3d-scene/scene-1.0.exe resources
+            lein release
+            electron-packager . --prune=true -out=release-builds
       - name: View root's artifacts
         run: dir
-#      - uses: actions/upload-artifact@v2
-#        with:
-#            name: windows
-#            path: backend-3d-scene\scene-1.0.exe
+      - uses: actions/upload-artifact@v2
+        with:
+            name: windows
+            path: release-builds
