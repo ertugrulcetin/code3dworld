@@ -2,6 +2,11 @@ name: Build Release Artifacts
 
 on: push
 
+env:
+  pkg-assembly: 'backend-3d-scene.jar'
+  pkg-name: 'Code3DWorld'
+  pkg-version: '1.1'
+
 jobs:
   build-exe:
     runs-on: windows-latest
@@ -16,13 +21,12 @@ jobs:
       - name: Build 3D Scene
         run: |
              lein uberjar
-             jpackage --input target --main-jar backend-3d-scene.jar --name "scene" --main-class backend_3d_scene.core --win-menu
+             jpackage --input target --main-jar backend-3d-scene.jar --name "scene" --main-class backend_3d_scene.core --type msi --win-menu
         working-directory: ./backend-3d-scene
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: View artifacts
+        run: dir
+      - name: Upload installer
+        uses: actions/upload-artifact@v1
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: scene-1.0.exe
-          asset_name: scene-1.0.exe
-          asset_content_type: application/vnd.microsoft.portable-executable
+          name: msis
+          path: "${{ env.pkg-name }}-${{ env.pkg-version }}.msi"
