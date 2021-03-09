@@ -21,12 +21,7 @@ jobs:
       - name: Build 3D Scene
         run: |
              lein uberjar
-             jpackage --input target \
-                      --main-jar backend-3d-scene.jar \
-                      --name "scene" \
-                      --main-class backend_3d_scene.core \
-                      --type exe \
-                      --win-dir-chooser
+             jpackage --input target --main-jar backend-3d-scene.jar --name "scene" --main-class backend_3d_scene.core --type exe --win-dir-chooser
         working-directory: ./backend-3d-scene
       - name: View artifacts
         run: dir
