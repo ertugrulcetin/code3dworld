@@ -7,28 +7,35 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v1
+
       - uses: actions/setup-java@v1
         with:
           java-version: '14'
+
       - uses: DeLaGuardo/setup-clojure@master
         with:
           lein: latest
+
       - name: Create Exe
         run: |
              lein uberjar
              jpackage --input target --main-jar backend-3d-scene.jar --name "scene" --main-class backend_3d_scene.core --type exe --win-menu
         working-directory: ./backend-3d-scene
+
       - name: View artifacts
         run: dir
         working-directory: ./backend-3d-scene
+
       - name: Build App
         run: |
             mv backend-3d-scene/scene-1.0.exe resources
             lein release
             npm install --save-dev electron-packager@electron/electron-packager
-            node_modules/.bin/electron-packager . --prune=true -out=release-builds
+            node_modules/.bin/electron-packager . --prune=true --out=release-builds
+
       - name: View root's artifacts
         run: dir
+
       - uses: actions/upload-artifact@v2
         with:
             name: windows
