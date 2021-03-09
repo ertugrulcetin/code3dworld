@@ -1,4 +1,0 @@
---input target
---main-jar backend-3d-scene.jar
---name "scene"
---main-class backend_3d_scene.core
