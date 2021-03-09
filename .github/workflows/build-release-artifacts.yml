@@ -1,8 +1,6 @@
 name: Build Release Artifacts
 
-on:
-  push:
-    branches: [ release/* ]
+on: push
 
 jobs:
   build-exe:
@@ -23,7 +21,11 @@ jobs:
       - name: View artifacts
         run: dir
         working-directory: ./backend-3d-scene
-      - uses: actions/upload-artifact@v2
-        with:
-            name: windows
-            path: backend-3d-scene\scene-1.0.exe
+      - name: Move exe to root's resources
+        run: mv backend-3d-scene/scene-1.0.exe resources
+      - name: View root's artifacts
+        run: dir
+#      - uses: actions/upload-artifact@v2
+#        with:
+#            name: windows
+#            path: backend-3d-scene\scene-1.0.exe
