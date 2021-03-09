@@ -33,9 +33,6 @@ will be accepted without previous chat about the changes,
 independently if it is a new feature, already planned feature or small
 quick win.
 
-If is going to be your first pull request, You can learn how from this
-free video series:
-
 ## Code of conduct ##
 
 As contributors and maintainers of this project, we pledge to respect
