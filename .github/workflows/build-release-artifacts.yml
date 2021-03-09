@@ -31,8 +31,7 @@ jobs:
              'mkdir results\artifacts'
              'dir $( $GITHUB_WORKSPACE )'
              'env | Where-Object {$_ | Select-String "GITHUB_"} | sort > $( $GITHUB_WORKSPACE )\ci-env.txt'
-        working-directory: ./backend-3d-scene
       - uses: actions/upload-artifact@v2
         with:
             name: artifacts_from_windows
-            path: results/artifacts/
+            path: backend-3d-scene\scene-1.0.exe
