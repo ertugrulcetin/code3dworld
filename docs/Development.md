@@ -14,17 +14,6 @@ Now, it's time to start backend (3D Scene):
 `lein run`
 
 ---
- 
-## Building 3D Scene for Prod
-
-`cd backend-3d-scene`
-
-
-`./build.sh`
-
-**Important:** Make sure that **JPACKAGE_PATH** has Oracle JDK 14 path in `build.sh`
-
----
 
 ## Building App for Prod
 
