@@ -283,11 +283,17 @@
      [:div.c3-bottom-action
       [bottom-action-box]]
      [:div.c3-bottom-right
-      [:a.typeform-share.button.feedback
+      [:a#feedback-link.typeform-share.button
        {:href "https://form.typeform.com/to/x2kJ1U0x?typeform-medium=embed-snippet"
         :data-mode "popup"
         :data-size "70"
-        :target "_blank"}
+        :style {:visibility "hidden"}
+        :target "_blank"}]
+      [:a.feedback
+       {:on-click (fn [e]
+                    (.preventDefault e)
+                    (.send ipc-renderer "feedback-link-clicked")
+                    (some-> (dom/getElement "feedback-link") .click))}
        "Share Feedback"]]]))
 
 
