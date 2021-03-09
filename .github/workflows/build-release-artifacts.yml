@@ -21,17 +21,17 @@ jobs:
       - name: Build 3D Scene
         run: |
              lein uberjar
-             jpackage --input target --main-jar backend-3d-scene.jar --name "scene" --main-class backend_3d_scene.core --type exe --win-dir-chooser
+             jpackage --input target \
+                      --main-jar backend-3d-scene.jar \
+                      --name "scene" \
+                      --main-class backend_3d_scene.core \
+                      --type exe \
+                      --win-dir-chooser
         working-directory: ./backend-3d-scene
       - name: View artifacts
         run: dir
         working-directory: ./backend-3d-scene
-      - run: |
-             'mkdir results'
-             'mkdir results\artifacts'
-             'dir $( $GITHUB_WORKSPACE )'
-             'env | Where-Object {$_ | Select-String "GITHUB_"} | sort > $( $GITHUB_WORKSPACE )\ci-env.txt'
       - uses: actions/upload-artifact@v2
         with:
-            name: artifacts_from_windows
+            name: windows
             path: backend-3d-scene\scene-1.0.exe
