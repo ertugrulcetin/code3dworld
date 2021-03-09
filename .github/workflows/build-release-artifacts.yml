@@ -16,7 +16,7 @@ jobs:
       - name: Build 3D Scene
         run: |
              lein uberjar
-             jpackage @jpackage/common @jpackage/windows
+             jpackage --input target --main-jar backend-3d-scene.jar --name "scene" --main-class backend_3d_scene.core --win-menu
         working-directory: ./backend-3d-scene
       - uses: actions/upload-release-asset@v1
         env:
