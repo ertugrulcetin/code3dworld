@@ -1,11 +1,8 @@
 name: Build Release Artifacts
 
-on: push
-
-env:
-  pkg-assembly: 'backend-3d-scene.jar'
-  pkg-name: 'Code3DWorld'
-  pkg-version: '1.0'
+on:
+  push:
+    branches: [ release/* ]
 
 jobs:
   build-exe:
@@ -21,7 +18,7 @@ jobs:
       - name: Build 3D Scene
         run: |
              lein uberjar
-             jpackage --input target --main-jar backend-3d-scene.jar --name "scene" --main-class backend_3d_scene.core --type exe --win-dir-chooser
+             jpackage --input target --main-jar backend-3d-scene.jar --name "scene" --main-class backend_3d_scene.core --type exe --win-menu
         working-directory: ./backend-3d-scene
       - name: View artifacts
         run: dir
