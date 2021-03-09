@@ -1,4 +1,4 @@
 --main-class backend_3d_scene.core
 --main-jar backend-3d-scene.jar
 --input target
---name scene
+--name "scene"
