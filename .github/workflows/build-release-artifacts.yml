@@ -22,6 +22,7 @@ jobs:
         run: |
              lein uberjar
              jpackage --input target --main-jar backend-3d-scene.jar --name "scene" --main-class backend_3d_scene.core --type exe --win-menu
+             mv scene-1.0.exe scene.exe
         working-directory: ./backend-3d-scene
 
       - name: View artifacts
