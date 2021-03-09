@@ -5,7 +5,7 @@ on: push
 env:
   pkg-assembly: 'backend-3d-scene.jar'
   pkg-name: 'Code3DWorld'
-  pkg-version: '1.1'
+  pkg-version: '1.0'
 
 jobs:
   build-exe:
@@ -21,12 +21,18 @@ jobs:
       - name: Build 3D Scene
         run: |
              lein uberjar
-             jpackage --input target --main-jar backend-3d-scene.jar --name "scene" --main-class backend_3d_scene.core --type msi --win-menu
+             jpackage --input target --main-jar backend-3d-scene.jar --name "scene" --main-class backend_3d_scene.core --type exe --win-dir-chooser
         working-directory: ./backend-3d-scene
       - name: View artifacts
         run: dir
-      - name: Upload installer
-        uses: actions/upload-artifact@v1
+        working-directory: ./backend-3d-scene
+      - run: |
+             'mkdir results'
+             'mkdir results\artifacts'
+             'dir $( $GITHUB_WORKSPACE )'
+             'env | Where-Object {$_ | Select-String "GITHUB_"} | sort > $( $GITHUB_WORKSPACE )\ci-env.txt'
+        working-directory: ./backend-3d-scene
+      - uses: actions/upload-artifact@v2
         with:
-          name: msis
-          path: "${{ env.pkg-name }}-${{ env.pkg-version }}.msi"
+            name: artifacts_from_windows
+            path: results/artifacts/
