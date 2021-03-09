@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "electron": "^11.2.3",
+    "electron-packager": "github:electron/electron-packager",
     "shadow-cljs": "2.11.7"
   }
 }

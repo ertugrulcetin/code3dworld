@@ -29,8 +29,6 @@
 
   :main ^:skip-aot backend-3d-scene.core
 
-  :target-path "target/%s"
-
   :cljfmt {:remove-consecutive-blank-lines? false}
 
   :eastwood {:source-paths ["src"]
