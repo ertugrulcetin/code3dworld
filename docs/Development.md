@@ -19,8 +19,8 @@ Now, it's time to start backend (3D Scene):
 
 Make sure that you're at the root dir: `code3dworld`
 
-`./build.sh`
+`./sh/build.sh`
 
 or
 
-`./build.sh zip` (Release purpose, creates a compressed app)
+`./sh/build.sh zip` (Release purpose, creates a compressed app)

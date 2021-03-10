@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Building 3D Scene..."
+
 cd backend-3d-scene
 lein clean
 lein uberjar
@@ -23,22 +25,3 @@ rm -rf scene-1.0.dmg
 
 # Go back to root dir: code3dworld
 cd ../
-
-lein clean
-lein release
-lein less once
-rm -rf release-builds
-electron-packager . --prune=true \
-                    --out=release-builds \
-                    --overwrite=true \
-                    --ignore="(.gitignore|.clj-kondo|.github|.shadow-cljs|.idea|.lein-repl-history)"\
-                    --ignore="(dev|docs|imgs|\.md|\.iml|build.sh|pom.xml|karma.conf.js|target)" \
-                    --ignore="(backend-3d-scene/)" \
-                    --ignore="(project.clj|LICENSE)"
-
-if [[ $1 == "zip" ]]
-then
-  echo "zip is being generated..."
-  cd release-builds/Code\ 3D\ World-darwin-x64
-  ditto -c -k --sequesterRsrc --keepParent Code\ 3D\ World.app Code-3D-World-Mac-amd64.zip
-fi
