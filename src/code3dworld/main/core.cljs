@@ -2,7 +2,7 @@
   (:require
    [goog.object :as ob]
    ["nrepl-client" :as nrepl]
-   ["electron" :refer [app BrowserWindow crashReporter ipcMain]]))
+   ["electron" :refer [app BrowserWindow ipcMain]]))
 
 
 (def main-window (atom nil))
@@ -53,9 +53,9 @@
 (defn main []
   ; CrashReporter can just be omitted
   #_(.start crashReporter
-          (clj->js
-           {:companyName "MyAwesomeCompany"
-            :productName "MyAwesomeApp"
-            :submitURL "https://example.com/submit-url"
-            :autoSubmit false}))
+            (clj->js
+             {:companyName "MyAwesomeCompany"
+              :productName "MyAwesomeApp"
+              :submitURL "https://example.com/submit-url"
+              :autoSubmit false}))
   (.on app "ready" init-browser))
