@@ -247,9 +247,17 @@
           height: ~"calc(100% - 50px)";
           background-color: @c3-black-001;
           color: @c3-gray-002;
-          padding: 20px;
           font-size: @editor-font-size;
           overflow: auto;
+          position: relative;
+          .c3-console-body {
+            padding: 10px;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            overflow: auto;
+            width: ~"calc(100% - 20px)";
+          }
         }
       }
     }
