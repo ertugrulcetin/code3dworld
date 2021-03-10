@@ -117,8 +117,8 @@
  (fn [{:keys [db]} _]
    {::effects/set-item-to-local! {:key "settings"
                                   :val (-> db
-                                           (dissoc :name :instruction)
-                                           (util/dissoc-in [:visibility :reset-modal?]))}}))
+                                           (select-keys [:visibility :editor :chapters :active-chapter])
+                                           (update :visibility select-keys [:console? :instruction? :full-screen?]))}}))
 
 
 (reg-event-fx
