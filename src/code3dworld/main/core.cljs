@@ -52,7 +52,7 @@
 
 (defn main []
   ; CrashReporter can just be omitted
-  (.start crashReporter
+  #_(.start crashReporter
           (clj->js
            {:companyName "MyAwesomeCompany"
             :productName "MyAwesomeApp"
