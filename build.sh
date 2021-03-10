@@ -26,6 +26,7 @@ cd ../
 
 lein clean
 lein release
+lein less once
 rm -rf release-builds
 electron-packager . --prune=true \
                     --out=release-builds \
