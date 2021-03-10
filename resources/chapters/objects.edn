@@ -21,9 +21,12 @@
  [:span.c3-body
   [:code "create-box"] " creates a box, but we're providing additional information. After function name "
   [:code "create-box"] ", the first argument is "
-  [:code "{:name \"My Box\"}"] ", which is a " [:b "hash map"] ". Hash maps keep " [:i "key and value"] " pairs. In this case, the key is "
+  [:code "{:name \"My Box\"}"] ", which is a " [:b "hash map"] "."
+  [:br] [:br]
+  "Hash maps keep " [:i "key and value"] " pairs. In this case, the key is "
   [:code ":name"] " and its value is "
   [:code "\"My Box\""] ", so we're creating a box with a name."]
+ [:br] [:br]
  [:span.c3-body
   "Basically, " [:code ":name"] " is one of the attributes of the box."]
  ]
