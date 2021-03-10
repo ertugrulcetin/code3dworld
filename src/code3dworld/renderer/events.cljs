@@ -152,6 +152,5 @@
 (reg-event-fx
  ::set-split-sizes
  (fn [{:keys [db]} [_ k v]]
-   (let [db (assoc-in db [:editor k] v)]
-     {:db db
-      :dispatch [::save-settings-to-local]})))
+   {:db (assoc-in db [:editor k] v)
+    :dispatch [::save-settings-to-local]}))
