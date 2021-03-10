@@ -389,7 +389,8 @@
   (dispatch [::events/stop-leftover-3d-scene])
   (.on ipc-renderer "eval-response" on-eval-response)
   (.on ipc-renderer "app-close" on-app-close)
-  (check-scene-3d-pid-regularly))
+  (check-scene-3d-pid-regularly)
+  (.addEventListener js/window "beforeunload" (fn [_] (.send ipc-renderer "url-change") nil) false))
 
 
 (defn main-panel []

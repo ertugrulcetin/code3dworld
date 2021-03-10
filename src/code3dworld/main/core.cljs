@@ -21,8 +21,7 @@
 
 
 (defn init-browser []
-  (let [index-html (str "file://" js/__dirname "/public/index.html")
-        clear-interval-id (atom nil)]
+  (let [index-html (str "file://" js/__dirname "/public/index.html")]
     (reset! main-window (BrowserWindow.
                          (clj->js {:width (max (or (.getItem ls "width") 800) 800)
                                    :height (max (or (.getItem ls "height") 600) 600)
@@ -47,17 +46,7 @@
                                      (.send (.-sender event) "eval-response" (clj->js {:result result
                                                                                        :error err}))
                                      (.end client))))))
-    (.on ipcMain "feedback-link-clicked" (fn [_]
-                                           (when-not @clear-interval-id
-                                             (reset! clear-interval-id
-                                                     (js/setInterval
-                                                      (fn []
-                                                        (when-let [url (some-> (get-main-window) .-webContents .getURL)]
-                                                          (when-not (str/starts-with? url "file://")
-                                                            (.loadURL (get-main-window) index-html)
-                                                            (js/clearInterval @clear-interval-id)
-                                                            (reset! clear-interval-id nil))))
-                                                      500)))))
+    (.on ipcMain "url-change" #(.loadURL (get-main-window) index-html))
     #_(.on js/process "uncaughtException" (fn [error]
                                             (println "Here is the ERROR:" error)))))
 
