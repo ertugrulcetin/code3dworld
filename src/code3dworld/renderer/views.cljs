@@ -89,9 +89,12 @@
   (reset!
    horizontal-split
    (split #js ["#instructions" "#code"]
-          (clj->js {:sizes [200 300]
+          (clj->js {:sizes (let [[instruction editor] (or @(subscribe [::subs/split-sizes :instruction])
+                                                          [200 300])]
+                             [instruction editor])
                     :gutterSize 20
-                    :dragInterval 0.5})))
+                    :dragInterval 0.5
+                    :onDragEnd #(dispatch [::events/set-split-sizes :instruction (js->clj %)])})))
   (when chapter
     (util/read-edn
      (.join fpath dir (str "/chapters/" (name chapter) ".edn"))
@@ -231,14 +234,19 @@
 
 (defn- console []
   (r/create-class
-   {:component-did-mount #(do (dispatch [::events/console-scroll-to-bottom])
-                              (reset!
-                               vertical-split
-                               (split #js ["#editor" "#console"]
-                                      (clj->js {:sizes [300 100]
-                                                :direction "vertical"
-                                                :gutterSize 20
-                                                :dragInterval 0.5}))))
+   {:component-did-mount (fn []
+                           (dispatch [::events/console-scroll-to-bottom])
+                           (reset!
+                            vertical-split
+                            (split #js ["#editor" "#console"]
+                                   (clj->js {:sizes (let [[editor console] (or
+                                                                            @(subscribe [::subs/split-sizes :console])
+                                                                            [300 100])]
+                                                      [editor console])
+                                             :direction "vertical"
+                                             :gutterSize 20
+                                             :dragInterval 0.5
+                                             :onDragEnd #(dispatch [::events/set-split-sizes :console (js->clj %)])}))))
     :component-will-unmount #(.destroy @vertical-split)
     :component-did-update #(dispatch [::events/console-scroll-to-bottom])
     :reagent-render (fn []

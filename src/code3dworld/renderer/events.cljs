@@ -117,8 +117,8 @@
  (fn [{:keys [db]} _]
    {::effects/set-item-to-local! {:key "settings"
                                   :val (-> db
-                                           (select-keys [:visibility :editor :chapters :active-chapter])
-                                           (update :visibility select-keys [:console? :instruction?]))}}))
+                                           (dissoc :name :instruction)
+                                           (util/dissoc-in [:visibility :reset-modal?]))}}))
 
 
 (reg-event-fx
@@ -147,3 +147,10 @@
    (let [db (assoc-in db [:chapters (:active-chapter db) :done?] true)]
      {:db db
       :dispatch [::save-settings-to-local]})))
+
+
+(reg-event-fx
+ ::set-split-sizes
+ (fn [{:keys [db]} [_ k v]]
+   {:db (assoc-in db [:editor k] v)
+    :dispatch [::save-settings-to-local]}))

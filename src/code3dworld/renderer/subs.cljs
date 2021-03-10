@@ -83,3 +83,9 @@
  ::scene-3d-pid
  (fn [db]
    (:scene-3d-pid db)))
+
+
+(reg-sub
+ ::split-sizes
+ (fn [db [_ k]]
+   (-> db :editor k)))
