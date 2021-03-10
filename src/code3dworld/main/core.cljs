@@ -1,7 +1,6 @@
 (ns code3dworld.main.core
   (:require
    [goog.object :as ob]
-   [clojure.string :as str]
    ["nrepl-client" :as nrepl]
    ["electron" :refer [app BrowserWindow crashReporter ipcMain]]))
 
