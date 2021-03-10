@@ -2,7 +2,7 @@
   (:require
    [goog.object :as ob]
    ["nrepl-client" :as nrepl]
-   ["electron" :refer [app BrowserWindow ipcMain]]))
+   ["electron" :refer [app BrowserWindow ipcMain autoUpdater]]))
 
 
 (def main-window (atom nil))
@@ -46,6 +46,8 @@
                                                                                        :error err}))
                                      (.end client))))))
     (.on ipcMain "url-change" #(.loadURL (get-main-window) index-html))
+    (when-not goog.DEBUG
+      ((js/require "update-electron-app")))
     #_(.on js/process "uncaughtException" (fn [error]
                                             (println "Here is the ERROR:" error)))))
 
