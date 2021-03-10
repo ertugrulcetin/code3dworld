@@ -250,14 +250,15 @@
     :component-will-unmount #(.destroy @vertical-split)
     :component-did-update #(dispatch [::events/console-scroll-to-bottom])
     :reagent-render (fn []
-                      [:div#console-body.c3-console
-                       (for [out @(subscribe [::subs/console])]
-                         (map (fn [[i s]]
-                                (if (str/blank? s)
-                                  ^{:key i} [:br]
-                                  ^{:key i} [:p (get-out-style (:type out))
-                                             s]))
-                              (map-indexed vector (str/split (:content out) #"\n"))))])}))
+                      [:div.c3-console
+                       [:div#console-body.c3-console-body
+                        (for [out @(subscribe [::subs/console])]
+                          (map (fn [[i s]]
+                                 (if (str/blank? s)
+                                   ^{:key i} [:br]
+                                   ^{:key i} [:p (get-out-style (:type out))
+                                              s]))
+                               (map-indexed vector (str/split (:content out) #"\n"))))]])}))
 
 
 (defn- code []
