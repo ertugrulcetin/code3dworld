@@ -1,4 +1,4 @@
-(defproject code3dworld "0.1.0-SNAPSHOT"
+(defproject code3dworld "1.0.0"
 
   :description "Code 3D World is interactive, and batteries included a 3D coding platform."
 

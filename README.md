@@ -3,6 +3,11 @@
 
 ![Code 3D World](docs/imgs/c3dw.png)
 
+## Download
+[Mac (OS X)](https://github.com/ertugrulcetin/code3dworld/releases/download/v1.0.0/Code-3D-World-Mac-amd64.zip)
+
+Windows (Coming Soon)
+
 ## Demo Video
 
 [![Code 3D World - Demo Video](https://img.youtube.com/vi/28qeBOaBSB4/0.jpg)](https://www.youtube.com/watch?v=28qeBOaBSB4)
