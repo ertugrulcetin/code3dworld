@@ -89,3 +89,11 @@
  ::split-sizes
  (fn [db [_ k]]
    (-> db :editor k)))
+
+
+(reg-sub
+ ::last-chapter?
+ :<- [::chapters-order]
+ :<- [::active-chapter]
+ (fn [[chapters-order active-chapter] _]
+   (= (last chapters-order) active-chapter)))

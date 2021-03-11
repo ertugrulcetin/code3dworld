@@ -279,9 +279,24 @@
        "Back"]]
      [:div current-chapter-page-info]
      [:div.c3-next-button
-      [:button.c3-button.c3-next-button
-       {:on-click #(dispatch [::events/change-chapter :next])}
-       "Next"]]]))
+      (if @(subscribe [::subs/last-chapter?])
+        [:<>
+         [:a#more-chapters.typeform-share.button
+          {:href "https://form.typeform.com/to/kexTlByP?typeform-medium=embed-snippet"
+           :data-mode "popup"
+           :data-size "70"
+           :style {:visibility "hidden"}
+           :target "_blank"}]
+         [:button.c3-button.c3-next-button
+          {:on-click (fn [e]
+                       (.preventDefault e)
+                       (if js/navigator.onLine
+                         (some-> (dom/getElement "more-chapters") .click)
+                         (js/alert "Please check your internet connection.")))}
+          "I want more chapters!"]]
+        [:button.c3-button.c3-next-button
+         {:on-click #(dispatch [::events/change-chapter :next])}
+         "Next"])]]))
 
 
 (defn- bottom []
@@ -302,9 +317,7 @@
        {:on-click (fn [e]
                     (.preventDefault e)
                     (if js/navigator.onLine
-                      (do
-                        (.send ipc-renderer "feedback-link-clicked")
-                        (some-> (dom/getElement "feedback-link") .click))
+                      (some-> (dom/getElement "feedback-link") .click)
                       (js/alert "Please check your internet connection.")))}
        "Share Feedback"]]]))
 
