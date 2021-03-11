@@ -75,6 +75,7 @@
                    ["watch"]]
 
             "watch" ["with-profile" "dev" "do"
+                     ["less" "once"]
                      ["shadow" "watch" "main" "renderer" "browser-test" "karma-test"]]
 
             "prod" ["do"
