@@ -12,4 +12,5 @@ electron-packager . --prune=true \
                     --ignore="(.gitignore|.clj-kondo|.github|.shadow-cljs|.idea|.lein-repl-history)"\
                     --ignore="(dev|docs|imgs|\.md|\.iml|build.sh|pom.xml|karma.conf.js|target)" \
                     --ignore="(backend-3d-scene/)" \
-                    --ignore="(project.clj|LICENSE)"
+                    --ignore="(project.clj|LICENSE)" \
+                    --icon=./resources/public/icons/mac/icon.icns
